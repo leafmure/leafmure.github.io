@@ -1,12 +1,5 @@
----
-title: next主题集成不蒜子统计
-date: 2018-11-28 15:14:59
-categories: hexo
-tags:
-- next 主题
-keywords: 不蒜子统计,next主题
-description:
----
+# next主题集成不蒜子统计
+
 打开next主题配置文件_config.yml 搜索busuanzi_count修改配置
 ```
 // next 6.0 的配置样式

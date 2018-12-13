@@ -1,12 +1,5 @@
----
-title: MV系列和VIPER架构学习
-date: 2018-11-28 14:08:59
-categories: iOS
-tags: 
-- 架构学习
-keywords: MV系列架构,VIPER架构,架构学习
-description:
----
+# MV系列和VIPER架构学习
+
 由于个人对一些流行的架构的分辨和其各模块的分工很模糊，所以通过网上查询整理关于架构模式的知识，并且根据自己的了解写了一个小[demo](https://github.com/MeanMouse/ArchitectureDemo)。
 
 知识整理来自: [iOS 架构模式–解密 MVC，MVP，MVVM以及VIPER架构,](http://ios.jobbole.com/83727/)

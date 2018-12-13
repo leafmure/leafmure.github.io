@@ -1,12 +1,5 @@
----
-title: Block
-date: 2018-11-28 14:37:57
-categories: iOS
-tags:
-- block
-keywords: block,block变量,__block,循环引用,block的实现,block的本质
-description:
----
+# Block 知识整理
+
 > Block是OSX Snow Leopard和iOS 4引入的C语言扩充功能，是一个带有自动变量（局部变量）的匿名函数，也被称为闭包。
 
 > 本篇内容来源：《Obejective-C iOS与 OSX多线程和内存管理》中的Blocks章节

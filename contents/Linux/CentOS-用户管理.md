@@ -1,12 +1,5 @@
----
-title: CentOS 用户管理
-date: 2018-11-28 15:16:47
-categories: Linux
-tags:
-- CentOS
-keywords: CentOS,用户管理
-description:
----
+# CentOS 用户管理
+
 整理来源：《鸟哥的Linux私房菜第四版》的第十三章 “账号管理与 ACL 权限设定”
 
 ### 用户账号

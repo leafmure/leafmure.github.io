@@ -1,12 +1,5 @@
----
-title: Hexo SEO设置
-date: 2018-11-28 15:09:05
-categories: hexo
-tags:
-- hexo 配置
-keywords: hexo,hexo seo,seo
-description:
----
+# Hexo SEO设置
+
 > SEO（Search Engine Optimization）:汉译为搜索引擎优化。是一种方式:利用搜索引擎的规则提高网站在有关搜索引擎内的自然排名。目的是：为网站提供生态式的自我营销解决方案，让其在行业内占据领先地位，获得品牌收益；SEO包含站外SEO和站内SEO两方面；为了从搜索引擎中获得更多的免费流量，从网站结构、内容建设方案、用户互动传播、页面等角度进行合理规划，还会使搜索引擎中显示的网站相关信息对用户来说更具有吸引力  [=>百度百科](https://baike.baidu.com/item/搜索引擎优化/3132?fromtitle=seo&fromid=102990&fr=aladdin)
 
 ### 百度收录站点

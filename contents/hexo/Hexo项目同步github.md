@@ -1,12 +1,5 @@
----
-title: Hexo项目同步github
-date: 2018-11-28 15:04:50
-categories: hexo
-tags:
-- hexo
-keywords: hexo,hexo同步github,hexo托管到github
-description:
----
+# Hexo项目同步github
+
 #### hexo文件托管到github
 
 ##### 克隆gitHub上的XXX.github.io项目的文件到本地 

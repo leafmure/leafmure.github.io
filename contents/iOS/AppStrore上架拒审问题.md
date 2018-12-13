@@ -1,14 +1,5 @@
----
-title: AppStrore上架拒审问题
-date: 2018-11-28 15:33:13
-categories:
-- iOS
-- iOS 问题集
-tags:
-- iOS 问题集
-keywords: AppStrore上架,上架拒审
-description:
----
+# AppStrore上架拒审问题
+
 ### Guideline 2.5.1 - Performance - Software Requirement，通过"prefs:root ="调用私有Api
 解决方案：
 - 通过"prefs:root ="调用私有Api在iOS8之前可用，iOS8之后不再通过私有Api跳转到相应设置，统一跳到设置界面。

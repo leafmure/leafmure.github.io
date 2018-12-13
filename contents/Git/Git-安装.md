@@ -1,12 +1,5 @@
----
-title: Git 安装
-date: 2018-11-28 14:56:29
-categories: Git
-tags:
-- Git安装
-keywords: Git 安装,Git
-description:
----
+# Git 安装
+
 ### Git是什么？
 Git是分布式版本控制系统，用于敏捷高效地处理任何或小或大的项目，它采用了分布式版本库的方式，不必服务器端软件支持。
 ### Git安装

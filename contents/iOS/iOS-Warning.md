@@ -1,14 +1,5 @@
----
-title: iOS Warning
-date: 2018-11-28 15:36:02
-categories: 
-- iOS
-- iOS 问题集
-tags:
-- iOS Warning
-keywords: Warning,iOS 警告,警告
-description:
----
+# iOS Warning
+
 ### ld: warning: directory not found for option“XXXXXX
 原因：从项目中删除了文件和文件夹的文件夹路径没有删除，编译器访问不到该路径而警告⚠️
 

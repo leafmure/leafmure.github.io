@@ -1,12 +1,6 @@
----
-title: github使用
-date: 2018-11-04
-categories: git
-tags: 
-- github
-keywords: github使用,github
-description:
----
+
+# github使用
+
 ### 什么是github？
 github是一个基于git的代码托管平台，付费用户可以建私人仓库，我们一般的免费用户只能使用公共仓库，也就是代码要公开。
 > gitHub是一个面向开源及私有软件项目的托管平台，因为只支持git 作为唯一的版本库格式进行托管，故名gitHub。

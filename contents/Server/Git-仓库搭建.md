@@ -1,12 +1,5 @@
----
-title: Git 仓库搭建
-date: 2018-11-28 15:29:59
-categories: 服务器
-tags:
-- Git 仓库搭建
-keywords: Git 仓库搭建,Git,服务器
-description:
----
+# Git 仓库搭建
+
 #### 创建git新用户管理git仓库
 1. 创建git用户并配置
 ```
