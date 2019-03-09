@@ -1,6 +1,7 @@
 # MeanMouse
 学习、探究、整理、记录、分享
 
+<img src="https://img.shields.io/badge/platform-iOS-%23222222.svg"> <img src="https://img.shields.io/badge/language-Objective--C-%23ff824c.svg"> <img src="https://img.shields.io/badge/language-Swift-%2378c504.svg"> <img src="https://img.shields.io/badge/platform-Linux-%23222222.svg">
 ## 📱  iOS
 
 | tag | Article |
