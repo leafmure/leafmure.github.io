@@ -1,6 +1,12 @@
-
-# Git 创建仓库和更换远程仓库地址
-
+---
+title: Git 创建仓库和更换远程仓库地址
+date: 2018-11-28 14:50:14
+categories: Git
+tags:
+- Git 使用
+keywords: Git创建仓库,更换远程仓库地址,Git使用
+description:
+---
 #### 创建仓库
 ##### 本地初始化git仓库
 ```

@@ -1,5 +1,13 @@
-# 上传封装工具到Cocoapods
-
+---
+title: 上传封装工具到Cocoapods
+date: 2018-11-28 14:58:55
+categories: 
+- iOS
+tags:
+- Cocoapods
+keywords: cocoapods,上传到Cocoapods
+description:
+---
 ##### 准备
 在github、码云上创建项目，并把项目代码上传到项目仓库。
 

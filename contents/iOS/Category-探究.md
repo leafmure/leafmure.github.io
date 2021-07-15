@@ -1,3 +1,13 @@
+---
+title: Category 探究
+date: 2018-12-21 14:37:21
+categories: iOS
+tags:
+- category
+keywords: category,分类,实例变量,+ load,关联对象,runtime
+description:
+images: "/postCover/Category-探究.png"
+---
 
 ### 简介
 人类在进步，社会在发展，随着时间变化我们会遇到不同的问题，由此也诞生了对应的解决方法。我们编写的类也是如此，在随着业务的发展，原定类的方法也就不足以处理新的业务，因此我们开始想方设法去扩展类以处理新业务。在 Objective-C 2.0 提供的 category 特性，此特性可为已有类添加新的方法。除了为已有类添加新方法外，我们可以运用分类的特性去抽离出复杂类的业务，降低类的复杂度。

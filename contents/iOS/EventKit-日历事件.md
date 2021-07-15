@@ -1,3 +1,13 @@
+---
+title: EventKit 日历事件
+date: 2018-12-19 13:39:24
+categories: iOS
+tags:
+- EventKit
+keywords: 日历事件,EventKit,event,reminders
+description:
+images: "/postCover/EventKit-日历事件.png"
+---
 
 #### EventKit 框架
 此框架可以访问手机系统日历和提醒事项APP的数据，用此框架可以添加日历事件和提醒事项。

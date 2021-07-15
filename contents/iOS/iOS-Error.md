@@ -1,5 +1,13 @@
-# iOS Error
-
+---
+title: iOS Error
+date: 2018-11-28 15:38:08
+categories:
+- iOS
+tags:
+- iOS 问题集
+keywords: Error,iOS Error,报错,错误
+description:
+---
 ### 离开页面后，网络请求使用 delegate 回调崩溃
 原因：用的是 assgin 修饰 delegate，像数值类型一样 delegate对象被销毁了但不置 nil。
 

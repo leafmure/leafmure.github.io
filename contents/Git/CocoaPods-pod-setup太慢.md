@@ -1,5 +1,14 @@
-# CocoaPods pod setup太慢
-
+---
+title: CocoaPods pod setup太慢
+date: 2018-11-28 15:39:50
+categories: 
+- iOS
+tags:
+- Cocoapods
+keywords: CocoaPods,pod setup,pod setup太慢
+description:
+images:
+---
 #### 更换镜像pod setup
 1.升级Ruby环境
 ```
