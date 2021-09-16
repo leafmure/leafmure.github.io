@@ -8,6 +8,7 @@ keywords: Git 仓库搭建,Git,服务器
 description:
 ---
 #### 创建git新用户管理git仓库
+<!-- more -->
 1. 创建git用户并配置
 ```
 # adduser git  // 创建git用户

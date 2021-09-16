@@ -8,6 +8,7 @@ keywords: 不蒜子统计,next主题
 description:
 ---
 打开next主题配置文件_config.yml 搜索busuanzi_count修改配置
+<!-- more -->
 ```
 // next 6.0 的配置样式
 busuanzi_count:

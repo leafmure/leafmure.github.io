@@ -13,7 +13,7 @@ description:
 #### Linux 如何辨别使用者身份
 我们登录 Linux时，输入的是我们的账号，其实
 Linux 使用的并不是你的账号，而是账号所对应的UID（UserID）,账号只是为了让使用者更好记忆。有关UID与账号的对应信息存储在 /etc/passwd，除了UID外还有一个群组ID：GID（GroupID），GID与账号对应的信息存储在 /etc/group中。当用户登录时，Linux时便会根据账号去 /etc/passwd和/etc/group的信息中找到 UID和GID对应的账号与组名显示出来。
-
+<!-- more -->
 #### Linux 登录
 登录Linux时，Liunx 对于用户的账号、密码输入进行了以下几个步骤
 1. 先查询 /etc/passwd 中是否有你输入的账号，如果有的话则将账号对应的 UID 读出来并去 /etc/group 中将GID也读出来，另外对于该账号的家目录与 shell 设定也一并读出。

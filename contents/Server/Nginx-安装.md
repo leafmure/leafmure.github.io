@@ -8,7 +8,7 @@ keywords: Nginx 安装,Nginx
 description:
 ---
 > Nginx (engine x) 是一个高性能的HTTP和反向代理服务，也是一个IMAP/POP3/SMTP服务。Nginx是由伊戈尔·赛索耶夫为俄罗斯访问量第二的Rambler.ru站点（俄文：Рамблер）开发的，第一个公开版本0.1.0发布于2004年10月4日。
-
+<!-- more -->
 #### Nginx安装
 yum源中的nginx版本比较旧，包安装可以指定安装版本，安装目录地址为 /usr/local/
 ##### 包安装

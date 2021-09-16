@@ -14,6 +14,7 @@ images:
 ```
 $ sudo gem update --system
 ```
+<!-- more -->
 2.更换Ruby镜像
 ```
 $ gem sources --remove https://rubygems.org/   移除现有镜像

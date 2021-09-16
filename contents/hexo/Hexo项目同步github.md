@@ -13,6 +13,7 @@ description:
 ```
 git clone https://github.com/yourname/xxx.github.io.git
 ```
+<!-- more -->
 ##### 删除文件夹里除了.git的其他所有文件 
 ##### 把hexo项目文件下的所有文件全部复制过来(除了.git)
 ##### 里面应该有一个叫.gitignore的文件，如果没有就输入 touch .gitignore，创建一个,并输入以下内容

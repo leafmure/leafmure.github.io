@@ -10,7 +10,7 @@ description:
 ---
 ### ld: warning: directory not found for option“XXXXXX
 原因：从项目中删除了文件和文件夹的文件夹路径没有删除，编译器访问不到该路径而警告⚠️
-
+<!-- more -->
 解决方案：targets => Build Settings =>  Library Search Paths & Framework Search Paths，删掉编译报warning的路径。
 
 ### Block implicitly retains 'self'; explicitly mention 'self' to indicate this...警告

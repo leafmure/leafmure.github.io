@@ -10,7 +10,7 @@ description:
 ---
 ### 离开页面后，网络请求使用 delegate 回调崩溃
 原因：用的是 assgin 修饰 delegate，像数值类型一样 delegate对象被销毁了但不置 nil。
-
+<!-- more -->
 解决方案：
 - 使用weak修饰delegate对象，离开页面后，delegate对像销毁并置 nil。
 - 离开页面时，手动将delegate对象置nil。

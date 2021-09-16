@@ -14,7 +14,7 @@ images: "/postCover/EventKit-日历事件.png"
 
 #### info.plist 配置
 在 info.plist 添加访问日历权限和提醒实现的key：Privacy - Calendars Usage Description、Privacy - Reminders Usage Description，目前只使用到日历事件的操作。
-
+<!-- more -->
 #### EKEventStore
 EKEventStore 类似一个数据库，管理着日历事件和提醒事项，我们通过它来操作日历事件和提醒事项。
 首先我们创建一个 EKEventStore：

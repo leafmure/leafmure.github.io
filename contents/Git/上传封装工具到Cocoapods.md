@@ -18,7 +18,7 @@ $ pod trunk me
 $ pod trunk register 邮箱号 昵称
 // 然后该邮箱会收到一封cocoapods的邮件，只需打开查看邮件即可验证。
 ```
-
+<!-- more -->
 ##### 创建Pod所对应的podspec文件
 ```
 $ cd 项目下

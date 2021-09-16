@@ -11,6 +11,7 @@ images:
 
 ### SideTables
 SideTables 是全局表，管理着对象的引用计数和weak引用指针，每个对象在此表中都有对应的一个 SideTable，让我们来看看 SideTables 源码定义
+<!-- more -->
 ```
 static StripedMap<SideTable>& SideTables() {
 return *reinterpret_cast<StripedMap<SideTable>*>(SideTableBuf);

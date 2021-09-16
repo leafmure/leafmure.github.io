@@ -9,6 +9,7 @@ keywords: AppStrore上架,上架拒审
 description:
 ---
 ### Guideline 2.5.1 - Performance - Software Requirement，通过"prefs:root ="调用私有Api
+<!-- more -->
 解决方案：
 - 通过"prefs:root ="调用私有Api在iOS8之前可用，iOS8之后不再通过私有Api跳转到相应设置，统一跳到设置界面。
 ```
