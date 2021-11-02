@@ -7,7 +7,7 @@
 | tag | Article |
 |:-------:|:------|
 | Architecture |[MV系列和VIPER架构学习](https://github.com/MeanMouse/blog/blob/master/contents/iOS/MV系列和VIPER架构学习.md)|
-| 问题集 | [AppStrore上架拒审问题](https://github.com/MeanMouse/blog/blob/master/contents/iOS/AppStrore上架拒审问题.md) <br> [iOS Error](https://github.com/MeanMouse/blog/blob/master/contents/iOS/iOS-Error.md) <br> [iOS Warning](https://github.com/MeanMouse/blog/blob/master/contents/iOS/iOS-Warning.md) |
+| 问题集 | [AppStrore上架拒审问题](https://github.com/MeanMouse/blog/blob/master/contents/iOS/AppStrore上架拒审问题.md) <br> [iOS Error](https://github.com/MeanMouse/blog/blob/master/contents/iOS/iOS-Error.md) <br> [iOS Warning](https://github.com/MeanMouse/blog/blob/master/contents/iOS/iOS-Warning.md) <br> [Xcode13 第三方库SwiftUI错误](https://github.com/MeanMouse/blog/blob/master/contents/iOS/Xcode13%20%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93SwiftUI%E9%94%99%E8%AF%AF.md) |
 | 知识点 | [Block](https://github.com/MeanMouse/blog/blob/master/contents/iOS/Block-知识整理.md) <br> [Category 探究](https://github.com/MeanMouse/blog/blob/master/contents/iOS/Category-探究.md) <br> [Runtime 探究](https://github.com/MeanMouse/blog/blob/master/contents/iOS/Runtime-探究.md) <br> [__weak 修饰符](https://github.com/MeanMouse/blog/blob/master/contents/iOS/weak-%E4%BF%AE%E9%A5%B0%E7%AC%A6.md)|
 | 功能集 | [EventKit 日历事件](https://github.com/MeanMouse/blog/blob/master/contents/iOS/EventKit-日历事件.md) |
 
