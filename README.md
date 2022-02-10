@@ -37,7 +37,7 @@
 |:-------:|:------|
 | git使用 | [Git 安装](https://github.com/MeanMouse/blog/blob/master/contents/Git/Git-安装.md) <br> [Git 创建仓库和更换远程仓库地址](https://github.com/MeanMouse/blog/blob/master/contents/Git/Git-创建仓库和更换远程仓库地址.md) |
 | github | [github使用](https://github.com/MeanMouse/blog/blob/master/contents/Git/github使用.md) |
-|Cocoapods| [上传封装工具到Cocoapods](https://github.com/MeanMouse/blog/blob/master/contents/iOS/上传封装工具到Cocoapods.md) <br> [CocoaPods pod setup太慢](https://github.com/MeanMouse/blog/blob/master/contents/iOS/CocoaPods-pod-setup太慢.md) <br> [cocoapods-私有库和公开库](https://github.com/MeanMouse/blog/blob/master/contents/Git/cocoapods-%E7%A7%81%E6%9C%89%E5%BA%93%E5%92%8C%E5%85%AC%E5%BC%80%E5%BA%93.md)|
+|Cocoapods| [上传封装工具到Cocoapods](https://github.com/MeanMouse/blog/blob/master/contents/Git/%E4%B8%8A%E4%BC%A0%E5%B0%81%E8%A3%85%E5%B7%A5%E5%85%B7%E5%88%B0Cocoapods.md) <br> [CocoaPods pod setup太慢](https://github.com/MeanMouse/blog/blob/master/contents/Git/CocoaPods-pod-setup%E5%A4%AA%E6%85%A2.md) <br> [cocoapods-私有库和公开库](https://github.com/MeanMouse/blog/blob/master/contents/Git/cocoapods-%E7%A7%81%E6%9C%89%E5%BA%93%E5%92%8C%E5%85%AC%E5%BC%80%E5%BA%93.md)|
 
 <br>
 
