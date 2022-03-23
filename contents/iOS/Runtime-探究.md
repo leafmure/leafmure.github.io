@@ -105,7 +105,7 @@ objc_class 中有指向父类的指针、类名、版本、实例的大小、实
 
 #### Meta Class
 在 objc_class 中也有一个 isa 指针，这个 isa 指针指向的是 Meta Class（元类），该类保存了创建类对象以及类方法所需的所有信息。元类也是一个对象，可以向元类发送消息，此类消息便是类方法（带 “+” 的方法）。每个类都会有一个单独对应的元类，因为每个类只有一个methodLists，方法不能重名，因此需要有一个类来保存类方法。其中对应关系如下图：
-![](http://r.photo.store.qq.com/psb?/V11AuUlP0teFMG/5tDM6T2hkY2tUt7oCZvzdGvkgmFVK0Wfo3v1Nb8S*f4!/r/dDcBAAAAAAAA)
+![](https://upload-images.jianshu.io/upload_images/1194012-d7b097e86f9e488d.png?imageMogr2/auto-orient/strip|imageView2/2/w/625/format/webp)
 - 每个对象(instance)的 isa 指针指向对象类(class)，而对象类指向唯一的元类(meta class)。
 - 每个类都有指向父类的指针，class -> superClass、class的meta class -> superClass 的 meta class。
 - 每个meta class 都指向 Root meta class
