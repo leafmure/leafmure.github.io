@@ -457,7 +457,6 @@ Program ended with exit code: 0
 从输出信息来看，它的内存分布图如下：
 ![image](https://lianghuii.com/postImage/AutoreleasePool详解/psb-02.png)
 
-小虎互联科技研发部 > AutoreleasePool 详解 > 单个@autorel
 再来看看多层 @autoreleasepool 嵌套情况：
 ```
 int main(int argc, const char * argv[]) {
