@@ -218,9 +218,9 @@ static struct IMAGE_INFO { unsigned version; unsigned flag; } _OBJC_IMAGE_INFO =
 
 ```
 我们可以看到：
-- 首先，编译器生成了实例方法列表 _OBJC_$_CATEGORY_INSTANCE_METHODS_NSObject_$_Category
-- 然后，用生成的实例方法列表初始化 _OBJC_$_CATEGORY_NSObject_$_Category (NSObject+Category)，在 OBJC_CATEGORY_SETUP_$_NSObject_$_Category 设置方法中将 _OBJC_$_CATEGORY_NSObject_$_Category 的成员变量 cls 指向 OBJC_CLASS_$_NSObject （NSObject 类）。
-- 最后，将 NSObject+Category 分类的设置方法 OBJC_CATEGORY_SETUP_$_NSObject_$_Category 保存到 OBJC_CATEGORY_SETUP[] 中，将 NSObject+Category 分类 保存到 DATA段下的objc_catlist section里的 L_OBJC_LABEL_CATEGORY_$ 中，在运行期时用于分类的加载。
+- 首先，生成了方法列表对象 _OBJC_$_CATEGORY_INSTANCE_METHODS_NSObject_$_Category
+- 然后，用方法列表对象初始化 _OBJC_$_CATEGORY_NSObject_$_Category (NSObject+Category)分类对象，在 OBJC_CATEGORY_SETUP_$_NSObject_$_Category 方法中将 _OBJC_$_CATEGORY_NSObject_$_Category 的 cls 指向 OBJC_CLASS_$_NSObject （NSObject 类）。
+- 最后，将 NSObject+Category 分类 保存到 DATA段下的objc_catlist section里的 L_OBJC_LABEL_CATEGORY_$ 中，在运行期时用于分类的加载。
 
 #### category 加载
 Objective-C 运行时入口方法：
@@ -353,7 +353,7 @@ getName(cls), cat->name);
 }
 
 ```
-首先，通过 _getObjc2CategoryList(hi, &count) 获取的 catlist 就是，在编译器编译时的 L_OBJC_LABEL_CATEGORY_$。获取到 category_t 列表后，开始遍历 catlist，将 instanceMethods（实例方法）、protocols（协议）、instanceProperties（属性）添加到类上，将 classMethods（类方法）、protocols（协议）添加到类的元类（meta class）上。在添加到元类时，有一段注释 /* ||  cat->classProperties */ 可见并不会将 classProperties （类属性）添加到元类上，不支持在分类给类添加类属性。
+首先，通过 _getObjc2CategoryList(hi, &count) 获取的 catlist 就是在编译器编译时的 L_OBJC_LABEL_CATEGORY_$。获取到 category_t 列表后，开始遍历 catlist，将 instanceMethods（实例方法）、protocols（协议）、instanceProperties（属性）添加到类上，将 classMethods（类方法）、protocols（协议）添加到类的元类（meta class）上。在添加到元类时，有一段注释 /* ||  cat->classProperties */ 可见并不会将 classProperties （类属性）添加到元类上，不支持在分类给类添加类属性。
 
 ##### addUnattachedCategoryForClass 函数
 ```
@@ -369,9 +369,11 @@ BOOL catFromBundle = (catHeader->mhdr->filetype == MH_BUNDLE) ? YES: NO;
 
 // DO NOT use cat->cls! 
 // cls may be cat->cls->isa, or cat->cls may have been remapped.
+// 获取所有未进行处理的分类
 NXMapTable *cats = unattachedCategories();
 category_list *list;
 
+// 根据 cls 获取该类未处理的分类
 list = NXMapGet(cats, cls);
 if (!list) {
 list = _calloc_internal(sizeof(*list) + sizeof(list->list[0]), 1);
@@ -382,7 +384,7 @@ list->list[list->count++] = (category_pair_t){cat, catFromBundle};
 NXMapInsert(cats, cls, list);
 }
 ```
-实现代码也比较简单，大致内容是：通过分类所属类和分类获取类的 category_list变量 list （分类列表），如果当前类未拥有分类，那么 list 不存在，便会初始化 list。如果 list 存在，便会用 list 从新初始化并将容量加 1，然后将分类添加到 list 中，最后将分类、类、分类列表插入到 NXMapTable 中。所以可见 addUnattachedCategoryForClass 函数是将 类和分类做了一个关联存储。
+实现代码也比较简单，大致内容是：获取所有未进行处理的分类，如果当前类在 NXMapGet 中未拥有未处理的分类，那么 list 不存在，便会初始化 list。如果 list 存在，便会用 list 重新初始化并将容量加 1，然后将分类添加到 list 中，最后将分类列表插入到 NXMapTable 中。所以可见 addUnattachedCategoryForClass 函数是将类和分类做了一个关联存储。
 
 ##### remethodizeClass 函数
 remethodizeClass 是去处理分类方法添加的入口
@@ -429,7 +431,7 @@ rwlock_assert_writing(&runtimeLock);
 return NXMapRemove(unattachedCategories(), cls);
 }
 ```
-根据注释和方法名，我们可以很清晰的知道 unattachedCategoriesForClass 做了什么，调用 NXMapRemove 函数，NXMapRemove 函数以类为 key 从 NXMapTable 中删除类映射的分类并返回类的分类列表，最终 unattachedCategoriesForClass 将 NXMapRemove 函数得到分类列表返回。
+根据注释和方法名，我们可以很清晰的知道 unattachedCategoriesForClass 做了什么，调用 NXMapRemove 函数，NXMapRemove 函数以 cls 为 key 从 NXMapTable 中删除类映射的分类列表并返回类的分类列表，最终 unattachedCategoriesForClass 将 NXMapRemove 函数得到分类列表返回。
 
 在执行 unattachedCategoriesForClass 函数获得分类列表后，将分类列表传入 attachCategoryMethods 函数中，attachCategoryMethods 函数的实现如下
 ```
@@ -460,7 +462,7 @@ _free_internal(mlists);
 
 }
 ```
-此函数中，遍历分类列表，如果不是元类将分类的实例方法列表 mlist 添加到 mlists 生成一个包含所有分类实例方法列表的实例方法列表，如果传入的类是元类，处理的便是类方法。最后将 mlists 传入 attachMethodLists 函数中，该函数的实现
+此函数中，**mlists 是个二维数组，遍历 cats 分类列表，将分类方法数据存入 **mlists 中，并将 mlists 存储到 class_rw_t 的方法列表中。最后将 mlists 传入 attachMethodLists 函数中，该函数的实现
 ```
 static void 
 attachMethodLists(class_t *cls, method_list_t **lists, int count, 
@@ -515,11 +517,11 @@ if (outVtablesAffected) *outVtablesAffected = vtablesAffected;
 }
 
 ```
-首先判断类的方法总列表 methods 是否是为空，如果为空，以传入的方法总列表 lists 中的元素（元素为方法列表）数量加一的容量以及 lists 的size 初始化 methods，如果 methods 不为空，便以原 methods 和 原 methods 的size 加上 lists 的 size 初始化，通过 memmove 宏方法将 methods 容量扩容增加 count （即 lists 中的方法列表个数）并将原来的 methods 中的方法列表往后移 count 位，这样原来的方法列表就被移至到 methods 中的后面部分。
+首先判断类的方法总列表 methods 是否是为空，如果为空，以分类方法列表 lists 初始化 methods，如果 methods 不为空，便以原 methods 和 lists 初始化，通过 memmove 宏方法将 methods 容量扩容增加 count （即 lists 中的方法列表个数）并将原来的 methods 中的方法列表往后移 count 位，这样原来的方法列表就被移至到 methods 中的后面部分。
 
-对于 methods 方法总列表的处理也就结束了，接下来便是开始添加方法列表至 methods 中。遍历传入的方法总列表 lists，对方法列表 mlist 中的方法进行注册等处理，最后添加到 methods 中。
+对于 methods 方法总列表的处理也就结束了，接下来便是开始添加方法列表至 methods 中。遍历 lists，对方法列表 mlist 中的方法进行表注册等处理，最后添加到 methods 中。
 
-最后的添加是将方法列表添加到 methods 的前面，这样的添加方法使得即使 category 中存在和原来类一样的方法也不会替换掉原来类的方法。调用方法时，会从 methods 的前面开始遍历，当找到方法后就开始调用并终止查询，所以在后面存在一样的方法便不可能会被调用，这也就是我们所说的：category的方法会“覆盖”掉原来类的同名方法。
+最后的添加是将分类方法列表添加到 methods 的前面，这样的添加顺序，使得即使 category 中存在和原来类一样的方法也不会覆盖掉原来类的方法。调用方法时，会从 methods 的前面开始遍历，当找到方法后就开始调用并终止查询，所以在后面存在一样的方法便不可能会被调用。
 
 ### category 与 + load 方法
 创建以下文件，并调用 + load 方法
@@ -570,7 +572,7 @@ NSLog(@"[Category2 load]");
 [Category2 load]
 ```
 #### 从 objc_init 中看 + load 的处理
-这是为什么呢？说好的覆盖呢？我们来看 runtime 入口方法 _objc_init
+这是为什么呢？说好的只会执行一次 load？我们来看 runtime 入口方法 _objc_init
 ```
 void _objc_init(void)
 {
