@@ -57,7 +57,7 @@
 | 配置 | [Hexo SEO设置](https://github.com/MeanMouse/blog/blob/master/contents/hexo/Hexo-SEO设置.md) <br> [next主题集成不蒜子统计](https://github.com/MeanMouse/blog/blob/master/contents/hexo/next主题集成不蒜子统计.md) |
 
 ## ❗️ 错误
-如有错误，麻烦提出，谢谢！
+如有问题，还请指出，非常感谢！
 
 ## 转载
 
