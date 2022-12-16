@@ -41,7 +41,7 @@ MD是应用非常广泛的一个算法家族，尤其是 MD5（Message-Digest Al
 
 ##### 3. 数据处理
 MD5运算要用到一个128位的MD5缓存器，用来保存中间变量和最终结果。该缓存器又可看成是4个32位的寄存器A、B、C、D，初始化为：
-```
+```Objective-C
 A = 0x67452301
 B = 0x0EFCDAB89
 C = 0x98BADCFE
@@ -51,7 +51,7 @@ D = 0x10325476
 以512位分组来处理数据，且每一分组又被划分为16个32位子分组，每组数据进行4轮的逻辑处理，最后的输出由四个32位分组组成，将这四个32位分组级联后将生成一个128位散列值。
 
 对每个数据段都要进行4轮的逻辑处理，在4轮中分别使用4个不同的函数F、G、H、I:
-```
+```Objective-C
 F(X,Y,Z) = (X & Y) | ((~X) & Z);
 G(X,Y,Z) = (X & Z) | (Y & (~Z)); 
 H(X,Y,Z) = X ^ Y ^ Z; 
@@ -60,7 +60,7 @@ I(X,Y,Z) = Y ^ (X | (~Z));
 
 
 MD5 简单实现：
-```
+```Objective-C
 导入CommonDigest.h：
 #import <CommonCrypto/CommonDigest.h>
   
@@ -106,7 +106,7 @@ SHA（Secure Hash Algorithm）是由美国专门制定密码算法的标准机�
 目前SHA1的应用较为广泛，主要应用于CA和数字证书中，另外在目前互联网中流行的BT软件中，也是使用SHA1来进行文件校验的。
 
 SHA 简单实现：
-```
+```Objective-C
 NSString *text = @"sdadasda";
 const char *cstr = [text cStringUsingEncoding:NSUTF8StringEncoding];
 NSData *data = [NSData dataWithBytes:cstr length:text.length];
@@ -207,7 +207,7 @@ Zero:
 填充后：FF FF FF 00 00 00 00 00
 ```
 在 iOS 官方提供一个加密框架 CommonCrypto，通过它可以方便的实现 DES、AES、3DES 等算法
-```
+```Objective-C
 // 注意：各算法对于密钥的长度要求不一致，这里以 DES-CBC 加密 为例
 NSString *key = @"1234567812345678";
 NSString *iv = @"123";

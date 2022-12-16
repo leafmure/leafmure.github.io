@@ -20,7 +20,7 @@ description:
 原因：未回主线程刷新UI
 
 解决方案： 
-```
+```Objective-C
 dispatch_async(dispatch_get_main_queue(), ^{
 // 有关UI的操作
 });

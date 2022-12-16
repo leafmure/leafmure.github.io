@@ -12,13 +12,13 @@ images:
 ### SideTables
 SideTables 是全局表，管理着对象的引用计数和weak引用指针，每个对象在此表中都有对应的一个 SideTable，让我们来看看 SideTables 源码定义
 <!-- more -->
-```
+```Objective-C
 static StripedMap<SideTable>& SideTables() {
 return *reinterpret_cast<StripedMap<SideTable>*>(SideTableBuf);
 }
 ```
 虽然看不懂，但从源码的定义可以看出 SideTables 是通过 StripedMap 来实现的，我们来看一下它的实现
-```
+```Objective-C
 template<typename T>
 class StripedMap {
 
@@ -52,9 +52,9 @@ return const_cast<StripedMap<T>>(this)[p];
 ```
 从上可以看出，StripedMap 的容量大小为：StripeCount = 64，通过 indexForPointer 函数分配在 StripedMap的下标。public 中的应该是读存方法吧（猜测，哈哈。。），可以看到其和 Map 集合一样。
 
-#### SideTable 
+#### SideTable
 SideTable 的定义如下
-```
+```Objective-C
 typedef objc::DenseMap<DisguisedPtr<objc_object>,size_t,true> RefcountMap;
 
 struct SideTable {
@@ -69,7 +69,7 @@ weak_table_t weak_table;
 - weak_table_t: 存放弱变量引用
 
 ##### DisguisedPtr
-```
+```Objective-C
 class DisguisedPtr {
 uintptr_t value;
 
@@ -87,7 +87,7 @@ return (T*)-val;
 DisguisedPtr 对指针进行伪装的类，将指针强转为 uintptr_t （unsigned long）类型的负值，这样类似 leaks 这样的查内存泄漏的工具便无法跟踪到对象。
 
 ##### weak_table_t
-```
+```Objective-C
 struct weak_table_t {
 weak_entry_t *weak_entries;
 size_t    num_entries;
@@ -101,7 +101,7 @@ uintptr_t max_hash_displacement;
 - max_hash_displacement：最大哈希偏移值
 
 ##### weak_entry_t
-```
+```Objective-C
 #define WEAK_INLINE_COUNT 4
 #define REFERRERS_OUT_OF_LINE 2
 
@@ -125,12 +125,13 @@ weak_referrer_t  inline_referrers[WEAK_INLINE_COUNT];
 weak_entry_t 是一个弱引用条目，其映射了引用对象和其被弱引用的指针，referent 便是引用对象，union（联合体） 里存放着弱引用该对象的指针，union 里面的多个成员变量共享同一内存空间。union 中有两个结构体都是存储弱引用对象指针的集合。第一个结构体中 referrers 是一个可进行扩容的集合，而第二个结构体中 inline_referrers 是一个容量为 4 的数组，weak_entry_t 默认使用 inline_referrers 来保存弱引用指针，当此数组容量满后，会使用 referrers 接管保存工作。out_of_line_ness 便是描述存储的弱引用指针是否超出 inline_referrers 的容量。
 
 ### __weak 原理
-```
+
+```Objective-C
 NSString *aa = @"aa";
 __weak NSString *test = aa;
 ```
 上面代码在编译时，模拟的代码如下：
-```
+```Objective-C
 NSString *aa;
 aa = @"aa"
 NSString *test;
@@ -140,7 +141,7 @@ objc_destoryWeak(&obj);
 #### __weak 变量创建
 
 __weak 变量的创建入口是 objc_initWeak 这个函数，其实现是：
-```
+```Objective-C
 id objc_initWeak(id *location, id newObj)
 {
 if (!newObj) {
@@ -154,7 +155,7 @@ return storeWeak<false/*old*/, true/*new*/, true/*crash*/>
 
 ```
 如果 __weak 变量被赋予的对象是 nil 那么，将 __weak 变量置 nil，进入 objc_destoryWeak 销毁函数。storeWeak 函数是一个更新弱变量的函数，此函数有点长，我们分段讲述：
-```
+```Objective-C
 // 如果 HaveOld 为 true，则表明变量需要清理，变量可能为nil
 // 如果 HaveNew 为 true，则表明有一个新值将赋予变量，这个新值可能为 nil
 // 如果 CrashIfDeallocating 为 true，则表明新值 newObj 是释放了的对象（并不是说 newObj 为 nil）或者是一个不支持弱引用的对象。
@@ -191,7 +192,7 @@ newTable = nil;
 }
 ```
 声明一个 previouslyInitializedClass 保存先前初始化的类，声明一个旧值对象 oldObj，一新一旧两个 SideTable（散列表）。从 objc_initWeak 传入的 HaveOld 为 false，HaveNew 为 true，因此将 oldTable 赋值为 nil，从 SideTables 获取 newObj 的 SideTable 赋值给 newTable。两个散列表处理好了后，因为当前是 __weak 变量的创建，处理的是新值，所以下面只给出新值有关的处理代码
-```
+```Objective-C
 // 给新旧散列表加锁
 SideTable::lockTwo<HaveOld, HaveNew>(oldTable, newTable);
 
@@ -213,7 +214,7 @@ goto retry;
 ```
 此步骤为确保弱引用对象 newObj 初始化了，首先通过获取 newObj 的 isa 指针获取它的类，然后判断它的类是否初始化了，如果没有，便打开新旧散列表的锁，获取 newObj 的元类发送 +initialize 消息进行初始化。下面是 storeWeak 函数最后一部分：
 
-```
+```Objective-C
 
 // Assign new value, if any.
 if (HaveNew) {
@@ -240,7 +241,7 @@ return (id)newObj;
 
 #### 弱引用注册
 __weak 变量引用对象时，需要将 __weak 变量的弱引用注册到被引用对象的弱引用表中，这一操作便由 weak_register_no_lock 函数完成。此函数的实现我们分两部分程呈现：
-```
+```Objective-C
 id 
 weak_register_no_lock(weak_table_t *weak_table, id referent_id, 
 id *referrer_id, bool crashIfDeallocating)
@@ -285,7 +286,7 @@ return nil;
 
 如果该引用对象在析构并且 crashIfDeallocating（控制引用对象析构是否需crash）为true，则crash。如果 crashIfDeallocating 为 false，则返回 nil 表示注册弱引用失败。
 
-```
+```Objective-C
 // now remember it and where it is being stored
 weak_entry_t *entry;
 if ((entry = weak_entry_for_referent(weak_table, referent))) {
@@ -306,7 +307,7 @@ return referent_id;
 这下半部分就是将 __weak 变量的弱引用指针存储到被引用对象 newObj 的弱引用表中，完成注册。首先通过 weak_entry_for_referent 函数去查找 newObj 对应的 SideTable 的 weak_table 表中的对应 newObj 的弱引用条目 entry。如果不存在 entry，则用 newobj 和 __weak变量指针生成一个新的弱引用条目 new_entry。接下来执行 weak_grow_maybe 函数看 weak_table 是否需要扩容。
 
 ##### weak_grow_maybe 和 weak_resize
-```
+```Objective-C
 #define TABLE_SIZE(entry) (entry->mask ? entry->mask + 1 : 0)
 
 static void weak_grow_maybe(weak_table_t *weak_table)
@@ -324,7 +325,7 @@ weak_resize(weak_table, old_size ? old_size*2 : 64);
 如果 newObj 是第一次被引用，那么其对应的 weak_table 的容量 mask 应为 0，则 old_size = 0， weak_table 的弱引用条目总数自然也为 0。满足扩容条件，因此初次扩容为 64，执行 weak_resize(weak_table, 64)。
 
 weak_resize 是对 weak_table 扩容的函数，其实现如下：
-```
+```Objective-C
 static void weak_resize(weak_table_t *weak_table, size_t new_size)
 {
 size_t old_size = TABLE_SIZE(weak_table);
@@ -354,7 +355,7 @@ free(old_entries);
 
 扩容完后，便开始将新创建的条目插入 weak_table 的条目列表 weak_entries 中。
 ##### weak_entry_insert
-```
+```Objective-C
 static void weak_entry_insert(weak_table_t *weak_table, weak_entry_t *new_entry)
 {
 weak_entry_t *weak_entries = weak_table->weak_entries;
@@ -385,7 +386,7 @@ weak_table->max_hash_displacement = hash_displacement;
 
 ##### append_referrer
 如果 newObj 是一个被其他变量弱引用的对象，那么能通过 weak_entry_for_referent 函数找到 newObj 对应的弱引用条目。将 __weak 变量的指针保存到弱引用条目的引用指针数组中完成注册，我们来看看这个过程是怎么样的
-```
+```Objective-C
 static void append_referrer(weak_entry_t *entry, objc_object **new_referrer)
 {
 if (! entry->out_of_line()) {
@@ -414,7 +415,7 @@ entry->max_hash_displacement = 0;
 ```
 上部分，判断弱引用条目中存放的引用指针数超过了 inline_referrers 数组的容量。如果没有超过的话（有可能容量已满），则遍历 inline_referrers 找到空位置存放 new_referrer。如果 inline_referrers 容量已满，改用 entry 的 referrers 列表存放引用指针。首先，将 inline_referrers 中存放的引用指针加到 referrers 中，更新设置 num_refs、out_of_line_ness（是否超出了inline_referrers数组的容量）、mask、max_hash_displacement。接下来就进入下部分
 
-```
+```Objective-C
 assert(entry->out_of_line());
 
 if (entry->num_refs >= TABLE_SIZE(entry) * 3/4) {
@@ -423,7 +424,7 @@ return grow_refs_and_insert(entry, new_referrer);
 ```
 如果 entry 的引用指针数达到了存放容量的 3/4，那么对 new_referrer 进行扩容并且插入 new_referrer。
 #### grow_refs_and_insert
-```
+```Objective-C
 #define TABLE_SIZE(entry) (entry->mask ? entry->mask + 1 : 0)
 static void grow_refs_and_insert(weak_entry_t *entry, 
 objc_object **new_referrer)
@@ -456,7 +457,7 @@ if (old_refs) free(old_refs);
 这个函数和 weakTable 的扩容函数 weak_resize 一样，首先通过 old_size 计算出扩容的大小 new_size，然后创建一个 weak_referrer_t 实例 old_refs 存放 entry 中 referrers 列表的引用指针，然后对 entry 的 referrers 进行初始化扩容。最后，如果 old_refs 有数据（即原 entry 存在的引用指针），将引用指针通过 append_referrer 插入到扩容后的 referrers 中，此步骤为递归调用。插入的主要代码便是 append_referrer 的最后一部分，如下
 
 
-```
+```Objective-C
 size_t begin = w_hash_pointer(new_referrer) & (entry->mask);
 size_t index = begin;
 size_t hash_displacement = 0;
@@ -477,7 +478,8 @@ entry->num_refs++;
 
 #### __weak 变量销毁
 __weak 变量销毁会调用 objc_destroyWeak 这个函数
-```
+
+```Objective-C
 void
 objc_destroyWeak(id *location)
 {
@@ -486,7 +488,7 @@ objc_destroyWeak(id *location)
 }
 ```
 其中实现也是通过 storeWeak 函数将 __weak 变量置为nil，下面只显示相关代码
-```
+```Objective-C
 template <bool HaveOld, bool HaveNew, bool CrashIfDeallocating>
 static id 
 storeWeak(id *location, objc_object *newObj)
@@ -533,7 +535,7 @@ return (id)newObj;
 从 objc_destroyWeak 函数传入的 HaveOld = true、HaveNew = false、CrashIfDeallocating = false，首先将 __weak 变量的内存指针指向 oldObj，将当前值变成旧值，对应的从 SideTables 取出对应的 SideTable 为 oldTable，将 newTable 赋值为 nil。然后，将 oldTable 和 newTable 加锁，如果旧值存在并且旧值 __weak 变量内存地址中的值和旧值不相等的话，那么需要重新执行第一步骤以保证销毁工作进行。接下来就是注销 oldObj 对应的 weak_table 中 __weak 变量的弱引用。最后，解开 oldTable 和 newTable 的锁，返回 nil，将 __weak 变量置 nil。
 
 ##### weak_unregister_no_lock
-```
+```Objective-C
 void
 weak_unregister_no_lock(weak_table_t *weak_table, id referent_id, 
 id *referrer_id)
@@ -572,7 +574,7 @@ weak_entry_remove(weak_table, entry);
 首先，通过 weak_entry_for_referent 找到 weak_table 中的弱引用条目 entry，然后通过 remove_referrer 函数从 entry 的引用指针列表中删除 __weak变量指针。如果 entry 中没有引用指针了，那么便会执行 weak_entry_remove 从弱引用表 weak_table 中删除该弱引用条目。
 
 ##### remove_referrer
-```
+```Objective-C
 static void remove_referrer(weak_entry_t *entry, objc_object **old_referrer)
 {
 if (! entry->out_of_line()) {
@@ -615,7 +617,7 @@ entry->num_refs--;
 如果，entry 的引用指针数不超过 inline_referrers 的容量，那么遍历 inline_referrers 找到引用指针的位置并置为nil。如果引用指针数不超过 inline_referrers 的容量，那么便得去 referrers 中找到引用指针置为nil并将 referrers 的长度减一。如果找不到便会调用 objc_weak_error()
 
 ##### weak_entry_remove
-```
+```Objective-C
 static void weak_entry_remove(weak_table_t *weak_table, weak_entry_t *entry)
 {
 // remove entry
@@ -631,7 +633,7 @@ weak_compact_maybe(weak_table);
 此函数将弱引用条目 entry 从 weak_table 中删除，然后通过 weak_compact_maybe 去检查是否需要缩小 weak_table 的容量。
 
 #### weak_compact_maybe
-```
+```Objective-C
 #define TABLE_SIZE(entry) (entry->mask ? entry->mask + 1 : 0)
 
 static void weak_compact_maybe(weak_table_t *weak_table)

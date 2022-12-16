@@ -10,7 +10,7 @@ keywords:
 description:
 images:
 ---
-```
+```swift
 控制台错误日志：
 Invalid update: invalid number of rows in section 0. The number of
 rows contained in an existing section after the update (3) must be
@@ -28,7 +28,7 @@ rows moved into or out of that section (0 moved in, 0 moved out).
 ```
 <!-- more -->
 ### 出现情况
-```
+```swift
 <!--UITableView 处于 reload 中-->
 tableView.beginUpdates()
 tableView.endUpdates()
@@ -39,13 +39,13 @@ tableView.endUpdates()
 
 ### 解决方案
 1. 在beginUpdates和endUpdates插入对cell数量有改变的section的刷新
-```
+```swift
 tableView.beginUpdates()
 tableView.reloadSections(IndexSet([0]), with: .automatic)
 tableView.endUpdates()
 ```
 2. 在 UITableView reloadData 完后操作
-```
+```swift
 DispatchQueue.main.async {
    tableView.beginUpdates()
    tableView.endUpdates()

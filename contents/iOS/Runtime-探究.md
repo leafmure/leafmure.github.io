@@ -20,7 +20,7 @@ images: "/postCover/runtime探究.png"
 
 ### NSObject
 根据源码可以看到 NSObject 的定义
-```
+```Objective-C
 typedef struct objc_class *Class;
 
 @interface NSObject <NSObject> {
@@ -43,7 +43,7 @@ struct objc_object {
 
 #### isa
 isa指针 是一个 union 联合体实例，如下： 
-```
+```Objective-C
 union isa_t {
   isa_t() { }
   isa_t(uintptr_t value) : bits(value) { }
@@ -73,7 +73,7 @@ uintptr_t extra_rc          : 8
 
 #### objc_class
 Class 是一个 struct objc_class 的结构体实例，objc_class 的定义如下：
-```
+```Objective-C
 struct objc_class {
   Class isa  OBJC_ISA_AVAILABILITY;
 
@@ -115,7 +115,7 @@ objc_class 中有指向父类的指针、类名、版本、实例的大小、实
 
 #### method
 method 在 Objective-C 中称为方法，在 C 语言称为函数，表示能够独立完成一个功能的一段代码，method 的源码定义如下：
-```
+```Objective-C
 typedef struct objc_method *Method;
 
 struct objc_method {
@@ -144,7 +144,7 @@ method 是一个 objc_method 结构体实例，结构体中有：方法名、方
 
 ##### SEL
 SEL 的源码定义：
-```
+```Objective-C
 /// An opaque type that represents a method selector.
 typedef struct objc_selector *SEL;
 ```
@@ -152,7 +152,7 @@ SEL 是 selector 在 Objective-C 中的表示类型（Swift中是Selector类）�
 
 ##### IMP
 IMP 的源码定义：
-```
+```Objective-C
 /// A pointer to the function of a method implementation. 
 typedef id (*IMP)(id, SEL, ...); 
 ```
@@ -165,7 +165,7 @@ Type Encoding类型编码，具体可看 [官方文档](https://developer.apple.
 
 #### objc_cache
 objc_cache 的源码定义：
-```
+```Objective-C
 struct objc_cache {
   unsigned int mask /* total = mask + 1 */                 OBJC2_UNAVAILABLE;
   unsigned int occupied                                    OBJC2_UNAVAILABLE;
@@ -202,7 +202,7 @@ struct bucket_t {
 ### 消息传递
 #### 消息发送
 在Objective-C 中方法的调用如：[receiver message]，在编译后会转化成用于消息发送的C函数函数形式，如下：
-```
+```Objective-C
 id objc_msgSend(void /* id self, SEL op, ... */ )
 ```
 当objc_msgSend 函数调用后会做以下事情：
@@ -211,14 +211,14 @@ id objc_msgSend(void /* id self, SEL op, ... */ )
 3. 去 class 的缓存中查找该方法的实现 IMP，如果找到便将方法名和IMP缓存到 cache 中，调用该方法。如果没找到便去父类的方法列表中查找，一直找到根类 NSObject 都没找到的话就开始进入消息转发阶段。
 
 有的时候，我们会被表面调用者迷惑，如：
-```
+```Objective-C
 @implementation Son : Father
 NSLog(@"%@", NSStringFromClass([self class]));
 NSLog(@"%@", NSStringFromClass([super class]));
 ```
 看表面，我们会以为结果是：Son、Father，但正确结果是 Son、Son。self 是类的一个隐藏参数，每个方法的实现的第一个参数即为self，代表对象自身，
 而 super 并不是隐藏参数，它实际上只是一个”编译器标示符”，它负责告诉编译器，当调用方法时，以 self 去调用父类的方法。下面是 super 调用的实现
-```
+```Objective-C
 void objc_msgSendSuper(void /* struct objc_super *super, SEL op, ... */ )
 
 // Specifies the superclass of an instance. 
@@ -238,7 +238,7 @@ struct objc_super {
 #endif
 ```
 错觉在于我们以为最终是 super_class->class 方法，然而在 objc_super 结构体中 super_class 并非是消息接收者，receiver 才是接收者，根据注释我们可以知道 receiver 其实就是 self，所以最终消息发送是这样的
-```
+```Objective-C
 objc_msgSend(objc_super->receiver, @selector(class))
 ```
 
@@ -249,7 +249,7 @@ objc_msgSend(objc_super->receiver, @selector(class))
 
 ##### 动态方法解析
 在直至 NSObject 还没找到方法实现时，若未知消息是实例方法便会调用 -resolveInstanceMethod: 若未知消息是类方法便会调用 +resolveClassMethod: ，这两个方法类似，都是提供机会，动态添加一个处理该消息的方法。
-```
+```Objective-C
 // 使用 runtime 需导入 runtime库，message.h 包含了 objc.h 和 runtime.h
 #import <objc/message.h>
 
@@ -269,7 +269,7 @@ void add_method(id self, SEL _cmd) {}
 
 ##### 备援接收者
 如接收者未能动态添加方法去处理消息，那么下一步便会寻找能处理该消息的接收者。该步骤的处理方法为 -forwardingTargetForSelector: ，可以在此方法中根据方法来选用备援接收者。
-```
+```Objective-C
 - (id)forwardingTargetForSelector:(SEL)selector {
   if (selector == @selector(method)) {
 
@@ -284,7 +284,7 @@ void add_method(id self, SEL _cmd) {}
 
 ##### 完整的消息转发
 如果没有备援接收者，那么唯一能做的便是启用完整的消息转发机制。首先通过 -methodSignatureForSelector: 获取消息方法的细节(即方法参数、返回类型等)，封装成一个 NSMethodSignature(签名) 对象，如果获取消息方法失败，便返回nil，这时便会执行 doesNotRecognizeSelector: 方法终止程序，报 unrecognized selector 错误。
-```
+```Objective-C
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)selector {
   if ([NSStringFromSelector(selector) isEqualToString:@"method"]) {
 
@@ -296,7 +296,7 @@ void add_method(id self, SEL _cmd) {}
 ```
 -methodSignatureForSelector: 中生成NSMethodSignature(签名)对象后，便用此签名对象生成 NSInvocation 对象并通过 -forwardInvocation: 方法发给目标对象，
 在此方法中还有最后一次机会去处理未知消息。
-```
+```Objective-C
 - (void)forwardInvocation:(NSInvocation *)invocation {
 
   SEL sel = invocation.selector;
@@ -320,14 +320,14 @@ void add_method(id self, SEL _cmd) {}
 在消息的转发的第三步的寻找备援接收者中，对象调用未实现的方法，在 forwardingTargetForSelector: 中返回备用接受者去调用该方法，在表面就像是对象自己调用的，这就像子类调用自己未实现而父类实现了的方法。
 
 即使我们利用转发消息来实现了“假”继承，但是NSObject类还是会将两者区分开。像respondsToSelector:和 isKindOfClass:这类方法只会考虑继承体系，不会考虑转发链。
-```
+```Objective-C
 BOOL result1 = [objc respondsToSelector:@selector(method)];
 BOOL result2 = [otherObj respondsToSelector:@selector(method)];
 ```
 result1 为NO, result2 为 YES，因为objc中没有该方法的实现，也并不是 objc 调用的，而是备援接收者 otherObj。
 
 因此如果非要制造假象，反应出这种“假”的继承关系，那么需要重新实现 respondsToSelector:和 isKindOfClass:。
-```
+```Objective-C
 - (BOOL)respondsToSelector:(SEL)selector
 {
   if ([super respondsToSelector:selector]) {
@@ -346,7 +346,7 @@ result1 为NO, result2 为 YES，因为objc中没有该方法的实现，也并�
 
 ```
 除了respondsToSelector:和 isKindOfClass:之外，instancesRespondToSelector: 中也应该写一份转发算法。如果使用了协议，conformsToProtocol: 也一样需要重写。类似地，如果一个对象转发它接受的任何远程消息，它得给出一个 methodSignatureForSelector: 来返回准确的方法描述，这个方法会最终响应被转发的消息。比如一个对象能给它的替代者对象转发消息，它需要像下面这样实现 methodSignatureForSelector:
-```
+```Objective-C
 - (NSMethodSignature*)methodSignatureForSelector:(SEL)selector
 {
   NSMethodSignature* signature = [super methodSignatureForSelector:selector];
@@ -362,7 +362,7 @@ result1 为NO, result2 为 YES，因为objc中没有该方法的实现，也并�
 
 #### Method Swizzling 方法交换
 Method Swizzing是发生在运行时的，用于在运行时将两个Method的 IMP 和 SEL 进行交换，可以通过这一特性来实现 AOP 编程。方法交换实现如下：
-```
+```Objective-C
 #import <objc/runtime.h>
 
 + (void)load {
@@ -414,12 +414,12 @@ Aspect 里面的 -forwardInvocation: 方法会干所有切面的事情，这里�
 > KVO 是通过一种叫做is a-swizzling的技术实现的，isa指针指向维护分派表的对象的类。这个分派表实质上包含指向类实现的方法的指针以及其他数据。当一个观察者为一个对象的属性注册时，观察对象的 isa 指针被修改，指向一个中间类而不是真正的类。因此，isa指针的值不一定反映实例的实际类，不应该依赖isa指针来确定类成员。相反，应该使用类方法来确定对象实例的类。
 
 在属性值发生变化的时候，肯定会调用其 setter 方法。因此，KVO的本质就是监听对象有没有调用被监听属性对应的 setter 方法。具体方法应是需要重写 setter 方法，如何重写的？实验如下：
-```
+```Objective-C
 A *a = [[A alloc]init];
 [a addObserver:self forKeyPath:@"name" options:NSKeyValueObservingOptionNew context:nil];
 ```
 打印观察isa指针的指向
-```
+```Objective-C
 // a 注册 KVO 监听前
 NSLog(@"Printing description of a->isa = %@",ClassMethodNames(object_getClass(a)));
 
@@ -437,7 +437,7 @@ NSKVONotifying_A
 
 
 在新的类中会重写对应的 setter 方法，是为了在 setter方法中增加另外两个方法的调用，回调值的更改状态。
-```
+```Objective-C
 - (void)willChangeValueForKey:(NSString *)key;
 - (void)didChangeValueForKey:(NSString *)key;
 //
@@ -453,7 +453,7 @@ context:(void *)context;
 
 #### Associated Object 关联对象
 有时需要在对象中存放相关信息(增加属性)时，我们会从对象所属的类中继承一个子类，然后改用该子类。除此外我们可以使用“关联对象”将对象关联其他对象，对象通过 “键” 来区分，存储对象值时，可以指明“存储策略”维护“内存管理语义”。
-```
+```Objective-C
 OBJC_ASSOCIATION_ASSIGH   =>  assign
 OBJC_ASSOCIATION_RETAIN_NONATOMIC  => nonatomic,retain
 OBJC_ASSOCIATION_COPY_NONATOMIC  => nonatomic,copy
@@ -470,7 +470,7 @@ id objc_getAssociatedObject(id object, void*key)
 void objc_removeAssociatedObjects(id object)
 ```
 这种方法可以为已有类增加属性
-```
+```Objective-C
 #import "objc/runtime.h"
 
 @interface NSObject (AssociatedObject)
@@ -491,7 +491,7 @@ void objc_removeAssociatedObjects(id object)
 ```
 
 #### class_addMethod 动态增加方法
-```
+```Objective-C
 class_addMethod(Class cls, SEL name, IMP imp, const char *types) 
 ```
 - cls 对象
@@ -502,7 +502,7 @@ class_addMethod(Class cls, SEL name, IMP imp, const char *types)
 
 #### NSCoding 自动归档和自动解档
 当类的属性多起来时，手写对应属性的归档和解档代码就多起来了，并且都是一样的代码。可以用 runtime 去获取类的所有成员属性，遍历属性，利用 KVC 去完成归档和解档。
-```
+```Objective-C
 #import <objc/message.h>
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
@@ -542,7 +542,7 @@ class_addMethod(Class cls, SEL name, IMP imp, const char *types)
 
 #### 字典和模型互相转换
 ##### 字典转模型
-```
+```Objective-C
 - (void)objectWithDictionary:(NSDictionary *)dictionary {
 
   for (NSString *key in dictionary.allKeys) {
@@ -568,7 +568,7 @@ class_addMethod(Class cls, SEL name, IMP imp, const char *types)
 ```
 
 ##### 模型转字典
-```
+```Objective-C
 - (NSDictionary *)keyValuesWithObject {
   // 1. 获取属性列表
   unsigned int outCount = 0;

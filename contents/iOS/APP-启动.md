@@ -154,7 +154,7 @@ Xcode 的链接器叫做 ld, ld 有一个参数叫 Order File（Build Settings�
 
 开启 SanitizerCoverage 的方法是：在 build settings 里的 “Other C Flags” 中添加 -fsanitize-coverage=func,trace-pc-guard。如果含有 Swift 代码的话，还需要在 “Other Swift Flags” 中加入 -sanitize-coverage=func 和 -sanitize=undefined。所有链接到 App 中的二进制都需要开启 SanitizerCoverage，这样才能完全覆盖到所有调，另外，设置了 -fsanitize-coverage=func,trace-pc-guard 则必须实现 __sanitizer_cov_trace_pc_guard_init 和 __sanitizer_cov_trace_pc_guard 函数。
 
-```
+```Objective-C
 官方示例
 /// 插入 __sanitizer_cov_trace_pc_guard 函数的符号范围回调
 void __sanitizer_cov_trace_pc_guard_init(uint32_t *start,
@@ -181,13 +181,13 @@ void __sanitizer_cov_trace_pc_guard(uint32_t *guard) {
 bl 能实现跳转到某个地址的汇编指令，其原理就是修改 pc 寄存器的值来指向到要跳转的地址，而且实际上 B 函数中也会对 x29 / x30 寄存器的值做保护，防止子函数又跳转其他函数会覆盖掉 x30 的值 , 当然叶子函数除外。
 当 B 函数执行 ret 也就是返回指令时，就会去读取 x30 寄存器的地址，跳转过去，因此也就回到了 A函数的下一步。
 
-```
+```Objective-C
 void *PC = __builtin_return_address(0); 
 ```
 它的作用其实就是去读取 x30 中所存储的要返回到下一条指令的地址，也就是说可在 __sanitizer_cov_trace_pc_guard 获取到被插桩函数地址。
 
 在 dlfcn.h 中有一个方法如下:
-```
+```Objective-C
 typedef struct dl_info {
         const char      *dli_fname;     /* 所在文件 */
         void            *dli_fbase;     /* 文件地址 */
@@ -200,7 +200,7 @@ int dladdr(const void *, Dl_info *);
 ```
 由于 __sanitizer_cov_trace_pc_guard 在不同函数里调用，所以涉及多线程调用，考虑到这个方法调用频率高，使用锁会影响性能，这里使用苹果底层的原子队列 (底层实际上是个栈结构，利用队列结构 + 原子性来保证顺序 ) 来实现。
 
-```
+```Objective-C
 #import <dlfcn.h>
 #import <libkern/OSAtomic.h>
 #include <sanitizer/coverage_interface.h>

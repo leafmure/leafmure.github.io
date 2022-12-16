@@ -30,7 +30,7 @@ images:
 消息调度是最灵活也是最慢的调度技术，最快是在方法缓存表中找到方法实现，最慢的时候，运行时需要爬遍整个类层次结构，然后分析是否动态添加了方法实现，是否提供了其他对象处理，是否有最后的容错处理。Objective-C 在很大程度上依赖于消息调度，并且还通过 dynamic @objc 向 Swift 提供运行时功能。
 
 ### 类的函数调度方式
-```
+```swift
 /// main.swift
 class Person {
     func eat() {}
@@ -190,7 +190,7 @@ bl: 跳转到某地址
 
 #### sil_vtable
 sil_vtable SIL源码实现如下：
-```
+```swift
 // swift-main/docs/SIL.rst
 decl ::= sil-vtable
 sil-vtable ::= 'sil_vtable' identifier '{' sil-vtable-entry* '}'
@@ -249,7 +249,7 @@ class::
 从源码注释中可得知，在类中 class_method、super_method、objc_method 和 objc_super_method 都采用动态调度。类的每个函数和继承的函数，都在 sil_vtable 中映射相对应的函数实现。swift 的 AST 记录了重载关系，vtable中的函数声明是指向最后的衍生类的函数。为了标明重载函数的所属，使用了原始类名作为前缀。
 
 再看一下类的 v-table 的初始化流程
-```
+```swift
 static void initClassVTable(ClassMetadata *self) {
   const auto *description = self->getDescription();
   auto *classWords = reinterpret_cast<void **>(self);
@@ -273,7 +273,7 @@ static void initClassVTable(ClassMetadata *self) {
 
 
 ### 结构体的函数调度方式
-```
+```swift
 struct TestStruct {
     func test() {}
     static func test2() {}
@@ -309,7 +309,7 @@ bb0(%0 : $Int32, %1 : $UnsafeMutablePointer<Optional<UnsafeMutablePointer<Int8>>
 由上可以知道，在结构体中的函数都是静态调度。
 
 ### 协议的函数调度方式
-```
+```swift
 // main
 sil @main : $@convention(c) (Int32, UnsafeMutablePointer<Optional<UnsafeMutablePointer<Int8>>>) -> Int32 {
 bb0(%0 : $Int32, %1 : $UnsafeMutablePointer<Optional<UnsafeMutablePointer<Int8>>>):
@@ -331,7 +331,7 @@ bb0(%0 : $Int32, %1 : $UnsafeMutablePointer<Optional<UnsafeMutablePointer<Int8>>
 witness_method 采用的是 Protocol Witness Table(简称PWT)调度，和 v-table 一样, PWT 内存储的是方法数组，里面包含了函数实现的指针地址，调度函数时，通过获取对象的内存地址和函数的 offset 去查找的。
 
 #### sil-witness-table
-```
+```swift
 // swift-main/docs/SIL.rst
 
 decl ::= sil-witness-table
@@ -342,7 +342,7 @@ SIL 将通用类型动态分派所需的信息编码为 witness table，这些�
 
 
 看下面一段代码，结果会输出什么呢？
-```
+```swift
 protocol RunProtocol {
     func run()
 }
@@ -372,7 +372,7 @@ extension run
 structTestSuper.run() 调用者是 ProtocolStructTestSuper 类型，采用 class_method 方式调度，所以打印：sadda。structTestSuper2.run() 调用
 者是 RunProtocol 协议类型，采用 witness_method 方式调度，由于父类 ProtocolStructTest 接受 RunProtocol 协议并采用协议的默认实现方式，协议的默认实现函数存放在 RunProtocol 的 witness Table ，因此 ProtocolStructTest 的虚函数表中没有该函数，子类 ProtocolStructTestSuper 也无法继承到该函数。
 
-```
+```swift
 sil_vtable ProtocolStructTest {
   #ProtocolStructTest.init!allocator: (ProtocolStructTest.Type) -> () -> ProtocolStructTest : @$s4main18ProtocolStructTestCACycfC	// ProtocolStructTest.__allocating_init()
   #ProtocolStructTest.deinit!deallocator: @$s4main18ProtocolStructTestCfD	// ProtocolStructTest.__deallocating_deinit
@@ -394,7 +394,7 @@ sil_witness_table hidden ProtocolStructTest: RunProtocol module main {
 
 ### final 关键字
 用 final 关键字修饰，表示不允许对其修饰的内容进行继承或者重新操作。当用 final 修饰类时，就无法对类进行继承以及对函数的重写，那对于函数调度有什么样的影响呢？
-```
+```swift
 final class Person {
     func eat() {}
     static func eat2() {}

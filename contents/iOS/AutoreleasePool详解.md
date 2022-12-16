@@ -13,7 +13,7 @@ iOS 的内存管理是通过引用计数管理的，当对象的引用计数为 
 ### 二、AutoreleasePool 是什么？
 #### 2.1  创建自动释放池
 在 MRC 下，我们可以用 NSAutoreleasePool 或者@autoreleasepool 去手动创建一个 AutoreleasePool
-```
+```Objective-C
 NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 Class *obj = [[Class alloc] init];
 /// 加入 pool
@@ -21,21 +21,21 @@ Class *obj = [[Class alloc] init];
 [pool release]
 ```
 在 ARC 下，已经禁止使用 NSAutoreleasePool 类以及 retain、release、autorelease 等调用方法，只能通过 @autoreleasepool 创建自动释放池。
-```
+```Objective-C
 @autoreleasepool {
     /// 括号中，存在 autorelease 对象时，自动加入 pool 中。
 }
 ```
 #### 2.2  @autoreleasepool 源码分析
 我们估计平时很少使用 @autoreleasepool 显式创建 AutoreleasePool，在工程的 Main 文件，倒是能看到 @autoreleasepool 使用，mian 函数如下：
-```
+```Objective-C
 int main(int argc, const char * argv[]) {
     @autoreleasepool {}
     return 0;
 }
 ```
 通过 Clang 命令将上述代码转换成 C++ 源码：
-```
+```Objective-C
 /// -> clang -rewrite-objc main.m
 /// -> main.cpp
 ......
@@ -56,7 +56,7 @@ int main(int argc, const char * argv[]) {
 
 #### 2.3  AutoreleasePoolPage
 objc_autoreleasePoolPush() 和 objc_autoreleasePoolPop() 这两个函数做了什么呢，让我们去 objc4 源码 查看：
-```
+```Objective-C
 /// -> NSObject.mm
 void * objc_autoreleasePoolPush(void)
 {
@@ -69,7 +69,7 @@ void objc_autoreleasePoolPop(void *ctxt)
 }
 ```
 从上述代码可以看出，objc_autoreleasePoolPush() 和 objc_autoreleasePoolPop() 内部是通过 AutoreleasePoolPage 去调用 push() 和 pop() 函数，AutoreleasePoolPage 明显是 @autoreleasepool 基础实现类。AutoreleasePoolPage 是如何管理 autorelease 对象的呢？让我们来看一下 AutoreleasePoolPage 的实现结构：
-```
+```Objective-C
 /// -> NSObject.mm
 class AutoreleasePoolPage : private AutoreleasePoolPageData
 {
@@ -150,7 +150,7 @@ AutoreleasePoolPage 类继承自 AutoreleasePoolPageData，从 AutoreleasePoolPa
 ![image](../postImage/AutoreleasePool详解/psb-01.png)
 
 AutoreleasePoolPage 拥有 begin、end、empty、full 这些方法来描述 Page 的容量情况，实现代码如下：
-```
+```Objective-C
 id * begin() {
    /// Page自己的地址+Page对象的大小56个字节；
    return (id *) ((uint8_t *)this+sizeof(*this));
@@ -175,7 +175,7 @@ bool full() {
 #### 2.4  AutoreleasePoolPage 的 push() 和 pop()
 ##### 2.4.1  push()
 AutoreleasePoolPage 是如何操纵 autorelease 对象的添加呢，让我们先看一下 push() 的源码实现：
-```
+```Objective-C
 /// NSObject.mm
 static inline void *push() {
    id *dest;
@@ -190,7 +190,7 @@ static inline void *push() {
 }
 ```
 当 AutoreleasePool 创建后，AutoreleasePoolPage 会调用 push() 方法加入 POOL_BOUNDARY 哨兵对象。push() 内部加入对象时，会判断是否 AutoreleasePoolPage 对象存在，没有的话，调用  autoreleaseNewPage() ，让我们看一下 autoreleaseNewPage 的实现：
-```
+```Objective-C
 static __attribute__((noinline))
 id *autoreleaseNewPage(id obj)
 {
@@ -272,7 +272,7 @@ autoreleaseNewPage() 内部逻辑如下：
 - 如果 Page 不存在，调用 autoreleaseNoPage() 创建第一个 AutoreleasePoolPage，并将 autorelease 对象添加进去。
 
 再让我们看一下 push() 方法中，当存在 AutoreleasePoolPage 时 autoreleaseFast()  函数实现：
-```
+```Objective-C
 static inline id *autoreleaseFast(id obj)
 {
     AutoreleasePoolPage *page = hotPage();
@@ -288,7 +288,7 @@ static inline id *autoreleaseFast(id obj)
 autoreleaseFast() 里处理的事情跟 autoreleaseNewPage() 差不多，都是判断 hotPage()的存在以及是否满容量做相对应的处理。
 
 对象要添加到 AutoreleasePool 中，就要调用 autorelease()，其内部也是通过 autoreleaseFast() 方法添加的，代码实现如下：
-```
+```Objective-C
 static inline id autorelease(id obj)
 {
     ASSERT(!obj->isTaggedPointerOrNil());
@@ -303,7 +303,7 @@ static inline id autorelease(id obj)
 ```
 ##### 2.4.2  pop()
 前面我们已经了解了 autorelease 对象的添加，接下来让我们了解 autorelease 对象的释放：
-```
+```Objective-C
 static inline void
 pop(void *token)
 {
@@ -354,7 +354,7 @@ pop() 方法内部流程如下：
 - 调用 popPage() 函数，内部会调用 releaseUntil() 释放 autorelease 对象。
 
 让我们来看一下 releaseUntil() 是如何释放对象的：
-```
+```Objective-C
 void releaseUntil(id *stop) 
 {
     // Not recursive: we don't want to blow out the stack 
@@ -411,7 +411,7 @@ releaseUntil() 内通过 while 循环，从最后一个 autorelease 对象开始
 
 ### 三、  POOL_BOUNDARY 的作用
 从  AutoreleasePoolPage pop() 的过程，我们可以知道 POOL_BOUNDARY 明显的一点就是作为一个边界对象，这样 AutoreleasePoolPage 可以保证将该释放的对象释放，这一作用在 @autoreleasepool 嵌套使用中更能体现，先让我们来看一下单个 @autoreleasepool 管理 autorelease 对象的内存分布。
-```
+```Objective-C
 extern void _objc_autoreleasePoolPrint(void);
 
 _objc_autoreleasePoolPrint();
@@ -425,7 +425,7 @@ _objc_autoreleasePoolPrint();
 ```
 _objc_autoreleasePoolPrint() 可以在控制台输出当前 AutoreleasePool 中的对象信息，_objc_autoreleasePoolPrint() Runtime 中的隐匿函数，所以得
 extern void _objc_autoreleasePoolPrint(void)，以下是输出信息：
-```
+```Objective-C
 objc[1529]: ##############
 objc[1529]: AUTORELEASE POOLS for thread 0x10008c580
 objc[1529]: 0 releases pending.
@@ -458,7 +458,7 @@ Program ended with exit code: 0
 ![image](../postImage/AutoreleasePool详解/psb-02.png)
 
 再来看看多层 @autoreleasepool 嵌套情况：
-```
+```Objective-C
 int main(int argc, const char * argv[]) {
     _objc_autoreleasePoolPrint();
     @autoreleasepool {
@@ -492,7 +492,7 @@ AutoreleasePool 创建一般是这两种方式：
 主线程因为会自动开 RunLoop，因此 AutoreleasePool 会自动创建，但其他线程的 RunLoop 是默认未创建的，那它们的  autorelease 对象如何管理呢？子线程中如果没有开启 RunLoop，当存在 autorelease 对象时，就会创建 AutoreleasePool 并添加到 AutoreleasePool 中，等线程销毁时，AutoreleasePool 就会释放。
 
 @autoreleasepool 的手动创建，一般用于避免内存峰值，比如在 for 循环中创建了大量的临时对象，我们需要在循环体内创建 AutoreleasePool ，当一次循环结束后，释放临时对象，数组系统遍历方法内部为避免这种情况，内部会自动创建 AutoreleasePool，但请注意只有 Autorelease类型的对象才会交给AutoreleasePool去管理。
-```
+```Objective-C
 [array enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
     // 这里被一个局部@autoreleasepool包围着
 }];

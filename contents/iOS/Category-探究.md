@@ -14,7 +14,7 @@ images: "/postCover/Category-探究.png"
 <!-- more -->
 ### 与 category 相似的 extension
 extension(类扩展) 从代码看起来和 category 十分相像，代码如下:
-```
+```Objective-C
 // extension
 @interface Father ()
 @property (nonatomic,strong) NSString *name;
@@ -35,7 +35,7 @@ extension(类扩展) 从代码看起来和 category 十分相像，代码如下:
 
 ### category 实现和加载
 category 的源码定义如下
-```
+```Objective-C
 typedef struct objc_category *Category;
 
 // objc 2.0
@@ -77,7 +77,8 @@ property_list_t *propertiesForMeta(bool isMeta, struct header_info *hi);
 
 #### 为什么存在 instanceProperties 和 _classProperties
 _classProperties 类的属性，对于我们来说可能很陌生，在开发中很少使用，它的定义和我们常定义的属性差不多，只不过 setter 和 getter方法为 “+ 方法”（类方法）。
-```
+
+```Objective-C
 // instance property
 @property (nonatomic,strong) NSString *name;
 - (NSString *)name;
@@ -89,7 +90,7 @@ _classProperties 类的属性，对于我们来说可能很陌生，在开发中
 + (void)setName:(NSString *)name
 ```
 在前面说了：category 是不能添加实例变量的，我们可能就会疑惑了，为什么会有 instanceProperties 和 _classProperties，这我们就得明白成员变量、实例变量、属性的联系了。
-```
+```Objective-C
 @interface Father : NSObject {
 
 int age;
@@ -102,7 +103,7 @@ NSData *data;
 ```
 ##### 成员变量
 在 @interface Father : NSObject {} 中声明的变量都是成员变量，编译器不会自动为成员变量声明 setter 和 getter 方法，因此我们无法通过 .语法糖访问成员变量，可通过 self -> 变量名或直接使用变量名，如：
-```
+```Objective-C
 age = 23;
 self -> age = 24;
 ```
@@ -121,7 +122,7 @@ self -> age = 24;
 在 category 中添加属性后能编译成功，但一旦使用了属性，程序便会崩溃，原因为：未找到属性的 setter 或 getter 方法的实现，于是我们开始为属性手动实现 setter 或 getter 方法，我们会发现无法访问到属性。通过 runtime 的 class_copyPropertyList() 获取类的所有属性 以及 class_copyIvarList() 获取类的变量，我们可以发现，在属性列表中存在该属性，而在变量列表中却没有对应的实例变量，所以我们可知编译器未给属性生成对应的实例变量，因此手动实现 setter 和 getter 方法的想法破灭了。当我们试图在 category 创建成员变量时，编译器会报 Instance variables may not be placed in categories 错误。
 
 正所谓上有政策下有对策，我们可以创建一个全局变量来保存属性值，就如这样:
-```
+```Objective-C
 @interface NSObject (test)
 @property (nonatomic,strong) NSString *name;
 @end
@@ -141,7 +142,7 @@ _name = name;
 @end
 ```
 或者我们可以通过 runtime的关联对象 来实现属性的 setter 和 getter 方法
-```
+```Objective-C
 @interface NSObject (test)
 @property (nonatomic,strong) NSString *name;
 
@@ -165,7 +166,7 @@ objc_setAssociatedObject(self, @selector(name), name, OBJC_ASSOCIATION_RETAIN_NO
 所以在 category 中无法添加实例变量，但是可以添加属性，但是不能添加类属性（后节分类的加载有提到）。
 
 #### 编译器对 category 的处理
-```
+```Objective-C
 @interface NSObject (Category)
 
 - (void)printDescription;
@@ -182,7 +183,7 @@ NSLog(@"%@",self.description);
 @end
 ```
 使用 clang -rewrite-objc 文件名.m 命令对上面代码转换成源码
-```
+```Objective-C
 static struct /*_method_list_t*/ {
 unsigned int entsize;  // sizeof(struct _objc_method)
 unsigned int method_count;
@@ -224,7 +225,7 @@ static struct IMAGE_INFO { unsigned version; unsigned flag; } _OBJC_IMAGE_INFO =
 
 #### category 加载
 Objective-C 运行时入口方法：
-```
+```Objective-C
 // objc4-706  objc-os.mm
 void _objc_init(void)
 {
@@ -280,7 +281,7 @@ dyld_register_image_state_change_handler(dyld_image_state_dependents_initialized
 }
 ```
 以上是三个版本的定义，最新版本 706 变得更简洁了。category 附加到类上面是在 map_images/map_2_images（images这里表示二进制文件(可执行文件或者动态链接库 .iso 文件)编译后的符号、代码） 的时候发生的，map_images/map_2_images 两个版本中，都在在方法里调用了 map_images_nolock 方法，在 map_images_nolock 函数中加载 images
-```
+```Objective-C
 // Find all images with Objective-C metadata.
 hCount = 0;
 i = infoCount;
@@ -307,7 +308,7 @@ _gcForHInfo2(hi));
 }
 ```
 在加载完 images 后，便在方法末尾调用 _read_images函数，我们在 _read_images函数 找到处理分类的相关代码
-```
+```Objective-C
 // Discover categories. 
 for (EACH_HEADER) {
 category_t **catlist = 
@@ -356,7 +357,7 @@ getName(cls), cat->name);
 首先，通过 _getObjc2CategoryList(hi, &count) 获取的 catlist 就是在编译器编译时的 L_OBJC_LABEL_CATEGORY_$。获取到 category_t 列表后，开始遍历 catlist，将 instanceMethods（实例方法）、protocols（协议）、instanceProperties（属性）添加到类上，将 classMethods（类方法）、protocols（协议）添加到类的元类（meta class）上。在添加到元类时，有一段注释 /* ||  cat->classProperties */ 可见并不会将 classProperties （类属性）添加到元类上，不支持在分类给类添加类属性。
 
 ##### addUnattachedCategoryForClass 函数
-```
+```Objective-C
 class_t *cls = remapClass(cat->cls);
 addUnattachedCategoryForClass(cat, cls, hi);
 
@@ -388,7 +389,7 @@ NXMapInsert(cats, cls, list);
 
 ##### remethodizeClass 函数
 remethodizeClass 是去处理分类方法添加的入口
-```
+```Objective-C
 // 删除无关分类的代码
 static void remethodizeClass(struct class_t *cls)
 {
@@ -417,7 +418,7 @@ if (vtableAffected) flushVtables(cls);
 }
 ```
 首先会执行 unattachedCategoriesForClass(cls)，以下是 unattachedCategoriesForClass 函数的实现
-```
+```Objective-C
 /***********************************************************************
 * unattachedCategoriesForClass
 * Returns the list of unattached categories for a class, and 
@@ -434,7 +435,7 @@ return NXMapRemove(unattachedCategories(), cls);
 根据注释和方法名，我们可以很清晰的知道 unattachedCategoriesForClass 做了什么，调用 NXMapRemove 函数，NXMapRemove 函数以 cls 为 key 从 NXMapTable 中删除类映射的分类列表并返回类的分类列表，最终 unattachedCategoriesForClass 将 NXMapRemove 函数得到分类列表返回。
 
 在执行 unattachedCategoriesForClass 函数获得分类列表后，将分类列表传入 attachCategoryMethods 函数中，attachCategoryMethods 函数的实现如下
-```
+```Objective-C
 attachCategoryMethods(class_t *cls, category_list *cats, 
 BOOL *outVtablesAffected)
 {
@@ -463,7 +464,7 @@ _free_internal(mlists);
 }
 ```
 此函数中，**mlists 是个二维数组，遍历 cats 分类列表，将分类方法数据存入 **mlists 中，并将 mlists 存储到 class_rw_t 的方法列表中。最后将 mlists 传入 attachMethodLists 函数中，该函数的实现
-```
+```Objective-C
 static void 
 attachMethodLists(class_t *cls, method_list_t **lists, int count, 
 BOOL methodsFromBundle, BOOL *outVtablesAffected)
@@ -525,7 +526,7 @@ if (outVtablesAffected) *outVtablesAffected = vtablesAffected;
 
 ### category 与 + load 方法
 创建以下文件，并调用 + load 方法
-```
+```Objective-C
 // Father.h
 @interface Father : NSObject
 + (void)load;
@@ -562,18 +563,18 @@ NSLog(@"[Category2 load]");
 }
 ```
 以编译文件顺序为：Father、Father+Category、Father+Category2，根据上节讲述的，我们可能会觉的打印的结果如下：
-```
+```Objective-C
 [Category2 load]
 ```
 但其实正确的结果如下：
-```
+```Objective-C
 [Father load]
 [Category load]
 [Category2 load]
 ```
 #### 从 objc_init 中看 + load 的处理
 这是为什么呢？说好的只会执行一次 load？我们来看 runtime 入口方法 _objc_init
-```
+```Objective-C
 void _objc_init(void)
 {
 // fixme defer initialization until an objc-using image is found?
@@ -590,11 +591,11 @@ dyld_register_image_state_change_handler(dyld_image_state_dependents_initialized
 }
 ```
 在 map_images 执行完后，category 的方法也就添加到类上了，最后执行
-```
+```Objective-C
 dyld_register_image_state_change_handler(dyld_image_state_dependents_initialized, 0/*not batch*/, &load_images);
 ```
 初始化 dyld 所需的依赖和注册 load_images 回调通知，当 iamge 被加载就会通知 runtime 处理，该函数的实现如下
-```
+```Objective-C
 
 /***********************************************************************
 * load_images
@@ -627,7 +628,7 @@ return NULL;
 }
 ```
 通过 load_images_nolock 函数查询 images中是否有 + load 方法并收集 + load方法，该方法实现如下
-```
+```Objective-C
 load_images_nolock(enum dyld_image_states state,uint32_t infoCount,
 const struct dyld_image_info infoList[])
 {
@@ -650,7 +651,7 @@ return found;
 }
 ```
 使用 while 循环遍历加载 iamges 中的 + load，其中处理便是 prepare_load_methods 这个函数，我们看看这个函数的实现
-```
+```Objective-C
 void prepare_load_methods(header_info *hi)
 {
 size_t count, i;
@@ -678,7 +679,7 @@ add_category_to_loadable_list((Category)cat);
 我们可以看到，首先被处理的是类的 + load 方法，将类和类的 + load  通过 schedule_class_load 函数中的 add_class_to_loadable_list 函数收集在 loadable_classes 中，然后才是处理分类中的 + load 方法，将分类和分类中的 + load方法收集在 loadable_categories 中。至此，+ load 收集准备工作也就完成了。
 
 回到 load_images 函数， 如果有 + load 方法的话，那么 load_images_nolock 则会返回 YES，那么接下来便会执行 call_load_methods 函数，调用所有收集的 + load 方法，我们来看看它的实现
-```
+```Objective-C
 void call_load_methods(void)
 {
 static BOOL loading = NO;

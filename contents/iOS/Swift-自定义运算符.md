@@ -11,7 +11,7 @@ description:
 images:
 ---
 ##### 运算符定义类型
-```
+```swift
 var a = 0
 var b = 1
 a += 1
@@ -27,14 +27,14 @@ a--
 <!-- more -->
 具体应用如下：
 
-```
+```swift
 prefix func --(v: inout Int) {
     v = v - 1
 }
 var a = 0
 --a
 ```
-```
+```swift
 infix operator ++
 func ++(leftv: Int, rightv: Int) -> Int {
     return leftv + rightv + rightv
@@ -42,7 +42,7 @@ func ++(leftv: Int, rightv: Int) -> Int {
 a ++ 1
 
 ```
-```
+```swift
 postfix func --(v: inout Int) {
     v = v - 1
 }
@@ -53,7 +53,7 @@ a--
 
 ##### 自定义运算符
 Swift 支持声明和实现自定义运算符，自定义运算符需要在全局作用域，通过关键字 operator 进行定义，同时要指定运算符类型，运算符命名只能包含这些字符：/ = - + * % < >！& | ^。~
-```
+```swift
 / = - + * % < >！& | ^。~
 
 postfix operator ~

@@ -28,7 +28,7 @@ WebView 内容加载速度较原生有肉眼可见的延迟，在进入帖子详
 #### WebView 资源缓存
 ##### URLScheme 设置
 WKWebView 提供 WKURLSchemeHandler 机制拦截资源请求，需传入自定义的资源链接 URLScheme，不能是 http、https，必须是自己定义的。
-```
+```swift
 // WebURLSchemeHandler
 static let urlScheme = "hooimageprex"
 
@@ -40,7 +40,7 @@ let webView = WKWebView.init(frame: CGRect(x: 0, y: 0, width: kScreenWidth - 16,
 
 ##### WKURLSchemeHandler 资源请求拦截处理
 使用 WKURLSchemeHandler，需实现两个协议方法
-```
+```swift
 /// 资源请求开始
 func webView(_ webView: WKWebView, start urlSchemeTask: WKURLSchemeTask)
 
@@ -48,7 +48,7 @@ func webView(_ webView: WKWebView, start urlSchemeTask: WKURLSchemeTask)
 func webView(_ webView: WKWebView, stop urlSchemeTask: WKURLSchemeTask) 
 ```
 WebView 进行资源请求时，便会调用该方法，我们需将资源地址恢复成正常的 http 地址，以资源地址为 key 去获取资源缓存，若获得缓存，则将资源数据填充给 urlSchemeTask。若未获得缓存，则通过资源地址下载，下载成功后，将资源数据填充给 urlSchemeTask 并缓存。如下载失败，调用 didFailWithError 方法结束资源请求。
-```
+```swift
 /// 资源请求开始
 func webView(_ webView: WKWebView, start urlSchemeTask: WKURLSchemeTask) {
     urlSchemeTaskList[urlSchemeTask.description] = false
@@ -85,7 +85,7 @@ func webView(_ webView: WKWebView, start urlSchemeTask: WKURLSchemeTask) {
 }
 ```
 缓存未命中情况下，根据资源地址下载资源填充到 urlSchemeTask 并缓存
-```
+```swift
 /// 缓存未命中，需自行下载并置入缓存
 private func needNetWorkRequestImageSource(urlSchemeTask: WKURLSchemeTask, urlString: String) {
     if let downURL = URL.safe(urlString: urlString) {
@@ -134,14 +134,14 @@ private func needNetWorkRequestImageSource(urlSchemeTask: WKURLSchemeTask, urlSt
 ```
 
 当 WebView 释放时，urlSchemeTask 会停止任务并调用 "func webView(_ webView: WKWebView, stop urlSchemeTask: WKURLSchemeTask)" ，如果这时我们还往 urlSchemeTask 中填充资源数据，会引发程序崩溃。
-```
+```swift
 /// 资源请求结束
 func webView(_ webView: WKWebView, stop urlSchemeTask: WKURLSchemeTask) {
     urlSchemeTaskList[urlSchemeTask.description] = true
 }
 ```
 urlSchemeTaskList 用于记录 urlSchemeTask 是否停止任务，在上述关于 urlSchemeTask 填充资源数据之前，都会对 urlSchemeTask 的状态进行判断。
-```
+```swift
 /// 判断资源请求是否已停止
 private func urlSchemeTaskIsStop(urlSchemeTask: WKURLSchemeTask) -> Bool {
     return urlSchemeTaskList[urlSchemeTask.description] ?? false
@@ -149,7 +149,7 @@ private func urlSchemeTaskIsStop(urlSchemeTask: WKURLSchemeTask) -> Bool {
 ```
 #### HooWKWebViewPool 缓存池
 创建缓存池单例
-```
+```swift
 /// webView 缓存池
 class HooWKWebViewPool {
     static let share = HooWKWebViewPool()
@@ -165,7 +165,7 @@ class HooWKWebViewPool {
 ```
 
 根据 HTML 字符串和对应的缓存标识进行预加载处理，首先，通过缓存标识判断，该内容是否已经进行了预加载处理，若未进行过预加载处理，则创建新的 WebView 去加载 HTML 字符串，并存入缓存池中。
-```
+```swift
 /// 预加载web
 /// - Parameter infoList: 预加载信息列表
 func prepare(infoList: [HooWKWebViewPrepareInfo]) {

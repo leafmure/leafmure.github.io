@@ -18,11 +18,11 @@ images: "/postCover/EventKit-日历事件.png"
 #### EKEventStore
 EKEventStore 类似一个数据库，管理着日历事件和提醒事项，我们通过它来操作日历事件和提醒事项。
 首先我们创建一个 EKEventStore：
-```
+```Objective-C
 EKEventStore *eventStore = [[EKEventStore alloc] init];
 ```
 获取授权，entityType 是授权实体类型，completion 是授权状态回调
-```
+```Objective-C
 /*
 typedef NS_ENUM(NSUInteger, EKEntityType) {
 EKEntityTypeEvent,  // 日历事件
@@ -45,7 +45,7 @@ if (granted) {
 
 #### EKSource
 日历源中拥有多个日历对象，将日历对象进行划分。
-```
+```Objective-C
 
 typedef NS_ENUM(NSInteger, EKSourceType) {
 EKSourceTypeLocal,  // 本地日历源
@@ -76,7 +76,7 @@ EKSourceTypeBirthdays  // 生日
 
 ```
 日历源也是通过 EKEventStore 这个管理者获取的， EKEventStore 有个属性
-```
+```Objective-C
 // 所有日历源
 @property (nonatomic, readonly) NSArray<EKSource *> *sources;
 
@@ -84,7 +84,7 @@ EKSourceTypeBirthdays  // 生日
 - (nullable EKSource *)sourceWithIdentifier:(NSString *)identifier;
 ```
 我们可以根据名称和类型获取我们要的日历源
-```
+```Objective-C
 for (EKSource *source in eventStore.sources) {
 
 // 获取 iCloud 源
@@ -97,7 +97,7 @@ calendarSource = source;
 
 #### EKCalendar
 EKCalendar 日历，添加的日历事件需要选择一个日历对象，日历对象可以通过 EKEventStore 来获取，也可以获取对应的日历源来获取。
-```
+```Objective-C
 // 所有的日历对象
 @property(nonatomic, readonly) NSArray<EKCalendar *> *calendars;
 
@@ -108,7 +108,7 @@ EKCalendar 日历，添加的日历事件需要选择一个日历对象，日历
 - (nullable EKCalendar *)defaultCalendarForNewReminders;
 ```
 当然，有的时候你想添加一个由自己命名的日历对象：
-```
+```Objective-C
 
 // 事件数据管理者
 EKEventStore *eventStore = [[EKEventStore alloc] init];
@@ -131,7 +131,7 @@ NSLog(@"添加事件日历失败");
 #### EKEvent
 EKEvent 是日历事件，显示在下拉框的日程中。
 ##### 添加日历事件
-```
+```Objective-C
 // 事件数据管理者
 EKEventStore *eventStore = [[EKEventStore alloc] init];
 EKEvent *event  = [EKEvent eventWithEventStore:eventStore];
@@ -169,7 +169,7 @@ NSLog(@"已添加到系统日历中");
 - (BOOL)saveReminder:(EKReminder *)reminder commit:(BOOL)commit error:(NSError **)error;
 ```
 ##### 重复规则
-```
+```Objective-C
 // 此枚举类型用于指示对重复事件进行更改的范围。EKSpanThis指示更改应仅应用于此事件，EKSpanFutureEvents指示更改应应用于此事件以及模式中的所有未来事件。
 typedef NS_ENUM(NSInteger, EKSpan) {
 EKSpanThisEvent,
@@ -207,7 +207,7 @@ setPositions：此属性对于具有有效的daysOfTheWeek、daysOfTheMonth、we
 end：结束规则
 ```
 ##### 查询事件
-```
+```Objective-C
 // 通过事件标识获取
 - (nullable EKEvent *)eventWithIdentifier:(NSString *)identifier;
 
@@ -228,7 +228,7 @@ end：结束规则
 ```
 
 ##### 删除事件
-```
+```Objective-C
 [eventStore removeEvent:event span:EKSpanFutureEvents error:&removeError];
 // 删除日历事件方法，span 看重复规则那一节
 // commit 为YES时，马上提交更改，一次处理一个事件。为 NO 时，不会马上提交改动，可以连续提交多个，在调用 - (BOOL)commit:(NSError **)error 方法后提交所有改动。

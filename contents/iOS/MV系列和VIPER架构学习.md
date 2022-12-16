@@ -52,7 +52,7 @@ iOS 下的架构设计常用模式有：MVC、MVP、MVVM以及VIPER，架构设�
 ##### 我们常用的MVC
 
 我们可能会看到这样的代码
-```
+```swift
 var userCell = tableView.dequeueReusableCellWithIdentifier("identifier") as UserCell
 userCell.configureWithUser(user)
 ```

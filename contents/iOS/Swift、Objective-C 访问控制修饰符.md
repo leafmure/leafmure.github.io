@@ -13,7 +13,7 @@ Swift、Objective-C 都具有面向对象的三大特征：封装、继承和多
 ### 二、Swift 的访问控制修饰符
 #### 2.1  private
 private 修饰的信息，仅能在当前定义的作用域访问，让我们看一下，Swift 中常使用的 “单例”实现模式：
-```
+```swift
 class Single {
    static let instance = Single()
    private init() {} 
@@ -24,7 +24,7 @@ let share = Single.instance
 
 #### 2.2 filePrivate
 filePrivate 修饰的信息，只能在当前定义的源文件中才能访问
-```
+```swift
 /// Person.swift
 fileprivate class Person {
    var name: String?
@@ -39,7 +39,7 @@ class XiaoMing: Person {
 ```
 #### 2.3  Internal
 Internal 默认访问级别，允许定义模块（Target）中的任意源文件访问，但不能被该模块之外的任何源文件访问
-```
+```swift
 /// TargetOne
 class Person {
    var name: String?
@@ -54,7 +54,7 @@ let p2 = Person() -> error: 'Person' initializer is inaccessible due to 'interna
 
 #### 2.4 public
 public 开放式访问，使我们能够在其定义模块的任何源文件中使用代码，并且可以从另一个源文件访问源文件。但是只能在定义的模块中继承和重写，在 SDK 封装中使用比较多。
-```
+```swift
 /// TargetOne
 public class Person {
   public init() {}
@@ -75,7 +75,7 @@ open 是最高权限的访问级别，它和 public 的区别就在于：可以�
 
 #### 2.6 访问控制符权限排序
 访问控制权限从高到低的顺序：open > public > internal > filePrivate > private，变量只能接受比自己访问权限高的值，若值的访问权限比定义的变量高，编译器会报错。
-```
+```swift
 fileprivate class Person {
 }
 let p1 = Person() -> error: Constant must be declared private or fileprivate because its type 'Person' uses a fileprivate type

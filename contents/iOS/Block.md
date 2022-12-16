@@ -13,7 +13,7 @@ description:
 ### Block语法
 
 #### Block的表达式语法
-```
+```Objective-C
 ^ 返回值类型 参数列表 表达式
 ^ int (int count) { return count + 1; }
 
@@ -30,12 +30,12 @@ Block类型变量与一般的C语言变量完全相同，可作为：自动变�
 
 声明Block类型变量的方式
 - 使用Block语法将Block赋值为Block类型变量
-```
+```Objective-C
 返回值 (^变量名)(参数列表) = ^参数列表 表达式
 int (^block)(int) = ^(int count) { return count + 1; }
 ```
 - 使用typedef来声明Block类型变量
-```
+```Objective-C
 // 定义Block类型
 typedef 返回值 (^变量名)(参数列表)
 typedef int (^block_t)(int count);
@@ -46,11 +46,11 @@ block_t block;
 ### Block的实现与本质
 
 Blcok语法实际上是作为极普通的C语言源代码来处理的，可以在shell中通过clang命令将OC文件转换为源码文件。
-```
+```shell
 clang -rewrite-objc 文件名
 ```
 将以下Block语法转换为源代码形式
-```
+```Objective-C
 int main(int argc, const char * argv[]) {
 @autoreleasepool {
 
@@ -64,7 +64,7 @@ return 0;
 }
 ```
 源码为：
-```
+```Objective-C
 // Block的结构体实例的信息
 struct __block_impl {
 void *isa;
@@ -120,13 +120,13 @@ return 0;
 }
 ```
 跟着代码执行流程走，首先执行
-```
+```Objective-C
 void (^block)(void) = ^{
 printf("hello block!");
 };
 ```
 下面源代码将在栈上__main_block_impl_0 结构体实例的指针赋值给 __main_block_impl_0 结构体指针类型的变量block。
-```
+```Objective-C
 void (*block)(void) = ((void (*)())&__main_block_impl_0((void *)__main_block_func_0, &__main_block_desc_0_DATA));
 
 // 去掉类型转换
@@ -136,7 +136,7 @@ struct __main_block_impl_0 *block = &tmp
 __main_block_impl_0 构造函数的第一个参数 __main_block_func_0 是block变量的表达式部分转换的C语言函数指针，第二个参数 __main_block_desc_0_DATA中存储着 __main_block_impl_0 结构体实例大小。
 
 声明好了block变量，就到了下一步，使用block：block()
-```
+```Objective-C
 ((void (*)(__block_impl *))((__block_impl *)block)->FuncPtr)((__block_impl *)block);
 
 // 去掉类型转换
@@ -147,7 +147,7 @@ __main_block_impl_0 构造函数的第一个参数 __main_block_func_0 是block�
 总结：由上可知Block实质就是Objective-C的对象。
 
 ### Block捕获自动变量
-```
+```Objective-C
 int main () {
 int val = 10;
 void (^block)(void) = ^{
@@ -160,12 +160,12 @@ block();
 }
 ```
 上面的示例的结果是：val = 10，由于Block捕获的是val的值，所以外部val变量的改动并不会影响到Block中的val变量，但是，如果我们试图在Block中改变val的值，由于Blcok捕获的是val变量的值而不是地址，所以在Block中无法修改自动变量val的值，因此编译器会报错，这一点在下节的“Block 是如何捕获自动变量”可明白。
-```
+```Objective-C
 int val = 10;
 void (^block)(void) = ^{ val = 1; };
 ```
 如果我们只使值的话就不会有任何问题
-```
+```Objective-C
 int val = 10;
 void (^block)(void) = ^{ printf("val = %d", val); };
 
@@ -175,7 +175,7 @@ void (^block)(void) = ^{
 }
 ```
 当然也有特殊情况，当我们在Block中只使用C语言的字符串字面变量数组时，由于Block捕获自动变量的方法没有实现对C语言数组的截获，所以在Block中使用C语言的字符串字面变量数组会出错。
-```
+```Objective-C
 const char text[] = "hello";
 void (^block)(void) = ^{
 printf("%c\n",text[2]);
@@ -190,7 +190,7 @@ printf("%c\n",text[2]);
 
 ### Block 是如何捕获自动变量
 将捕获自动变量的代码转换为源代码
-```
+```Objective-C
 int main(int argc, const char * argv[]) {
 @autoreleasepool {
 
@@ -205,7 +205,7 @@ return 0;
 }
 ```
 源码：
-```
+```Objective-C
 struct __main_block_impl_0 {
 
 struct __block_impl impl;
@@ -245,7 +245,7 @@ return 0;
 }
 ```
 从上面的代码可知道，Block将在表达式中用到的val自动变量作为成员变量追加到 __main_block_impl_0 结构体中
-```
+```Objective-C
 struct __main_block_impl_0 {
 
 struct __block_impl impl;
@@ -254,7 +254,7 @@ int val;
 };
 ```
 跟着程序执行流程
-```
+```Objective-C
 int val = 10;
 void (^block)(void) = ^{
 printf("val = %d", val);
@@ -265,7 +265,7 @@ int val = 10;
 void (*block)(void) = ((void (*)())&__main_block_impl_0((void *)__main_block_func_0, &__main_block_desc_0_DATA, val));
 ```
 定义 val变量并赋予初始值10，将val值通过 __main_block_impl_0 的构造方法对__main_block_impl_0追加的val成员变量进行初始化。
-```
+```Objective-C
 // __main_block_impl_0 初始化
 impl.isa = &_NSConcreteStackBlock;
 impl.Flags = 0;
@@ -275,7 +275,7 @@ val = 10;
 ```
 
 使用block：block()，也就是执行
-```
+```Objective-C
 ^{ printf("val = %d", val); }
 
 源码：
@@ -295,7 +295,7 @@ printf("val = %d", val);
 - 静态变量
 - 静态全局变量
 - 全局变量
-```
+```Objective-C
 int global_val = 1;
 static int static_global_val = 2;
 int main(int argc, const char * argv[]) {
@@ -328,7 +328,7 @@ static_val: 4
 block_val: 5 
 ```
 转换的源码为：
-```
+```Objective-C
 int global_val = 1;
 static int static_global_val = 2;
 struct __Block_byref_block_val_0 {
@@ -393,7 +393,7 @@ return 0;
 }
 ```
 以下是对四种变量改变值的表达式函数
-```
+```Objective-C
 static void __main_block_func_0(struct __main_block_impl_0 *__cself) {
 
 __Block_byref_block_val_0 *block_val = __cself->block_val; // bound by ref
@@ -410,7 +410,7 @@ Block仅捕获了 block_val修饰的变量和staic_val，全局变量没有捕�
 对于全局变量能在Block中修改值，如上面说的，它作用域很广，所以在Block表达式函数结束后也能保存修改的值。静态变量static_val是将其指针传递给 __main_block_impl_0 结构体的构造函数并保存，也就是说Block捕获的并不是 static_val的值，而是其指针（即内存地址），所以static_val能够在超出作用域之外使用，在Block结束后也能保存修改后的值。
 
 最后就是block_val变量了，block_val 是使用__block 说明符修饰的变量，“__block 说明符”也被称为“__block 存储域类说明符”，block_val在添加上“__block 说明符”后，源码变换如下
-```
+```Objective-C
 __block int block_val = 4;
 
 // 转换后的源码：
@@ -428,7 +428,7 @@ int block_val;
 };
 ```
 在添加上“__block 说明符”后，block_val变成了 __Block_byref_block_val_0 结构体类型的自动变量，并且其结构体中含有一个相当于原自动变量block_val的成员变量，当对block_val变量赋值时
-```
+```Objective-C
 __Block_byref_block_val_0 *block_val = __cself->block_val; 
 
 (block_val->__forwarding->block_val) = 5;
@@ -454,14 +454,14 @@ Block实质就是Objective-C对象，它有三种类型：_NSConcreteStackBlock�
 ![image](/postImage/Block/psb.png)
 
 _NSConcreteGlobalBlock 类型Block变量在超出作用域也能通过指针访问，而_NSConcreteStackBlock类型Block在作用域结束后就会被废弃，同样的 __block 类型变量也是如此，为解决这个问题，Block语法提供了将Block 和 __block变量从栈上复制到堆上，这样在Block变量作用域结束后，堆上的Block还能继续存在。复制在堆上的Block会将 _NSConcreteMallocBlock 类名写入Block 结构体实例 __main_block_impl_0 中的成员变量 ipml 的isa变量中。
-```
+```Objective-C
 ipml.isa = &_NSConcreteMallocBlock;
 ```
 而 __block 结构体实例的成员变量 __forwarding 拥有永远指向自身的指针， 可以实现无论 __block 变量配置在栈上还是堆上也可以访问 __block变量，因此即使__block变量在Block变量的作用域之外也能访问__block变量并保存更改后的值。
 
 ### Block 的copy方法和dispose方法
 这是在MRC环境下的代码示例
-```
+```Objective-C
 typedef void (^block_t)(id);
 int main(int argc, const char * argv[]) {
 @autoreleasepool {
@@ -531,7 +531,7 @@ return 0;
 }
 ```
 上面代码中 Block捕获了一个 __strong 类型的变量 array，虽然源码中没有标识。在Objective-C中，C语言结构体不能含有 __strong 类型的变量，因为在Block从栈上复制到堆以及堆上的Block废弃时，编译器不知道何时进行C语言结构体的初始化和废弃操作，但是由于 Objective-C的运行库能够准确把握Block从栈上复制到堆以及堆上的Block废弃的时机，因此在 __main_block_desc_0增加了 copy、dispose成员变量并赋予__main_block_copy_0、__main_block_dispose_0函数，通过这个两个函数管理此类变量的复制和废弃。
-```
+```Objective-C
 static struct __main_block_desc_0 {
 size_t reserved;
 size_t Block_size;
@@ -548,7 +548,7 @@ static void __main_block_dispose_0(struct __main_block_impl_0*src) {_Block_objec
 ```
 
 在ARC下，编译器会适当地进行判断去自动执行copy，而在MRC下需要自己手动copy，看下面在ARC环境下的一个返回Block的函数：
-```
+```Objective-C
 typedef int (^blk_t)(int);
 blk_t func(int rate) {
 
@@ -577,7 +577,7 @@ return objc_autoreleaseReturnValue(tmp);
 - Grand Central Dispatch 的API中
 
 对于不同类型的Block进行copy操作后的情况
-```
+```Objective-C
 Block 的类                   副本源的配置存储域                 复制结果
 _NSConcreteStackBlock        栈                            从栈复制到堆
 _NSConcreteGlobalBlock       程序的数据区域                   什么也不做
@@ -593,7 +593,7 @@ _NSConcreteMallocBlock       堆                            引用计数增加
 
 ### Block 循环引用
 #### Block 是如何引起循环引用的
-```
+```Objective-C
 
 #import <Foundation/Foundation.h>
 
@@ -655,7 +655,7 @@ return 0;
 - 使用 __weak（弱引用）修饰的变量
 
 上面的例子中，Block捕获了带有 __strong修饰的testCircleRetain对象，导致testCircleRetain持有的printBlock变量强引用了testCircleRetain自身引起循环引用，我们可以使用 __weak 修饰的变量并将testCircleRetain（即self）赋值使用来避免循环引用。
-```
+```Objective-C
 __weak TestCircleRetain *weakSelf = self;
 printBlock = ^{
 NSLog(@"print: %@", weakSelf.name);
@@ -665,7 +665,7 @@ NSLog(@"print: %@", weakSelf.name);
 ![image](../postImage/Block/psb-3.png)
 
 - 使用__block 变量来避免循环引用
-```
+```Objective-C
 __block block_self = self;
 printBlock = ^{
 NSLog(@"print: %@", block_self.name);

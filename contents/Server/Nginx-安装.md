@@ -16,66 +16,66 @@ yum源中的nginx版本比较旧，包安装可以指定安装版本，安装目
 
 ###### pcre库
 1. 下载 pcre库 安装包
-```
+```shell
 # wget ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.36.tar.gz
 ```
 2. 解压安装包
-```
+```shell
 # tar -zxvf pcre-8.36.tar.gz
 ```
 3. 编译安装
-```
+```shell
 # cd pcre-8.36
 # ./configure
 # make && make install
 ```
 ###### zlib库
 1. 下载 zlib库 安装包
-```
+```shell
 # wget http://zlib.net/zlib-1.2.8.tar.gz
 ```
 2. 解压安装包
-```
+```shell
 # tar -zxvf zlib-1.2.8.tar.gz
 ```
 3. 编译安装
-```
+```shell
 # cd zlib-1.2.8
 # ./configure
 # make && make install
 ```
 ###### ssl库
 1. 下载 zlib库 安装包
-```
+```shell
 # wget http://www.openssl.org/source/openssl-1.0.1j.tar.gz
 ```
 2. 解压安装包
-```
+```shell
 # tar -zxvf openssl-1.0.1j.tar.gz
 ```
 3. 编译安装
-```
+```shell
 # cd openssl-1.0.1j
 # ./configure
 # make && make install
 ```
 ###### 依赖库安装完后就开始安装nginx
 1. 下载 zlib库 安装包
-```
+```shell
 # wget http://nginx.org/download/nginx-1.7.4.tar.gz
 ```
 2. 解压安装包
-```
+```shell
 # tar -zxvf nginx-1.7.4.tar.gz
 ```
 3. 编译安装
-```
+```shell
 # cd nginx-1.7.4
 # ./configure
 # make && make install
 ```
 ##### yum 安装
-```
+```shell
 # yum install pcre pcre-devel
 # yum install zlib zlib-devel
 # yum install openssl openssl--devel
@@ -84,14 +84,14 @@ yum源中的nginx版本比较旧，包安装可以指定安装版本，安装目
 
 #### Nginx 配置
 1. 首先查看nginx的安装地址，一般默认安装在 /etc/nginx/nginx.conf
-```
+```shell
 # nginx -t  // root身份下
 // 输出
 nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
 nginx: configuration file /etc/nginx/nginx.conf test is successful
 ```
 2. 修改配置文件
-```
+```shell
 # vim /etc/nginx/nginx.conf
 
 // 修改格式如下
@@ -118,7 +118,7 @@ location = /50x.html {
 
 ```
 3. 修改保存后启动nginx服务
-```
+```shell
 # systemctl start nginx.service
 ```
 4. 访问自己服务器公网ip -> http://123.123.123.123:80（默认80端口），如果能访问成功证明nginx开启成功，如果访问失败
@@ -127,25 +127,25 @@ location = /50x.html {
 
 #### Nginx 命令
 - nginx服务状态
-```
+```shell
 # systemctl status nginx.service
 ```
 - 启动nginx服务
-```
+```shell
 # systemctl start nginx.service
 ```
 - 停止nginx服务
-```
+```shell
 # systemctl stop nginx.service
 ```
 - 重启nginx服务
-```
+```shell
 # systemctl reload nginx.service
 ```
 
 #### 禁止IP直接访问网站
 禁止别人直接通过IP访问网站，在nginx的server配置文件前面加上如下的配置，如果有通过IP直接访问的，直接拒绝连接。在配置前面加一个server，如下
-```
+```shell
 server {
 listen   80 default_server;
 listen   [::]:80 default_server;
@@ -154,7 +154,7 @@ return 444;
 }
 ```
 添加后：
-```
+```shell
 server {
 listen   80 default_server;
 listen   [::]:80 default_server;

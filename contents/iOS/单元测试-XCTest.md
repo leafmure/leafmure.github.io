@@ -14,7 +14,7 @@ images:
 
 > 单元测试通常由软件开发人员编写，用于确保他们所写的代码符合软件需求和遵循开发目标。通常来说，每修改一次程序就会进行最少一次单元测试，在编写程序的过程中前后很可能要进行多次单元测试，以证实程序达到工作目标要求。
 <!-- more -->
-### Unit Tests 
+### Unit Tests
 ![image](https://lianghuii.com/postImage/单元测试-XCTest/psb-01.png)
 创建项目或文件时，底部勾选 Unit Tests 会创建对应的测试类，该类继承 XCTestCase，提供测试方法如下：
 - setUpWithError：在进行测试前会调用该方法，用于准备测试中需要的条件如：对象初始化、测试数据准备等等。
@@ -26,7 +26,7 @@ images:
 
 ### XCTAssert-断言
 大部分的测试方法使用断言决定的测试结果，所有断言都有一个类似的形式：比较，表达式为真假，强行失败等。断言方法如下：
-```
+```Objective-C
 public func XCTAssert(_ expression: @autoclosure () throws -> Bool, _ message: @autoclosure () -> String = "", file: StaticString = #filePath, line: UInt = #line)
 public func XCTAssertEqual<T>(_ expression1: @autoclosure () throws -> T, _ expression2: @autoclosure () throws -> T, _ message: @autoclosure () -> String = "", file: StaticString = #filePath, line: UInt = #line) where T : Equatable
 public func XCTAssertEqual<T>(_ expression1: @autoclosure () throws -> T, _ expression2: @autoclosure () throws -> T, accuracy: T, _ message: @autoclosure () -> String = "", file: StaticString = #filePath, line: UInt = #line) where T : FloatingPoint
@@ -53,7 +53,7 @@ public func XCTFail(_ message: String = "", file: StaticString = #filePath, line
 ### 异步逻辑测试
 
 测试异步方法时，例如网络请求等耗时操作，由于执行结果不是立即就能获取到，XCTest 提供了一些辅助方法，如下例所示：
-```
+```swift
 let expectation = XCTestExpectation()
 request { // 请求回调
     expectation.fulfill()
@@ -67,7 +67,7 @@ waitForExpectations(timeout: 2) { eror in
 waitForExpectationsWithTimeout 方法会在规定时间内，等待 XCTestExpectation 执行 fulfill()，规定时间内不执行就会执行超时闭包。
 
 此外还可配合以下方法实现对异步操作的测试：
-```
+```Objective-C
 // 根据 NSPredicate 判读对象的属性
 open func expectation(for predicate: NSPredicate, evaluatedWith object: Any?, handler: XCTNSPredicateExpectation.Handler? = nil) -> XCTestExpectation
 
@@ -75,7 +75,7 @@ open func expectation(for predicate: NSPredicate, evaluatedWith object: Any?, ha
 open func expectation(forNotification notificationName: NSNotification.Name, object objectToObserve: Any?, notificationCenter: NotificationCenter, handler: XCTNSNotificationExpectation.Handler? = nil) -> XCTestExpectation
 ```
 使用示例如下：
-```
+```swift
 expectation(for: NSPredicate.init(format: "name == 'car'"), evaluatedWith: car) {
    // 判断通过
 }
@@ -97,7 +97,7 @@ waitForExpectations(timeout: 2) { eror in
 
 ### UITest
 UITest 用于测试 UI 交互逻辑，对应的测试类与 Unit Test一致
-```
+```swift
 class LearnXCTestUITests: XCTestCase {
 
     override func setUpWithError() throws {

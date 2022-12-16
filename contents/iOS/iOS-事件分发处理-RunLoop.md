@@ -15,7 +15,7 @@ iOS开发是单进程，所以一般来说，一个应用程序就是一个进�
 
 #### 1.2  线程如何常驻处理事件
 一般来讲，一个线程一次只能执行一个任务，执行完成后线程就会退出。主线程是程序是重要的事件处理单元，自然不能执行完任务后就退出，所以我们需要一个机制，让线程能随时处理事件但并不退出，通常的代码逻辑是这样的：
-```
+```swift
 func loop() {
     do {
         var message = get_next_message();
@@ -29,7 +29,7 @@ Event Loop 在很多系统和框架里都有实现，比如 Node.js 的事件处
 
 #### 1.3  RunLoop
 RunLoop 实际上就是一个对象，是事件接收和分发机制的一个实现，让我们来看看它的结构：
-```
+```Objective-C
 struct __CFRunLoop {
     __CFPort _wakeUpPort;   /// used for CFRunLoopWakeUp 内核向该端口发送消息可以唤醒runloop
     pthread_t _pthread;             /// RunLoop对应的线程
@@ -61,7 +61,7 @@ CFRunLoopRef 的代码是开源的，你可以在这里 http://opensource.apple.
 苹果并没有提供这两个对象相互转换的接口，但不管怎么样，可以肯定的是 pthread_t 和 NSThread 是一一对应的。比如，你可以通过 pthread_main_thread_np() 或 [NSThread mainThread] 来获取主线程；也可以通过 pthread_self() 或 [NSThread currentThread] 来获取当前线程。
 
 苹果不允许直接创建 RunLoop，它只提供了两个自动获取的函数：CFRunLoopGetMain() 和 CFRunLoopGetCurrent()。 这两个函数内部的逻辑大概是下面这样:
-```
+```Objective-C
 CFRunLoopRef CFRunLoopGetMain() {
     return _CFRunLoopGet(pthread_main_thread_np());
 }
@@ -135,7 +135,7 @@ CFRunLoopTimerRef 是基于时间的触发器，它和 NSTimer 是 toll-free bri
 
 #### 2.4 CFRunLoopObserverRef
 CFRunLoopObserverRef 是观察者，每个 Observer 都包含了一个回调（函数指针），当 RunLoop 的状态发生变化时，观察者就能通过回调接受到这个变化。可以观测的时间点有以下几个：
-```
+```Objective-C
 typedef CF_OPTIONS(CFOptionFlags, CFRunLoopActivity) {
     kCFRunLoopEntry         = (1UL << 0), // 即将进入Loop
     kCFRunLoopBeforeTimers  = (1UL << 1), // 即将处理 Timer
@@ -161,7 +161,7 @@ iOS 中公开暴露出来的只有 NSDefaultRunLoopMode 和 NSRunLoopCommonModes
 ### 三、RunLoop的实现
 #### 3.1 RunLoop 运行函数实现
 在Core Foundation中我们可以通过以下2个API来让RunLoop运行：
-```
+```Objective-C
 /// 默认 kCFRunLoopDefaultMode 运行当前线程的RunLoop
 void CFRunLoopRun(void) {  
     int32_t result;
@@ -179,7 +179,7 @@ SInt32 CFRunLoopRunInMode(CFStringRef modeName, CFTimeInterval seconds, Boolean 
 }
 ```
 两种启动运行方式都共同的调用了 CFRunLoopRunSpecific 函数，那么 CFRunLoopRunSpecific 函数里干了什么呢？
-```
+```Objective-C
 /// RunLoop的实现
 int CFRunLoopRunSpecific(runloop, modeName, seconds, stopAfterHandle) {
     
@@ -289,7 +289,7 @@ CFRunLoopRunSpecific 具体函数实现在官方文档中可查阅，它的内�
 - 直到接收到 kCFRunLoopExit 信号或者超时，通知 observer RunLoop 退出运行。
 
 #### 3.2 添加 RunLoop Mode
-```
+```Objective-C
 /// 向当前RunLoop的common modes中添加一个mode。
 CFRunLoopAddCommonMode(CFRunLoopRef rl, CFStringRef mode)
 
@@ -305,7 +305,7 @@ CFArrayRef CFRunLoopCopyAllModes(CFRunLoopRef rl)
 - 添加commonMode会把commonModeItems数组中的所有source同步到新添加的mode中
 - CFRunLoopMode对象在CFRunLoopAddItemsToCommonMode函数中调用CFRunLoopFindMode时被创建
 相关函数实现如下：
-```
+```Objective-C
 CFRunLoopAddCommonMode
 void CFRunLoopAddCommonMode(CFRunLoopRef rl, CFStringRef modeName) {
     CHECK_FOR_FORK();
@@ -331,7 +331,7 @@ void CFRunLoopAddCommonMode(CFRunLoopRef rl, CFStringRef modeName) {
 ```
 #### 3.3 添加Run Loop Source（ModeItem）
 我们可以通过以下接口添加/移除各种事件:
-```
+```Objective-C
 void CFRunLoopAddSource(CFRunLoopRef rl, CFRunLoopSourceRef source, CFStringRef mode)
 void CFRunLoopRemoveSource(CFRunLoopRef rl, CFRunLoopSourceRef source, CFStringRef mode)
 void CFRunLoopAddObserver(CFRunLoopRef rl, CFRunLoopObserverRef observer, CFStringRef mode)
@@ -340,7 +340,7 @@ void CFRunLoopAddTimer(CFRunLoopRef rl, CFRunLoopTimerRef timer, CFStringRef mod
 void CFRunLoopRemoveTimer(CFRunLoopRef rl, CFRunLoopTimerRef timer, CFStringRef mode)
 ```
 CFRunLoopAddSource 的代码如下：
-```
+```Objective-C
 //添加source事件
 void CFRunLoopAddSource(CFRunLoopRef rl, CFRunLoopSourceRef rls, CFStringRef modeName) {    /* DOES CALLOUT */
     CHECK_FOR_FORK();
@@ -424,7 +424,7 @@ CFRunLoopAddSource 函数内部工作内容如下：
 - 如果 modeName 传入 kCFRunLoopCommonModes，则该source 会被保存到 RunLoop 的 _commonModeItems 中，同时也会添加到 commonMode 下的所有 Mode 中。
 - 如果modeName传入的不是kCFRunLoopCommonModes，则会先查找该Mode，如果没有，会创建一个新的 Mode 对象，将 Source 添加到该 Mode 保存。
 同一个source在一个mode中只能被添加一次
-```
+```Objective-C
 CFRunLoopRemoveSource
 //移除source
 void CFRunLoopRemoveSource(CFRunLoopRef rl, CFRunLoopSourceRef rls, CFStringRef modeName) { /* DOES CALLOUT */
@@ -491,7 +491,7 @@ void CFRunLoopRemoveSource(CFRunLoopRef rl, CFRunLoopSourceRef rls, CFStringRef 
 区别在于observer和timer只能被添加到一个RunLoop的一个或者多个mode中，比如一个timer被添加到主线程的RunLoop中，则不能再把该timer添加到子线程的RunLoop，而source没有这个限制，不管是哪个RunLoop，只要mode中没有，就可以添加。
 
 这一点从实现结构上就能体现，CFRunLoopSource结构体中有保存RunLoop对象的数组，而CFRunLoopObserver和CFRunLoopTimer只有单个RunLoop对象。
-```
+```Objective-C
 struct __CFRunLoopSource {
     CFRuntimeBase _base;
     uint32_t _bits;
@@ -545,7 +545,7 @@ RunLoop 的核心是基于 mach port 的，其进入休眠时调用的函数是 
 Mach 本身提供的 API 非常有限，而且苹果也不鼓励使用 Mach 的 API，但是这些API非常基础，如果没有这些API的话，其他任何工作都无法实施。在 Mach 中，所有的东西都是通过自己的对象实现的，进程、线程和虚拟内存都被称为”对象”。和其他架构不同， Mach 的对象间不能直接调用，只能通过消息传递的方式实现对象间的通信。“消息”是 Mach 中最基础的概念，消息在两个端口 (port) 之间传递，这就是 Mach 的 IPC (进程间通信) 的核心。
 
 Mach 的消息定义在 <mach/message.h> 文件：
-```
+```Objective-C
 typedef struct {
   mach_msg_header_t header;
   mach_msg_body_t body;
@@ -582,7 +582,7 @@ RunLoop 的核心就是一个 mach_msg() ，RunLoop 调用这个函数去接收�
 
 RunLoop 处于“空闲”状态
 当 RunLoop 迭代处理完成了所有事件，马上要休眠时 RunLoop 提供了 CFRunLoopObserverCreateWithHandler 函数，让我们可以通过该函数监听 RunLoop 当前的运行状态，代码示例如下：
-```
+```Objective-C
 CFRunLoopRef runLoop = CFRunLoopGetCurrent();
 CFStringRef runLoopMode = kCFRunLoopDefaultMode;
 CFRunLoopObserverRef observer = CFRunLoopObserverCreateWithHandler
@@ -629,7 +629,7 @@ NSURLConnectionLoader 中的 RunLoop 通过一些基于 mach port 的 Source 接
 
 #### 4.8 RunLoop 在 AFNetworking 的应用
 AFNetworking 是第三方框架，基于 NSURLConnection 系统网络请求框架封装的。AFNetworking 希望能在后台线程接收 Delegate 回调。为此 AFNetworking 单独创建了一个线程，并在这个线程中启动了一个 RunLoop：
-```
+```Objective-C
 + (void)networkRequestThreadEntryPoint:(id)__unused object {
     @autoreleasepool {
         [[NSThread currentThread] setName:@"AFNetworking"];
@@ -650,7 +650,7 @@ AFNetworking 是第三方框架，基于 NSURLConnection 系统网络请求框�
 }
 ```
 RunLoop 启动前内部必须要有至少一个 Timer/Observer/Source，所以 AFNetworking 在 [runLoop run] 之前先创建了一个新的 NSMachPort 添加进去了。通常情况下，调用者需要持有这个 NSMachPort (mach_port) 并在外部线程通过这个 port 发送消息到 loop 内；但此处添加 port 只是为了让 RunLoop 不至于退出，并没有用于实际的发送消息。
-```
+```Objective-C
 - (void)start {
     [self.lock lock];
     if ([self isCancelled]) {

@@ -14,7 +14,7 @@ images:
 ### Property wrapper
 Property wrapper 类似于 java 中的注解，一种给属性附加逻辑的特性。在类、结构体、枚举声明时使用该特性，可以让其成为一个属性包装器。属性包装器可复用统一规则对属性进行包装，降低重复工作。
 <!-- more -->
-```
+```swift
 @propertyWrapper struct increase { }
 ```
 
@@ -24,7 +24,7 @@ wrappedValue 属性是一个计算类型属性，包装处理在 wrappedValue �
 
 `init(wrappedValue: Int) ` 在包装器对属性声明时会自动调用，根据属性默认值进行初始化。
 
-```
+```swift
 @propertyWrapper struct increase {
     /// 存储值
     private var truelyValue: Int = 0
@@ -50,7 +50,7 @@ class Test {
 ```
 
 在修饰属性时，属性包装器的 wrappedValue 的入参是可选的，如上面不显示传入 wrappedValue 就需要给予属性初始值。若显示传入 wrappedValue，不能给予属性初始值。
-```
+```swift
 class Test {
     @increase(wrappedValue: 6)
     var a: Int
@@ -58,7 +58,7 @@ class Test {
 ```
 
 `init(wrappedValue: Int)` 构造器可以追加初始化参数，
-```
+```swift
 @propertyWrapper struct increase {
     ....
     var maxValue: Int
@@ -76,7 +76,7 @@ class Test {
 ```
 ### 组合包装器
 可以对一个属性声明多个属性包装器，执行顺序为从右到左。
-```
+```swift
 @propertyWrapper struct increase: CustomStringConvertible {
     /// 存储值
     private var truelyValue: Int = 0

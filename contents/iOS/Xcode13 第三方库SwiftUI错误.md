@@ -17,7 +17,7 @@ Xcode 13 发行说明中提到：
 例如，将库的部署目标增加到 iOS 11 或更高版本）。
 <!-- more -->
 Kingfisher、RealmSwift 库处于上述情况，如果项目中使用的是 Swift UI 则需要将最低兼容版本改为 iOS 12。由于个人项目需要兼容 iOS 10 并且项目中也没有使用到 Swift UI，所以修改 pod file，在 pod install 时将Kingfisher、RealmSwift库的 Swift UI 相关代码删除。
-```
+```Ruby
 pre_install do |installer|
   remove_Kingfisher_swiftui()
   remove_RealmSwift_swiftui()
@@ -44,7 +44,7 @@ end
 ```
 
 在 Ruby 中 gsub 函数用于替换字符，示例用法如下：
-```
+```Ruby
 'abc'.gsub(/a/,d) => 'dbc'
 'abc'.gsub!(/a/,d) => 'dbc'
 'abc'.gsub(/d/,e) => 'abc'

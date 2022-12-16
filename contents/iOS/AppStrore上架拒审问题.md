@@ -12,11 +12,11 @@ description:
 <!-- more -->
 解决方案：
 - 通过"prefs:root ="调用私有Api在iOS8之前可用，iOS8之后不再通过私有Api跳转到相应设置，统一跳到设置界面。
-```
+```Objective-C
 [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
 ```
 - 将"prefs:root ="字段转化，将转换结果再还原调用。
-```
+```Objective-C
 //iOS10
 [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"prefs:root= Bluetooth"] options:@{} completionHandler:nil];
 [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"prefs:root= Bluetooth"]];

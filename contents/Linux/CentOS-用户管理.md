@@ -23,7 +23,7 @@ Linux 使用的并不是你的账号，而是账号所对应的UID（UserID）,�
 #### 账号密码信息相关文件
 ##### /etc/passwd
 存储着账号信息，每一行代表一个账号，里面除了用户账号还有许多系统账号（系统运作所需），每一行的行的账号信息格式如下
-```
+```shell
 // 以 “:” 符号分割
 root : x : 0 : 0 : root : /root : /bin/bash
 
@@ -37,7 +37,7 @@ root : x : 0 : 0 : root : /root : /bin/bash
 ```
 ##### /etc/shadow
 储存着账号对应的密码等信息，该文件预设权限是 -rw------- 或者 ----------，为了账号安全请注意该文件的权限。
-```
+```shell
 root : $6$pUfomqmbz6D2LPAv$Q : : 0 : 99999 : 7 : : :
 
 1. 账号名称
@@ -54,11 +54,11 @@ root : $6$pUfomqmbz6D2LPAv$Q : : 0 : 99999 : 7 : : :
 
 ##### 用户信息查询命令
 - id：查询用户的相关 UID/GID 等等的信息
-```
+```shell
 # id 用户名    // 不加用户名，默认查询当前用户
 ```
 - finger：查阅很多用户相关的信息
-```
+```shell
 # finger 用户名    // 不加用户名，默认查询当前用户
 
 Login: 为使用者账号，亦即 /etc/passwd 内的第一字段;
@@ -70,7 +70,7 @@ No mail.: 调查 /var/spool/mail 当中的信箱资料;
 No Plan.: 调查 ~vbird1/.plan 文件，并将该文件取出来说明!
 ```
 建立自己的计划内容：
-```
+```shell
 # echo "I will study Linux during this year." > ~/.plan
 
 上面的 No Plan.: 变成了
@@ -78,18 +78,18 @@ Plan:
 I will study Linux during this year.
 ```
 - chfn：大致有点像 change finger 的意思
-```
+```shell
 # chfn 用户名    // 不加用户名，默认查询当前用户
 ```
 选项与参数:
-```
+```shell
 -f : 后面接完整的大名;
 -o : 您办公室的房间号码; 
 -p : 办公室的电话号码; 
 -h : 家里的电话号码!
 ```
 - chsh：change shell 的简写
-```
+```shell
 // 用当前的身份列出系统上所有合法的 shell
 # chsh -l
 
@@ -98,7 +98,7 @@ I will study Linux during this year.
 ```
 
 #### 用户创建
-```
+```shell
 # useradd 用户名   // 采用默认配置创建用户
 # useradd -D  // 查看 useradd 的默认配置
 
@@ -150,11 +150,11 @@ ENCRYPT_METHOD SHA512  // 密码加密的机制使用的是 sha512 这一个机�
 #### 配置用户密码
 所有人均可使用以下命令来改自己的密码，不加用户名，默认修改当前登录用户密码，一般账号需要输入旧密码来更改密码，root 用户不需要。
 ##### passwd
-```
+```shell
 # passwd 用户名  
 ```
 passwd 命令选项与参数:
-```
+```shell
 --stdin : 可以透过来自前一个管线的数据，作为密码输入，对 shell script 有帮助! -l : 是 Lock 的意思，会将 /etc/shadow 第二栏最前面加上 ! 使密码失效。
 -u : 与 -l 相对，是 Unlock 的意思!
 -S : 列出密码相关参数，亦即 shadow 文件内的大部分信息。 
@@ -164,7 +164,7 @@ passwd 命令选项与参数:
 -i : 后面接日期，/etc/shadow 的第 7 字段，密码失效日期
 ```
 --stdin的使用：变更用户密码，此方法缺点是这个密码会保留在指令中，可以在 /root/.bash_history 找到这个密码，所以这个动作通常仅用在 shell script 的大量建立使用者账号当中! 要注意的是，这个选项并不存在所有 distributions 版 本中， 请使用 man passwd 确认你的 distribution 是否有支持此选项！
-```
+```shell
 echo "AbcXXX21" | passwd --stdin 用户名
 ```
 
@@ -177,11 +177,11 @@ echo "AbcXXX21" | passwd --stdin 用户名
 
 ##### chage
 与 passwd 一样的功能命令，能展示更为详细的密码参数。
-```
+```shell
 # chage 账号
 ```
 chage 命令选项与参数:
-```
+```shell
 -l : 列出该账号的详细密码参数;
 -d : 后面接日期，修改 shadow 第三字段(最近一次更改密码的日期)，格式 YYYY-MM-DD
 -E : 后面接日期，修改 shadow 第八字段(账号失效日)，格式 YYYY-MM-DD
@@ -191,16 +191,16 @@ chage 命令选项与参数:
 -W : 后面接天数，修改 shadow 第六字段(密码过期前警告日期)
 ```
 change 有个命令可以使用户第一次登录后必须更改密码
-```
+```shell
 # chage -d 0 用户
 ```
 ##### usermod
 修改密码配置的选项数据
-```
+```shell
 # usermod 用户名
 ```
 选项参数：
-```
+```shell
 -c : 后面接账号的说明，即 /etc/passwd 第五栏的说明栏，可以加入一些账号的说明。
 -d : 后面接账号的家目录，即修改 /etc/passwd 的第六栏;
 -e : 后面接日期，格式是 YYYY-MM-DD 也就是在 /etc/shadow 内的第八个字段数据啦!
@@ -216,11 +216,11 @@ change 有个命令可以使用户第一次登录后必须更改密码
 ```
 #### 删除用户
 在删除前可通过 “find  用户名” 来查出该用户的所有文件，对于文件是否需要存留，来选择通过何种方式删除用。如果该账号只是暂时不启用的话，那么将 /etc/shadow 里头账号失效日期 (第八字段) 设定为 0 就可以让该账号无法使用，所有跟该账号相关的数据都会留下来，如果不需要该用户的数据就用 userdel。
-```
+```shell
 # userdel 用户名 // 删除 /etc/passwd 与 /etc/shadow 里的账号
 ```
 选项参数：
-```
+```shell
 -r : 连同用户的家目录也一起删除
 ```
 
@@ -229,7 +229,7 @@ change 有个命令可以使用户第一次登录后必须更改密码
 #### 群组信息相关文件
 ##### /etc/group 
 此文件中记录了GID和组名
-```
+```shell
 root : x : 0 :
 
 1. 组名
@@ -239,7 +239,7 @@ root : x : 0 :
 ```
 ##### /etc/gshadow
 此文件存储着群组管理员的账号、密码信息以及群组内的用户成员
-```
+```shell
 root: : :
 
 1. 群组名
@@ -249,18 +249,18 @@ root: : :
 ```
 ##### 初始群组
 用户的GID就是用户的初始群组ID，初始群组是用户账号创建时默认创建的，对于初始群组不会在上面的第四个字段出现。
-```
+```shell
 # grep 用户名 /etc/group  // 查询用户名的群组信息
 ```
 ##### 有效群组
 一个账号可以加入多个群组，当新建文件和目录时，新文件的所属的群组是当前的有效群组，默认下为当前用户的初始群组。可以通过下面命令查询，当前用户加入的群组
-```
+```shell
 # groups
 
 // 输出比如：user1 user2
 ```
 如果当前登录身份是user1那么新建文件的所属群默认就是user1了，如果想让新建的文件是 user2，可以使用 newgrp 命令切换有效群组，但是切换的目标群组必须是当前用户加入了的。
-```
+```shell
 // user1用户将当前有效群组user1切换至user2，切换后会提供一个新的shell环境以支持有效群组 user2
 #  newgrp user2
 
@@ -271,31 +271,31 @@ root: : :
 群组的内容都与这两个文件有关: /etc/group  、 /etc/gshadow ，都是上面两个 文件的新增、修改与移除而已。
 
 ##### 创建群组
-```
+```shell
 # groupadd 群组名
 ```
 选项与参数:
-```
+```shell
 -g : 后面接某个特定的 GID ，用来直接给予某个 GID。
 -r : 建立系统群组啦!与 /etc/login.defs 内的 GID_MIN 有关。
 ```
 ##### 修改群组的相关参数
-```
+```shell
 # groupmod 群组名
 ```
 选项与参数:
-```
+```shell
 -g :修改既有的 GID 数字
 -n :修改既有的组名
 ```
 #### 删除群组
 要删除的群组没有被其他用户作为 initial group（初始群组）时才能被删除，如果有的话可以考虑修改 该群组的GID 或者 删除该群组的使用者。
-```
+```shell
 # groupdel 群组名
 ```
 #### 群组管理员
 群组管理员可以管理 哪些账号可以加入、移出该群组。
-```
+```shell
 // 设置群组密码
 # gpasswd 群组名
 
@@ -303,7 +303,7 @@ root: : :
 # gpasswd -A  用户名  群组名
 ```
 选项与参数:
-```
+```shell
 :后面接群组名，设置此群组的密码，若没有任何参数时，表示给予当前用户的初始群组 一个密码 (/etc/gshadow)
 -a : 向群组 GROUP 中添加用户 USER
 -d : 从群组 GROUP 中添加或删除用户
@@ -320,7 +320,7 @@ ACL 是 Access Control List 的缩写，主要的目的是在提供传统的 own
 - 默认属性 (mask): 还可以针对在该目录下在建立新文件/目录时，规范新数据的默认权限;
 
 通过此命令可查看核心挂载显示的信息中是否已经支持 ACL
-```
+```shell
 # dmesg | grep -i acl
 
 输出信息：
@@ -329,11 +329,11 @@ ACL 是 Access Control List 的缩写，主要的目的是在提供传统的 own
 ```
 
 #### 设定某个目录/文件的权限
-```
+```shell
 # setfacl [-bkRd] [{-m|-x} acl 参数] 文件名
 ```
 选项与参数:
-```
+```shell
 -m : 设定后续的 ACL 参数给文件使用，不可与 -x 合用
 -x : 删除后续的 ACL 参数，不可与 -m 合用
 -b : 移除 所有的 ACL 设定参数
@@ -342,28 +342,28 @@ ACL 是 Access Control List 的缩写，主要的目的是在提供传统的 own
 -d : 设定“预设 ACL 参数”的意思!只对目录有效，在该目录新建的数据会引用此默认值
 ```
 - 针对单一使用者的权限设定
-```
+```shell
 // 如果使用者账号列表为空，代表设定的是文件拥有者的权限
 # setfacl 选项  u:使用者账号列表:权限 文件名
 
 // eg：setfacl -m u:user1:rx fieldName
 ```
 - 针对单一群组的权限设定
-```
+```shell
 // 如果群组列表为空，代表设定的是文件所属群组的权限
 # setfacl 选项  g:群组列表:权限 文件
 
 // eg：setfacl -m g:group1:rx fieldName
 ```
 - 针对有效权限设定：
-```
+```shell
 // m:r -> mask::r--
 # setfacl -m m:r fieldName
 ```
 有效权限的意思是: 使用者或群组所设定的权限必须要存在于 mask 的权限设定范围内才会生效，比如 user:user1:r-x 但是 mask::r-- 因此user1其实只有 r 的权限。
 
 - 使用默认权限设定目录未来文件的 ACL 权限继承
-```
+```shell
 // 如果使用者账号列表为空，代表设定的是目录拥有者的权限
 # setfacl -m d:u:使用者列表:权限  目录
 // eg：setfacl -m d:u:user1:rx /field/fieldName
@@ -371,7 +371,7 @@ ACL 是 Access Control List 的缩写，主要的目的是在提供传统的 own
 在此目录下创建的文件会继承目录的权限设定
 
 #### 查看文件的权限内容
-```
+```shell
 # getfacl 文件名
 
 输出：
@@ -385,7 +385,7 @@ mask::r-x  // 此文件预设的有效权限
 other::r--  // 其他人拥有的权限
 ```
 选项与参数:
-```
+```shell
 -m : 设定后续的 ACL 参数给文件使用，不可与 -x 合用
 -x : 删除后续的 ACL 参数，不可与 -m 合用
 -b : 移除 所有的 ACL 设定参数
@@ -396,11 +396,11 @@ other::r--  // 其他人拥有的权限
 
 ### 使用者身份切换
 #### su 命令
-```
+```shell
 # su -用户名
 ```
 选项与参数:
-```
+```shell
 : su 后面直接加用户名，若不加代表切换至 root，但是这种方式读取的变量设定方式为 non-login shell 的方式，这种方式 很多原本的变量不会被改变，使用 “su” 切换到 root 比如环境路径不会更换成 root 的。
 - : 单纯使用 - 如“su -”代表使用 login-shell 的变量文件读取方式来登入系统，
 若使用者名称没有加上去，则代表切换为 root 的身份。
@@ -412,11 +412,11 @@ other::r--  // 其他人拥有的权限
 
 #### sudo 命令
 相对 su 命令来说，此命令执行不需要知道切换用户的密码，只需要自己的密码，甚至可以设置无需密码。并非所有用户都能够执行 sudo ，而是仅有添加到 /etc/sudoers 内的用户才能够执行 sudo 这个指令。
-```
+```shell
 # sudo 用户名
 ```
 选项与参数:
-```
+```shell
 -b : 将后续的指令放到背景中让系统自行执行，而不与目前的 shell 产生影响 
 -u : 后面可以接欲切换的使用者，若无此项则代表切换身份为 root 。
 
@@ -428,7 +428,7 @@ eg: sudo -u sshd touch /tmp/mysshd  // 以 sshd 的身份在 /tmp 底下建立�
 只有配置在 /etc/sudoers 中的用户才能使用 sudo 命令，该文件初始添加的用户是 root。我们可以使用 vim 去手动修改 /etc/sudoers 文件，但是如果设定错误那会造成无 法使用 sudo 指令的不良后果，所以我们采取使用 visudo 命令设定，visudo 更改后在离开修改页面时系统会检查 /etc/sudoers 的语法。 
 
 - 单一用户设定
-```
+```shell
 使用者账号     登入者的来源主机名=(可切换的身份)     可下达的指令
 root                ALL=(ALL)                   ALL 
 
@@ -445,11 +445,11 @@ root                ALL=(ALL)                   ALL
 // 新用户      ALL=(ALL)       ALL
 ```
 - wheel群组设定（centos 7.0开始开放）
-```
+```shell
 %群组名  ALL=(ALL)       ALL  // 改群组内的用户都能使用 sudo
 ```
 - 使用别名设定
-```
+```shell
 // 设定用户别名
 User_Alias ADMPW = user1,user2
 // 设定指令别名 
@@ -461,18 +461,18 @@ Host_Alias ADMPWHOST = ALL
 ADMPW     ADMPWHOST=(ALL)     ADMPWCOM
 ```
 - 设定执行 sudo 不需要密码
-```
+```shell
 用户名       ALL=(ALL)       NOPASSWD:ALL
 ```
 - 限制用户指令操作
-```
+```shell
 用户名       ALL=(ALL)      !指令务绝对路径  // 加感叹号表示禁止
 
 //eg：user1 ALL=(root) !/usr/bin/passwd, /usr/bin/passwd [A-Za-z]*, !/usr/bin/passwd root
 // 如上 user1 能使用任何计算机连接并且只能切换 root 身份，在 root 身份下能使用 passwd 任意字符命令，但是禁止 passwd 和 passwd root 命令。
 ```
 - sudo 搭配 su 无需知道 root 密码切换至 root
-```
+```shell
 // 这样设定后，该用户可以通过 sudo su - 命令并输入自己的密码就能切换到 root
 用户名       ALL=(root)       /bin/su -
 ```
@@ -480,7 +480,7 @@ ADMPW     ADMPWHOST=(ALL)     ADMPWCOM
 ### 账户相关的检查工具
 #### pwck
 这个指令在检查 /etc/passwd 这个账号配置文件内的信息，与实际的家目录是否存在等信息， 还可以比对 /etc/passwd /etc/shadow 的信息是否一致，另外，如果 /etc/passwd 内的数据字段错误时， 会提示使用者修订。
-```
+```shell
 # pwck
 ```
 
@@ -489,7 +489,7 @@ ADMPW     ADMPWHOST=(ALL)     ADMPWCOM
 
 - 比对 /etc/passwd 及 /etc/shadow ，若 /etc/passwd 内存在的账号并没有对应的/etc/shadow 密码时，则 pwconv 会去 /etc/login.defs 取用相关的密码数据，并建立该账号的 /etc/shadow 数据。
 - 若 /etc/passwd 内存在加密后的密码数据时，则 pwconv 会将该密码栏移动到 /etc/shadow 内，并将原本的 /etc/passwd 内相对应的密码栏变成 x !
-```
+```shell
 # pwconv
 ```
 
@@ -499,7 +499,7 @@ ADMPW     ADMPWHOST=(ALL)     ADMPWCOM
 #### chpasswd
 chpasswd 可以读入未加密前的密码，并且经过加密后，将加密后的密码写
 入 /etc/shadow 当中。这个指令很常被使用在大量建置账号的情况，由于 passwd 已经默认加入了 --stdin 的选项，因此 chpasswd 命令便很少使用。 
-```
+```shell
 // chpasswd 会去读取 /etc/login.defs 文件内的加密机制加密 密码，然后写入/etc/shadow 当中
 # echo "用户名:密码" | chpasswd
 ```
