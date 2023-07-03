@@ -6,7 +6,7 @@ tags:
 - Runtime
 keywords: Runtime,消息转发机制,Runtime的应用,Swizzling
 description:
-images: "/postCover/runtime探究.png"
+images: "https://lianghuii.com/postCover/runtime探究.png"
 ---
 
 对于 Runtime 的了解一直很少，面试的时候，总是会提及，因此开始去了解 Runtime。在网上找寻这类资料和文章并开始详读，在详读后对于 Runtime 有了更深了解，但是有些地方仍有些模糊，这样半知半解的状态可不是好事，因此我通过知识整理，模拟向人讲述的方式，以查解自己的模糊之处。若整理的有误之处，望各位大神指出，谢谢！

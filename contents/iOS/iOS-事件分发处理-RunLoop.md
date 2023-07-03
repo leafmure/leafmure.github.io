@@ -11,7 +11,7 @@ images:
 #### 1.1  线程
 iOS开发是单进程，所以一般来说，一个应用程序就是一个进程，进程之间是相互独立的，每个进程都有独立的内存空间和资源。进程若需处理事件，则需要基本执行单元：线程。进程的所有事件都必须在线程中处理，因此进程在开辟时，会默认创建并开启一条线程，程序默认的事件处理和 UI 绘制都在这条线程处理，因此这条线程被称为主线程或者UI线程。
 <!-- more -->
-![image](../postImage/iOS-事件分发处理-RunLoop/psb-01.png)
+![image](https://lianghuii.com/postImage/iOS-事件分发处理-RunLoop/psb-01.png)
 
 #### 1.2  线程如何常驻处理事件
 一般来讲，一个线程一次只能执行一个任务，执行完成后线程就会退出。主线程是程序是重要的事件处理单元，自然不能执行完任务后就退出，所以我们需要一个机制，让线程能随时处理事件但并不退出，通常的代码逻辑是这样的：
@@ -52,7 +52,7 @@ CFRunLoopRef 的代码是开源的，你可以在这里 http://opensource.apple.
 #### 1.4 RunLoop 与 线程的关系
 在Runloop的 官方文档 中，我们可以看到 Runloop 是一个死循环模型，线程在执行完任务后会进行休眠，有新的任务需要执行时就会被唤醒。如下图所示：
 
-![image](../postImage/iOS-事件分发处理-RunLoop/psb-02.png)
+![image](https://lianghuii.com/postImage/iOS-事件分发处理-RunLoop/psb-02.png)
 
 线程提供事件处理的能力，RunLoop 提供线程持续处理事件的能力。RunLoop 在接收到 Input sources、Timer sources 后，根据 sources 类型转化相对应的事件交于线程处理。在这个过程中，RunLoop 体现了它接收事件和分发事件的能力。
 
@@ -119,7 +119,7 @@ CFRunLoopRef _CFRunLoopGet(pthread_t thread) {
 - CFRunLoopObserverRef
 
 CFRunLoopModeRef 类没有对外暴露，只是通过 CFRunLoopRef 的接口进行了封装。他们的关系如下:
-![image](../postImage/iOS-事件分发处理-RunLoop/psb-03.png)
+![image](https://lianghuii.com/postImage/iOS-事件分发处理-RunLoop/psb-03.png)
 
 一个 RunLoop 包含若干个 Mode，每个 Mode 又包含若干个 Source/Timer/Observer。每次调用 RunLoop 的主函数时，只能指定其中一个 Mode，这个Mode被称作 CurrentMode。如果需要切换 Mode，只能退出 Loop，再重新指定一个 Mode 进入。这样做主要是为了分隔开不同组的 Source/Timer/Observer，让其互不影响。
 
@@ -156,7 +156,7 @@ typedef CF_OPTIONS(CFOptionFlags, CFRunLoopActivity) {
 iOS 中公开暴露出来的只有 NSDefaultRunLoopMode 和 NSRunLoopCommonModes。 NSRunLoopCommonModes 实际上是一个 Mode 的集合，默认包括 NSDefaultRunLoopMode 和 NSEventTrackingRunLoopMode。并不是说 Runloop 会运行在 kCFRunLoopCommonModes 这种模式下，而是相当于分别注册了 NSDefaultRunLoopMode 和 UITrackingRunLoopMode。当然你也可以通过调用CFRunLoopAddCommonMode() 方法将自定义 Mode 放到 kCFRunLoopCommonModes 组合。
 
 #### 2.6 RunLoop 的运行流程
-![image](../postImage/iOS-事件分发处理-RunLoop/psb-04.png)
+![image](https://lianghuii.com/postImage/iOS-事件分发处理-RunLoop/psb-04.png)
 
 ### 三、RunLoop的实现
 #### 3.1 RunLoop 运行函数实现
@@ -533,12 +533,12 @@ struct __CFRunLoopTimer {
 
 #### 3.4 RunLoop 的底层实现
 RunLoop 的核心是基于 mach port 的，其进入休眠时调用的函数是 mach_msg()。为了解释这个逻辑，下面稍微介绍一下 OSX/iOS 的系统架构。
-![image](../postImage/iOS-事件分发处理-RunLoop/psb-05.png)
+![image](https://lianghuii.com/postImage/iOS-事件分发处理-RunLoop/psb-05.png)
 
 苹果官方将整个系统大致划分为上述4个层次： 应用层包括用户能接触到的图形应用，例如 Spotlight、Aqua、SpringBoard 等。 应用框架层即开发人员接触到的 Cocoa 等框架。 核心框架层包括各种核心框架、OpenGL 等内容。 Darwin 即操作系统的核心，包括系统内核、驱动、Shell 等内容，这一层是开源的，其所有源码都可以在 opensource.apple.com 里找到。
 
 我们再深入看一下 Darwin 这个核心的架构：
-![image](../postImage/iOS-事件分发处理-RunLoop/psb-06.png)
+![image](https://lianghuii.com/postImage/iOS-事件分发处理-RunLoop/psb-06.png)
 
 其中，在硬件层上面的三个组成部分：Mach、BSD、IOKit (还包括一些上面没标注的内容)，共同组成了 XNU 内核。 XNU 内核的内环被称作 Mach，其作为一个微内核，仅提供了诸如处理器调度、IPC (进程间通信)等非常少量的基础服务。 BSD 层可以看作围绕 Mach 层的一个外环，其提供了诸如进程管理、文件系统和网络等功能。 IOKit 层是为设备驱动提供了一个面向对象(C++)的一个框架。
 
@@ -572,7 +572,7 @@ mach_msg_return_t mach_msg(
 一条 Mach 消息实际上就是一个二进制数据包 (BLOB)，其头部定义了当前端口 msgh_remote_port 和目标端口 msgh_remote_port， 发送和接受消息是通过同一个 API 进行的，其 option 标记了消息传递的方向。
 
 为了实现消息的发送和接收，mach_msg() 函数实际上是调用了一个 Mach 陷阱 (trap)，即函数mach_msg_trap()，陷阱这个概念在 Mach 中等同于系统调用。当你在用户态调用 mach_msg_trap() 时会触发陷阱机制，切换到内核态；内核态中内核实现的 mach_msg() 函数会完成实际的工作，如下图：
-![image](../postImage/iOS-事件分发处理-RunLoop/psb-07.png)
+![image](https://lianghuii.com/postImage/iOS-事件分发处理-RunLoop/psb-07.png)
 
 RunLoop 的核心就是一个 mach_msg() ，RunLoop 调用这个函数去接收消息，如果没有别人发送 port 消息过来，内核会将线程置于等待状态。例如你在模拟器里跑起一个 iOS 的 App，然后在 App 静止时点击暂停，你会看到主线程调用栈是停留在 mach_msg_trap() 这个地方。
 
