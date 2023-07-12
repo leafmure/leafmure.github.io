@@ -1,7 +1,7 @@
 ---
 title: Nginx 安装
 date: 2018-11-28 15:26:11
-categories: 服务器
+categories: Server
 tags:
 - Nginx
 keywords: Nginx 安装,Nginx
