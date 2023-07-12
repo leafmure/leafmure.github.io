@@ -12,7 +12,7 @@
 | AutoreleasePool | [AutoreleasePool详解](https://github.com/MeanMouse/blog/blob/master/contents/iOS/AutoreleasePool详解.md) |
 | 访问控制修饰符 | [Swift、Objective-C 访问控制修饰符](https://github.com/MeanMouse/blog/blob/master/contents/iOS/Swift、Objective-C%20访问控制修饰符.md) |
 | RunLoop | [iOS-事件分发处理-RunLoop](https://github.com/MeanMouse/blog/blob/master/contents/iOS/iOS-事件分发处理-RunLoop.md) |
-| cocoapods | [cocoapods-私有库和公开库](https://github.com/MeanMouse/blog/blob/master/contents/iOS/cocoapods-私有库和公开库.md) |
+| Cocoapods | [cocoapods-私有库和公开库](https://github.com/MeanMouse/blog/blob/master/contents/iOS/cocoapods-私有库和公开库.md) <br> [CocoaPods-pod-setup太慢](https://github.com/MeanMouse/blog/blob/master/contents/iOS/CocoaPods-pod-setup太慢.md) <br> [上传封装工具到Cocoapods](https://github.com/MeanMouse/blog/blob/master/contents/iOS/上传封装工具到Cocoapods.md) |
 | UITableView Error | [UITableView Invalid update](https://github.com/MeanMouse/blog/blob/master/contents/iOS/UITableView%20Invalid%20update.md) |
 | WKWebView秒开优化方案 | [iOS-WKWebView秒开优化方案](https://github.com/MeanMouse/blog/blob/master/contents/iOS/iOS-WKWebView秒开优化方案.md) |
 | 属性包装器 | [Swift-属性包装器](https://github.com/MeanMouse/blog/blob/master/contents/iOS/Swift-属性包装器.md) |
@@ -27,7 +27,6 @@
 | EventKit | [EventKit-日历事件](https://github.com/MeanMouse/blog/blob/master/contents/iOS/EventKit-日历事件.md) |
 | __weak | [weak-修饰符](https://github.com/MeanMouse/blog/blob/master/contents/iOS/weak-修饰符.md) |
 | Runtime | [Runtime-探究](https://github.com/MeanMouse/blog/blob/master/contents/iOS/Runtime-探究.md) |
-| Cocoapods | [CocoaPods-pod-setup太慢](https://github.com/MeanMouse/blog/blob/master/contents/iOS/CocoaPods-pod-setup太慢.md) <br> [上传封装工具到Cocoapods](https://github.com/MeanMouse/blog/blob/master/contents/iOS/上传封装工具到Cocoapods.md) |
 | block | [Block](https://github.com/MeanMouse/blog/blob/master/contents/iOS/Block.md) |
 | 架构学习 | [MV系列和VIPER架构学习](https://github.com/MeanMouse/blog/blob/master/contents/iOS/MV系列和VIPER架构学习.md) |
 
