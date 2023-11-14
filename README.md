@@ -5,6 +5,18 @@
 <img src="https://img.shields.io/badge/platform-iOS-%23222222.svg"> <img src="https://img.shields.io/badge/language-Objective--C-%23ff824c.svg"> <img src="https://img.shields.io/badge/language-Swift-%2378c504.svg"> <img src="https://img.shields.io/badge/platform-Linux-%23222222.svg">
 
 
+## 工具
+
+| tag | Article |
+|:-------:|:------:|
+| Stable Diffusion | [Mac 本地部署 Stable Diffusion](https://github.com/MeanMouse/blog/blob/master/contents/工具/Mac%20本地部署%20Stable%20Diffusion.md) |
+| FFmpeg | [FFmpeg安装](https://github.com/MeanMouse/blog/blob/master/contents/工具/FFmpeg安装.md) |
+| rtmp | [FFmpeg安装](https://github.com/MeanMouse/blog/blob/master/contents/工具/FFmpeg安装.md) |
+| SRS | [FFmpeg安装](https://github.com/MeanMouse/blog/blob/master/contents/工具/FFmpeg安装.md) |
+| H.256推流 | [FFmpeg安装](https://github.com/MeanMouse/blog/blob/master/contents/工具/FFmpeg安装.md) |
+| Ruby | [Mac Ruby 和 Cocoapods 安装 (适用 M 系列芯片)](https://github.com/MeanMouse/blog/blob/master/contents/工具/Mac%20Ruby%20和%20Cocoapods%20安装%20(适用%20M%20系列芯片).md) |
+| Cocoapods | [Mac Ruby 和 Cocoapods 安装 (适用 M 系列芯片)](https://github.com/MeanMouse/blog/blob/master/contents/工具/Mac%20Ruby%20和%20Cocoapods%20安装%20(适用%20M%20系列芯片).md) |
+
 ## iOS
 
 | tag | Article |
