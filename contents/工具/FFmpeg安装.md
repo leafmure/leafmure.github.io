@@ -5,17 +5,12 @@ categories:
 - 工具
 tags:
 - FFmpeg
-- rtmp
-- SRS
-- H.256推流
 keywords:
 - FFmpeg,rtmp,SRS,H.256
 description:
 images:
 ---
-# FFmpeg 安装
-
-## Homebrew 方式安装
+### Homebrew 方式安装
 1、执行安装命令
 ```
 brew install ffmpeg
@@ -41,8 +36,8 @@ brew options homebrew-ffmpeg/ffmpeg/ffmpeg
 brew install homebrew-ffmpeg/ffmpeg/ffmpeg --with-aribb24 --with-chromaprint --with-decklink --with-fdk-aac --with-game-music-emu --with-jack --with-jpeg-xl --with-libaribb24 --with-libbluray --with-libbs2b --with-libcaca --with-libflite --with-libgsm --with-libmodplug --with-libopenmpt --with-librist --with-librsvg --with-libsoxr --with-libssh --with-libvidstab --with-libvmaf --with-libxml2 --with-libzvbi --with-opencore-amr --with-openh264 --with-openjpeg --with-openssl --with-openssl@1.1 --with-rav1e --with-rtmpdump --with-rubberband --with-speex --with-srt --with-svt-av1 --with-tesseract --with-two-lame --with-webp --with-xvid --with-zeromq --with-zimg
 ```
 
-## FFmpeg 支持 RTMP H265
-### 安装 libx264
+### FFmpeg 支持 RTMP H265
+#### 安装 libx264
 ```
 git clone https://code.videolan.org/videolan/x264.git
 cd x264
@@ -51,7 +46,7 @@ mkdir build
 make -j10
 make install
 ```
-### 安装 libx265
+#### 安装 libx265
 ```
 git clone https://bitbucket.org/multicoreware/x265_git.git
 cd x265_git/build/linux
@@ -60,18 +55,18 @@ cmake -DCMAKE_INSTALL_PREFIX=$(pwd)/build -DENABLE_SHARED=OFF ../../source
 make -j10
 make install
 ```
-### 设置 libx264、libx265 环境变量
+#### 设置 libx264、libx265 环境变量
 ```
 export PKG_CONFIG_PATH=~/x264/build/lib/pkgconfig:~/x265_git/build/linux/build/lib/pkgconfig
 ```
-### ffmpeg 中 rtmp/flv 模块支持 h.265
+#### ffmpeg 中 rtmp/flv 模块支持 h.265
 ```
 git clone -b 5.1 https://github.com/runner365/ffmpeg_rtmp_h265.git
 cd ffmpeg_rtmp_h265
 cp flv.h ~/FFmpeg/libavformat/
 cp flv*.c ~/FFmpeg/libavformat/
 ```
-### ffmpeg 重新编译安装
+#### ffmpeg 重新编译安装
 ```
 git clone https://github.com/FFmpeg/FFmpeg.git
 cd FFmpeg
@@ -88,7 +83,7 @@ make -j10
 make install
 ```
 
-## rtmp/flv h.265 服务器支持
+### rtmp/flv h.265 服务器支持
 nginx-rtmp 只支持 h.264, SRS 已支持 rtmp/flv h.265, 因此建议使用 SRS 服务.
 ```
 git clone https://github.com/ossrs/srs.git

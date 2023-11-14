@@ -11,13 +11,12 @@ keywords:
 description:
 images:
 ---
-# Mac Ruby 和 Cocoapods 安装 (适用 M 系列芯片)
-## 前言
+### 前言
 Ruby 和 Cocoapods 是 iOSer 必接触的工具, Cocoapods 是 Ruby 程序包, 因此安装 Cocoapods 前置条件要有一个适用的 Ruby 版本, 系统有自带 Ruby, 但版本比较低且其执行目录无权限访问, 所以我们需要去下载安装一个比较高版本的 Ruby
 <!-- more -->
 
-## Ruby 安装
-### RVM
+### Ruby 安装
+#### RVM
 Ruby 的下载和管理, 一般会通过 rvm 包管理工具, 如何检查 rvm 是否安装? 终端执行以下命令, 有输出版本号即为成功.
 ```bash
 rvm --version
@@ -52,7 +51,7 @@ rvm use 版本名 --default
 ```
 一般来说, 通过 rvm 安装 ruby 一般会顺利完成, 但是最近在 M 系列 Mac 上一直卡在一个问题报错上:  “Error running __rvm_make -j8”, 网上查询好多资料和博文都未得到有效解决, 最终放弃 rvm 方式, 通过 homebrew 安装 ruby.
 
-## HomeBrew 方式安装 Ruby
+### HomeBrew 方式安装 Ruby
 homebrew 是 Mac 常用的包管理器，用于安装和管理各种开源软件. 
 ```bash
 
@@ -96,8 +95,8 @@ fi
 ruby -v
 ```
 
-## Cocoapods 安装
-### RubyGems
+### Cocoapods 安装
+#### RubyGems
 Ruby 安装完后, 需要检查 RubyGems 源, RubyGems 是一个用于管理 Ruby 程序包（也称为 gem）的软件包管理系统.
 ```bash
 # 查看当前 ruby 的源
@@ -118,7 +117,7 @@ gem -v
 sudo gem update --system
 ```
 
-### 开始安装Cocoapods
+#### 开始安装Cocoapods
 为防止旧版本影响, 可先移除旧版本再安装. 可以通过 sh 脚本进行卸载
 ```bash
 # remove.sh
