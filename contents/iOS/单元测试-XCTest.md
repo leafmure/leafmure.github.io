@@ -15,7 +15,7 @@ images:
 > 单元测试通常由软件开发人员编写，用于确保他们所写的代码符合软件需求和遵循开发目标。通常来说，每修改一次程序就会进行最少一次单元测试，在编写程序的过程中前后很可能要进行多次单元测试，以证实程序达到工作目标要求。
 <!-- more -->
 ### Unit Tests
-![image](https://meanmouse.github.io/postImage/单元测试-XCTest/psb-01.png)
+![image](https://meanmouse.github.io/pic/postImage/单元测试-XCTest/psb-01.png)
 创建项目或文件时，底部勾选 Unit Tests 会创建对应的测试类，该类继承 XCTestCase，提供测试方法如下：
 - setUpWithError：在进行测试前会调用该方法，用于准备测试中需要的条件如：对象初始化、测试数据准备等等。
 - tearDownWithError：在测试结束后会调用该方法
@@ -134,4 +134,4 @@ class LearnXCTestUITests: XCTestCase {
 }
 ```
 为方便编写 UI 测试，Xcode 提供 UI 行为录制，光标定位到 testExample 方法中，点击底部红点开启录制，当点击 UI 时会自动生成 UI 操作代码。
-![image](https://meanmouse.github.io/postImage/单元测试-XCTest/psb-02.png)
+![image](https://meanmouse.github.io/pic/postImage/单元测试-XCTest/psb-02.png)

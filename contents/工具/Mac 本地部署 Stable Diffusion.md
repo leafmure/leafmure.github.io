@@ -96,12 +96,12 @@ git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui
 需在启动 WebUI 前下载好一个大模型放置目录下, 否则会自动下载默认模型, 比较耗费时间.
 
 ##### [C站](https://civitai.com/)
-![image](https://meanmouse.github.io/postImage/Mac-本地部署-StableDiffusion/C站模型获取.png)
+![image](https://meanmouse.github.io/pic/postImage/Mac-本地部署-StableDiffusion/C站模型获取.png)
 ##### [Hugging Face](https://huggingface.co/models?pipeline_tag=text-to-image&sort=downloads)
-![image](https://meanmouse.github.io/postImage/Mac-本地部署-StableDiffusion/HuggingFace1.png)
-![image](https://meanmouse.github.io/postImage/Mac-本地部署-StableDiffusion/HuggingFace1.png)
+![image](https://meanmouse.github.io/pic/postImage/Mac-本地部署-StableDiffusion/HuggingFace1.png)
+![image](https://meanmouse.github.io/pic/postImage/Mac-本地部署-StableDiffusion/HuggingFace1.png)
 ##### [LiblibAI](https://www.liblib.ai/modelinfo/8b4b7eb6aa2c480bbe65ca3d4625632d)
-![image](https://meanmouse.github.io/postImage/Mac-本地部署-StableDiffusion/LiblibAI.png)
+![image](https://meanmouse.github.io/pic/postImage/Mac-本地部署-StableDiffusion/LiblibAI.png)
 
 ### 启动 WebUI
 #### 准备依赖工具
@@ -116,7 +116,7 @@ brew install cmake protobuf rust wget
 
 ./webui.sh
 ```
-![image](https://meanmouse.github.io/postImage/Mac-本地部署-StableDiffusion/应用界面.png)
+![image](https://meanmouse.github.io/pic/postImage/Mac-本地部署-StableDiffusion/应用界面.png)
 
 ### 汉化
 可使用 [stable-diffusion-webui-chinese](https://github.com/VinsonLaro/stable-diffusion-webui-chinese) 扩展进行汉化, 具体使用方法请阅读[安装说明](https://github.com/VinsonLaro/stable-diffusion-webui-chinese#%E6%96%B9%E6%B3%951%E9%80%9A%E8%BF%87webui%E6%8B%93%E5%B1%95%E8%BF%9B%E8%A1%8C%E5%AE%89%E8%A3%85)
