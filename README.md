@@ -9,6 +9,7 @@
 
 | tag | Article |
 |:-------:|:------:|
+| H.264 | [H.264](https://github.com/MeanMouse/blog/blob/master/contents/音视频/H.264.md) |
 | 音视频 | [音视频基础知识](https://github.com/MeanMouse/blog/blob/master/contents/音视频/音视频基础知识.md) |
 
 ## 工具
