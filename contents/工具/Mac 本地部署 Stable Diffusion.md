@@ -128,3 +128,10 @@ brew install cmake protobuf rust wget
 return run(f'"{python}" -m pip {command} --use-pep517 --prefer-binary{index_url_line}', desc=f"Installing {desc}", errdesc=f"Couldn't install {desc}", live=live)
 ```
 [github issues](https://github.com/AUTOMATIC1111/stable-diffusion-webui/issues/13113)
+
+##### 2. [stable-diffusion-webui-extensions 加载 SSL 错误]
+在 launch_utils.py 中的 from module.paths_internal import script_path, extensions_dir 后面添加:
+```
+import ssl ssl._create_default_https_context = ssl._create_unverified_context
+```
+[github issues](https://github.com/AUTOMATIC1111/stable-diffusion-webui/issues/9285)
