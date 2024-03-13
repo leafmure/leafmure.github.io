@@ -202,7 +202,7 @@ SInt64 audioDataByteCount = fileSize - dataOffset;
 
 
 #### kAudioFileStreamProperty_BitRate
-获取音频数据的码率, 获取这个malProperty 是为了计算音频的总时长 Duration. 
+获取音频数据的码率, 获取这个 Property 是为了计算音频的总时长 Duration. 
 ```Objective-C
 /// 这是 CBR 固定码率音频的计算方式, VBR 需解析 Xing 头获取总帧数, 总帧数 * 帧时长.
 estimatedDuration = (audioDataByteCount * 8.0) / bitRate * 1000
