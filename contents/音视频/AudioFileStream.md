@@ -1,6 +1,6 @@
 ---
 title: AudioFileStream
-date: 2024-03-12 13:42:30
+date: 2024-03-12 12:42:30
 categories:
 - 音视频
 tags:
@@ -301,6 +301,28 @@ AudioFileStreamGetProperty(_audioFileStreamID, kAudioFileStreamProperty_MaximumP
 UInt32 maxPacketSize;
 UInt32 sizeOfUInt32 = sizeof(maxPacketSize);
 AudioFileStreamGetProperty(_audioFileStreamID, kAudioFileStreamProperty_PacketSizeUpperBound, &sizeOfUInt32, &maxPacketSize);
+```
+
+#### kAudioFileStreamProperty_MagicCookieData
+Magic Cookie 一种用于描述特定音频格式或编解码器配置信息的数据块, 解码器需要该信息.
+```Objective-C
+UInt32 cookieSize;
+Boolean writable;
+OSStatus status = AudioFileStreamGetPropertyInfo(_audioFileStreamID, kAudioFileStreamProperty_MagicCookieData, &cookieSize, &writable);
+if (status != noErr)
+{
+    return nil;
+}
+
+void *cookieData = malloc(cookieSize);
+status = AudioFileStreamGetProperty(_audioFileStreamID, kAudioFileStreamProperty_MagicCookieData, &cookieSize, cookieData);
+if (status != noErr)
+{
+    return nil;
+}
+
+NSData *cookie = [NSData dataWithBytes:cookieData length:cookieSize];
+free(cookieData);
 ```
 
 ## 分离音频帧

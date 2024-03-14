@@ -1,6 +1,6 @@
 ---
 title: Mac Ruby 和 Cocoapods 安装 (适用 M 系列芯片)
-date: 2023-07-06 17:35:47
+date: 2023-07-06 19:35:47
 categories:
 - 工具
 tags:

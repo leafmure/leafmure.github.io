@@ -1,6 +1,6 @@
 ---
 title: AudioFile
-date: 2024-03-13 16:40:30
+date: 2024-03-13 19:40:30
 categories:
 - 音视频
 tags:
@@ -310,6 +310,27 @@ AudioFileGetProperty(_fileID, kAudioFilePropertyPacketSizeUpperBound, &size, &ma
 SInt64 packetCount = 0.0;
 UInt32 size = sizeof(packetCount);
 AudioFileGetProperty(_fileID, kAudioFilePropertyAudioDataPacketCount, &size, &packetCount);
+```
+
+##### kAudioFilePropertyMagicCookieData
+Magic Cookie 一种用于描述特定音频格式或编解码器配置信息的数据块, 解码器需要该信息.
+```Objective-C
+UInt32 cookieSize;
+OSStatus status = AudioFileGetPropertyInfo(_fileID, kAudioFilePropertyMagicCookieData, &cookieSize, NULL);
+if (status != noErr)
+{
+    return nil;
+}
+
+void *cookieData = malloc(cookieSize);
+status = AudioFileGetProperty(_fileID, kAudioFilePropertyMagicCookieData, &cookieSize, cookieData);
+if (status != noErr)
+{
+    return nil;
+}
+
+NSData *cookie = [NSData dataWithBytes:cookieData length:cookieSize];
+free(cookieData);
 ```
 
 ### 读取音频数据
