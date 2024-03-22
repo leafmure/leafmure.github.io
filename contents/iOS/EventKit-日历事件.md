@@ -6,7 +6,7 @@ tags:
 - EventKit
 keywords: 日历事件,EventKit,event,reminders
 description:
-images: "https://lianghuii.com/postCover/EventKit-日历事件.png"
+images: "https://destinmure.github.io/pic/postCover/EventKit-日历事件.png"
 ---
 
 #### EventKit 框架

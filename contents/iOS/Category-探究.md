@@ -6,7 +6,7 @@ tags:
 - category
 keywords: category,分类,实例变量,+ load,关联对象,runtime
 description:
-images: "https://lianghuii.com/postCover/Category-探究.png"
+images: "https://destinmure.github.io/pic/postCover/Category-探究.png"
 ---
 
 ### 简介

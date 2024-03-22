@@ -147,7 +147,7 @@ AutoreleasePoolPage 类继承自 AutoreleasePoolPageData，从 AutoreleasePoolPa
 - AutoreleasePool 是以 AutoreleasePoolPage 为节点组合的“双向链表”，AutoreleasePoolPage 创建时，将新创建的 Page 的 parent 指针指向parentPage，将 parentPage 的 child 指针指向自己。
 - AutoreleasePoolPage 的 thread 成员变量指向当前 AutoreleasePool 所在的线程，说明 AutoreleasePool 和线程是一一对应的
 - AutoreleasePoolPage 的最大 Size 为一页虚拟内存页的大小-4096 字节，其中 56 个字节用来存放它内部的成员变量，剩下的空间（4040个字节）用来存放 autorelease 对象 的地址，它的内存分布图如下：
-![image](https://leafmure.github.io/pic/postImage/AutoreleasePool详解/psb-01.png)
+![image](https://destinmure.github.io/pic/postImage/AutoreleasePool详解/psb-01.png)
 
 AutoreleasePoolPage 拥有 begin、end、empty、full 这些方法来描述 Page 的容量情况，实现代码如下：
 ```Objective-C
@@ -455,7 +455,7 @@ objc[1529]: ##############
 Program ended with exit code: 0
 ```
 从输出信息来看，它的内存分布图如下：
-![image](https://leafmure.github.io/pic/postImage/AutoreleasePool详解/psb-02.png)
+![image](https://destinmure.github.io/pic/postImage/AutoreleasePool详解/psb-02.png)
 
 再来看看多层 @autoreleasepool 嵌套情况：
 ```Objective-C
@@ -479,7 +479,7 @@ int main(int argc, const char * argv[]) {
 }
 ```
 每个 AutoreleasePool 创建后都会 push 一个 POOL_BOUNDARY 对象，区别其他 AutoreleasePool 管理的对象，嵌套后分布图如下
-![image](https://leafmure.github.io/pic/postImage/AutoreleasePool详解/psb-03.png)
+![image](https://destinmure.github.io/pic/postImage/AutoreleasePool详解/psb-03.png)
 
 ### 四、AutoreleasePool 的创建时机和释放时机
 AutoreleasePool 创建一般是这两种方式：
