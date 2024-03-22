@@ -451,7 +451,7 @@ Block实质就是Objective-C对象，它有三种类型：_NSConcreteStackBlock�
 - _NSConcreteMallocBlock
 它是在堆（内存块）里的Block类型，有强指针引用或copy修饰的成员属性引用，没有强指针引用即销毁。
 
-![image](https://meanmouse.github.io/pic/postImage/Block/psb.png)
+![image](https://leafmure.github.io/pic/postImage/Block/psb.png)
 
 _NSConcreteGlobalBlock 类型Block变量在超出作用域也能通过指针访问，而_NSConcreteStackBlock类型Block在作用域结束后就会被废弃，同样的 __block 类型变量也是如此，为解决这个问题，Block语法提供了将Block 和 __block变量从栈上复制到堆上，这样在Block变量作用域结束后，堆上的Block还能继续存在。复制在堆上的Block会将 _NSConcreteMallocBlock 类名写入Block 结构体实例 __main_block_impl_0 中的成员变量 ipml 的isa变量中。
 ```Objective-C
@@ -589,7 +589,7 @@ _NSConcreteMallocBlock       堆                            引用计数增加
 
 当Block从栈上复制到堆上时，其拥有的所有__block 变量也会随Block全部被复制到堆上。栈上的__block变量结构体中的成员变量 __forwarding的值会被替换成堆上的__block变量结构体的地址，堆上的__block变量结构体中的成员变量 __forwarding依然指向自身，因此，不管是在栈上我们都能通过__forwarding 访问同一个__block 变量。
 
-![image](https://meanmouse.github.io/pic/postImage/Block/psb-1.png)
+![image](https://leafmure.github.io/pic/postImage/Block/psb-1.png)
 
 ### Block 循环引用
 #### Block 是如何引起循环引用的
@@ -648,7 +648,7 @@ return 0;
 ```
 运行后可发现TestCircleRetain实例类的dealloc方法没有调用，因为在TestCircleRetain实例方法中，Block里使用了 带有 __strong（强引用） 修饰的testCircleRetain（也就是self）对象的成员变量 name，所以Block会捕获testCircleRetain（而不是只捕获name，即使你用的是_name,和self.name并无差别），并且当Block赋值给成员变量printBlock时，Block由栈上复制到了堆上 ，因此 testCircleRetain 持有 printBlock，printBlock 持有 testCircleRetain，双方互相持有（强引用），没法销毁，故而没法执行dealloc()方法。不过上面的循环引用比较明显，编译器会发现并警告。
 
-![image](https://meanmouse.github.io/pic/postImage/Block/psb-2.png)
+![image](https://leafmure.github.io/pic/postImage/Block/psb-2.png)
 
 #### 如何避免循环引用
 
@@ -662,7 +662,7 @@ NSLog(@"print: %@", weakSelf.name);
 };
 ```
 
-![image](https://meanmouse.github.io/pic/postImage/Block/psb-3.png)
+![image](https://leafmure.github.io/pic/postImage/Block/psb-3.png)
 
 - 使用__block 变量来避免循环引用
 ```Objective-C
@@ -674,4 +674,4 @@ block_self = nil;
 ```
 使用__block修饰的变量并赋值self（testCircleRetain自身），它们之间的引用便变成了：testCircleRetain 引用了 printBlock，block_self 引用了 testCircleRetain和 printBlock。当printBlock执行后 循环引用便会打破，但是如果你不使用 printBlock的话，便会持续循环引用从而导致内存泄漏。
 
-![image](https://meanmouse.github.io/pic/postImage/Block/psb-4.png)
+![image](https://leafmure.github.io/pic/postImage/Block/psb-4.png)

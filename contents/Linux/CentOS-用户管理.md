@@ -440,7 +440,7 @@ root                ALL=(ALL)                   ALL
 // eg：# visudo
 // 输出：
 // root       ALL=(ALL)       ALL
-// meanmouse  ALL=(ALL)       ALL
+// leafmure  ALL=(ALL)       ALL
 // bear       ALL=(ALL)       ALL
 // 新用户      ALL=(ALL)       ALL
 ```

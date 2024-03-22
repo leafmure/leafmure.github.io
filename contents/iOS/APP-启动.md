@@ -129,11 +129,11 @@ main 阶段的优化主要在 application:didFinishLaunchingWithOptions 方法�
 
 ###### 重排原理
 函数编译在 mach-o 中的位置是根据 ld ( Xcode 的链接器) 的编译顺序并非调用顺序来的（即：Build Phases中Compile Sources 里文件的排列顺序）。当程序启动时如果需要调用 method2 和 method4，为了执行对应的代码，系统必须进行两个Page Fault。但如果我们把 method2 和 method4排布到一起，那么只需要一个Page Fault即可，这就是二进制文件重排的核心原理。
-![image](https://meanmouse.github.io/pic/postImage/AppStart/psb-1.png)
+![image](https://leafmure.github.io/pic/postImage/AppStart/psb-1.png)
 ###### System Trace
 检测 page fault 次数以及测试优化结果，可以采用 Instruments 的 System Trace 工具，选择App冷启动作为测试环境。
 
-![image](https://meanmouse.github.io/pic/postImage/AppStart/psb-2.png)
+![image](https://leafmure.github.io/pic/postImage/AppStart/psb-2.png)
 
 File Backed Page In 即为 page fault 次数
 

@@ -57,8 +57,8 @@ path: baidu_urls.txt # 文本文档的地址， 新链接会保存在此文本�
 deploy:
 - type: git
 repo:
-github: git@github.com:MeanMouse/MeanMouse.github.io.git
-coding: git@git.coding.net:MeanMouse/blog.git
+github: git@github.com:Leafmure/Leafmure.github.io.git
+coding: git@git.coding.net:Leafmure/blog.git
 - type: baidu_url_submitter
 ```
 #### 自动推送
