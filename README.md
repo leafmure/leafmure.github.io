@@ -2,7 +2,7 @@
 <img src="https://destinmure.github.io/pic/common/635867.jpg">
 
 # Leafmure
-学习、探究、整理、记录、分享
+怀良辰以孤往，或植杖而耘耔。登东皋以舒啸，临清流而赋诗。聊乘化以归尽，乐夫天命复奚疑！
 
 <img src="https://img.shields.io/badge/platform-iOS-%23222222.svg"> <img src="https://img.shields.io/badge/language-Objective--C-%23ff824c.svg"> <img src="https://img.shields.io/badge/language-Swift-%2378c504.svg"> <img src="https://img.shields.io/badge/platform-Linux-%23222222.svg">
 
