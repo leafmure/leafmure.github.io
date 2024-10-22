@@ -37,15 +37,15 @@ iOS 下的架构设计常用模式有：MVC、MVP、MVVM以及VIPER，架构设�
 - View：界面UI展示
 - Controller：View 和 Model之间的协调器
 
-##### Aplle 所推荐的MVC
+##### Apple 所推荐的MVC
 
-![image](http://upload-images.jianshu.io/upload_images/3850436-53e7ffe36e1a158f.w!&rf=viewer_4?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![image](https://destinmure.github.io/pic/postImage/MV系列和VIPER架构学习/applemvc.webp)
 
 上图所表示的意思：View和Model之间没有任何直接的联系，Controller作为View 和 Model之间的协调器，所以处理逻辑的代码放在Controller。
 
 但是事实是这样的：
 
-![image](http://upload-images.jianshu.io/upload_images/3850436-9b68bbcc8a03eb06?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![image](https://destinmure.github.io/pic/postImage/MV系列和VIPER架构学习/事实mvc.webp)
 
 由于View混杂在Controller的生命周期中，所以View和ViewController几乎是绑定在一起的。加上处理逻辑代码也编写在Controller中，造成了Controller臃肿，因此也被戏称 “Massive View Controller”。即使可以将一部分逻辑放在Model中处理，但是由于View和Controller的紧密性，对于View的减压毫无办法，之前所说“即使使用的是Apple的MVC架构也会出现原因”便是因为如此。
 
@@ -58,7 +58,7 @@ userCell.configureWithUser(user)
 ```
 这里View直接调用了Model，这违反了MVC的原则，但是这样的情况让人不觉得有什么不对的地方，因为向Cell中传递一个Model对象可以避免将Cell的设置代码放在Controller中，减少Controller的体积。因此我们用的MVC便成了下面的示意：
 
-![image](http://upload-images.jianshu.io/upload_images/3850436-4884937238fa1478.I!&rf=viewer_4?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![image](https://destinmure.github.io/pic/postImage/MV系列和VIPER架构学习/常用mvc.webp)
 
 ##### MVC特点分析
 - 分布性：View和Model确实是分开的，但Controller和View紧密耦合
@@ -71,7 +71,7 @@ userCell.configureWithUser(user)
 - View/Controller：Controller被定义为View，界面UI展示
 - Presenter（展示器）：处理逻辑以及View的动作事件，将数据展示到View上
 
-![image](http://upload-images.jianshu.io/upload_images/3850436-a0cfd7951ac5af7e?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![image](https://destinmure.github.io/pic/postImage/MV系列和VIPER架构学习/mvp.webp)
 
 MVP与Aplle的MVC很像，区别在于：虽然View是和Controller紧密耦合的，但是MVP的协调器Presenter并没有对ViewController的生命周期做任何改变，因此View可以很容易的被模拟出来。在Presenter中根本没有和布局有关的代码，但是它却负责更新View的数据和状态。在MVP中Controller被定义为View，于是View是和Controller紧密耦合的关系便不在是测试的阻碍了，但是因为Presenter的编写降低了一些开发速度。
 
@@ -86,7 +86,7 @@ MVP与Aplle的MVC很像，区别在于：虽然View是和Controller紧密耦合�
 - View/Controller：Controller被定义为View，界面UI展示
 - ViewModel：读取Model，处理逻辑，绑定View，将Model的改变更新到自身并更新View状态
 
-![image](http://upload-images.jianshu.io/upload_images/3850436-26f8b73dabf87a5b?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![image](https://destinmure.github.io/pic/postImage/MV系列和VIPER架构学习/mvvm.webp)
 
 MVVM架构模式MV系列中最新的模式，它和MVP很相似，都是将Controller定义为View并且View和Model没有直接联系。ViewModel读取Model数据进行逻辑处理并绑定View，所以Model改变的同时，ViewMode会将Model的改变更新到自身并更新View。
 
@@ -106,7 +106,7 @@ ViewModel和View的绑定有两种选择：
 - Entity（实体）：普通的数据对象，不属于数据访问层次，因为数据访问属于交互器的职责。
 - Router（路由器）：用来连接VIPER的各个模块，负责视图的跳转
 
-![image](http://upload-images.jianshu.io/upload_images/3850436-60cad17c1f53861d.AQAAAAADF98!&rf=viewer_4?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![image](https://destinmure.github.io/pic/postImage/MV系列和VIPER架构学习/viper.webp)
 
 VIPER和MV系列在任务分摊不同：
 - Model（实体） 作为最小的数据结构转换到交互器中
