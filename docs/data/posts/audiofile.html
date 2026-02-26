@@ -1,0 +1,360 @@
+<h3 id="概述" tabindex="-1">概述</h3>
+<p>AudioFile 归属于 AudioToolBox 框架, 可以用于读取音频信息和分离音频帧, 与 AudioFileStream 功能类似, 但功能会相对强大. 它不仅可以读取并解析音频, 还可以写入音频. 但是它在解析音频时, 需要音频文件的完整性, 适合于本地音频文件, 不适合用于流播.</p>
+<!-- more -->
+<h3 id="audiofile-初始化" tabindex="-1">AudioFile 初始化</h3>
+<h4 id="audiofileopenurl" tabindex="-1">AudioFileOpenURL</h4>
+<pre><code class="language-Objective-C">typedef CF_ENUM(SInt8, AudioFilePermissions) {
+    kAudioFileReadPermission      = 0x01,
+    kAudioFileWritePermission     = 0x02,
+    kAudioFileReadWritePermission = 0x03
+};
+
+extern OSStatus 
+AudioFileOpenURL (  CFURLRef                            inFileRef,
+                    AudioFilePermissions                inPermissions,
+                    AudioFileTypeID                     inFileTypeHint,
+                    AudioFileID __nullable * __nonnull  outAudioFile);
+</code></pre>
+<ul>
+<li>inFileRef: 传入 <strong>CFURLRef</strong> url, 只支持本地文件.</li>
+<li>inPermissions: 枚举 <strong>AudioFilePermissions</strong> 授予读取权限.</li>
+<li>inFileTypeHint: <strong>AudioFileTypeID</strong> 音频建议类型, 不知道类型传 0.</li>
+<li>outAudioFile: <strong>AudioFileID</strong> AudioFile 实例 ID.</li>
+</ul>
+<h4 id="audiofileopenwithcallbacks" tabindex="-1">AudioFileOpenWithCallbacks</h4>
+<pre><code class="language-Objective-C">AudioFileOpenWithCallbacks (
+                void *                              inClientData,
+                AudioFile_ReadProc                  inReadFunc,
+                AudioFile_WriteProc __nullable      inWriteFunc,
+                AudioFile_GetSizeProc               inGetSizeFunc,
+                AudioFile_SetSizeProc __nullable    inSetSizeFunc,
+                AudioFileTypeID                     inFileTypeHint,
+                AudioFileID __nullable * __nonnull  outAudioFile);
+</code></pre>
+<ul>
+<li>inClientData: 上下文对象, 回调函数中传入.</li>
+<li>inReadFunc: <strong>AudioFile_ReadProc</strong>, 读取音频数据时回调, 需给予数据返回.</li>
+<li>inWriteFunc: <strong>AudioFile_WriteProc</strong> 写入音频数据时回调, 需给予数据返回.</li>
+<li>inGetSizeFunc: <strong>AudioFile_GetSizeProc</strong> 获取音频文件长度时触发, 需给予返回文件长度.</li>
+<li>inSetSizeFunc: <strong>AudioFile_SetSizeProc</strong> 设置音频文件长度时触发, 需给予返回文件长度.</li>
+<li>inFileTypeHint: <strong>AudioFileTypeID</strong> 音频建议类型, 不知道类型传 0.</li>
+<li>outAudioFile: <strong>AudioFileID</strong> AudioFile 实例 ID.</li>
+</ul>
+<p><strong>AudioFileOpenWithCallbacks</strong> 创建方式需要先准备好音频文件数据, 在回调函数中返回 AudioFile 所需要的数据, 否则会创建失败. 创建的所需的数据是包含音频格式信息的那部分, 即 <strong>AudioFileStream</strong> 返回 <strong>kAudioFileStreamProperty_ReadyToProducePackets</strong> 时的长度. 所以如果 AudioFile 要读取网络音频流, 需 <strong>AudioFileStream</strong> 配合使用.</p>
+<h5 id="audiofile_readproc" tabindex="-1">AudioFile_ReadProc</h5>
+<pre><code class="language-Objective-C">typedef OSStatus (*AudioFile_ReadProc)(
+                                void *      inClientData,
+                                SInt64      inPosition, 
+                                UInt32      requestCount,
+                                void *      buffer, 
+                                UInt32 *    actualCount);
+</code></pre>
+<ul>
+<li>inClientData: 上下文对象.</li>
+<li>inPosition: AudioFile 所需数据在文件中的开始字节位置.</li>
+<li>requestCount: AudioFile 所需数据的字节长度.</li>
+<li>buffer: 通过 memcpy 函数, 给 AudioFile 返回所需的数据.</li>
+<li>actualCount: 返回给 AudioFile 数据的真实长度, 和 buffer 的长度应一致.</li>
+</ul>
+<p>OSStatus 返回值一般都传 noError, 如果返回异常值, AudioFile 需要重新打开才能使用. 无异常情况, 没有数据可返回时, 也应返回 noError, actualCount 返回 0.</p>
+<p>在读取网络音频流, 缓冲数据不够给 AudioFile, 只给了一部分的情况下, AudioFile 会表现异常, 无法继续正常工作, 此时需要重新创建打开.
+<font color='red'>注意: AudioFile 不适用于网络音频流播放</font></p>
+<h5 id="audiofile_getsizeproc" tabindex="-1">AudioFile_GetSizeProc</h5>
+<pre><code class="language-Objective-C">typedef SInt64 (*AudioFile_GetSizeProc)(
+                                void *      inClientData);
+</code></pre>
+<ul>
+<li>inClientData: 上下文对象.</li>
+<li>返回 SInt64 值, 音频文件字节长度.</li>
+</ul>
+<h5 id="audiofile_writeproc" tabindex="-1">AudioFile_WriteProc</h5>
+<pre><code class="language-Objective-C">typedef OSStatus (*AudioFile_WriteProc)(
+                                void *      inClientData,
+                                SInt64      inPosition, 
+                                UInt32      requestCount, 
+                                const void *buffer, 
+                                UInt32    * actualCount);
+</code></pre>
+<ul>
+<li>inClientData: 上下文对象.</li>
+<li>inPosition: AudioFile 写入数据在文件中的开始字节位置.</li>
+<li>requestCount: AudioFile 写入数据的字节长度.</li>
+<li>buffer: 通过 memcpy 函数, 给 AudioFile 返回写入数据.</li>
+<li>actualCount: 返回给 AudioFile 写入数据的真实长度, 和 buffer 的长度应一致.</li>
+</ul>
+<h5 id="audiofile_getsizeproc-1" tabindex="-1">AudioFile_GetSizeProc</h5>
+<pre><code class="language-Objective-C">typedef OSStatus (*AudioFile_SetSizeProc)(
+                                void *      inClientData,
+                                SInt64      inSize);
+</code></pre>
+<ul>
+<li>inClientData: 上下文对象.</li>
+<li>inSize: 写入数据字节长度</li>
+</ul>
+<h3 id="audiofile-读取音频信息" tabindex="-1">AudioFile 读取音频信息</h3>
+<pre><code class="language-Objective-C">extern OSStatus
+AudioFileGetPropertyInfo(       AudioFileID             inAudioFile,
+                                AudioFilePropertyID     inPropertyID,
+                                UInt32 * __nullable     outDataSize,
+                                UInt32 * __nullable     isWritable);
+</code></pre>
+<ul>
+<li>inAudioFile: 传入 AudioFile ID.</li>
+<li>inPropertyID: 传入要读取的属性类型.</li>
+<li>outDataSize: 获取属性值的数据大小.</li>
+<li>isWritable: 获取属性是否支持写入.</li>
+</ul>
+<pre><code class="language-Objective-C">extern OSStatus
+AudioFileGetProperty(   AudioFileID             inAudioFile,
+                        AudioFilePropertyID     inPropertyID,
+                        UInt32                  *ioDataSize,
+                        void                    *outPropertyData);
+</code></pre>
+<ul>
+<li>inAudioFile: 传入 AudioFile ID.</li>
+<li>nPropertyID: 传入要读取的属性类型.</li>
+</ul>
+<h4 id="audiofilepropertyid" tabindex="-1">AudioFilePropertyID</h4>
+<pre><code class="language-Objective-C">CF_ENUM(AudioFilePropertyID)
+{
+    kAudioFilePropertyFileFormat            =   'ffmt',
+    kAudioFilePropertyDataFormat            =   'dfmt',
+    kAudioFilePropertyIsOptimized           =   'optm',
+    kAudioFilePropertyMagicCookieData       =   'mgic',
+    kAudioFilePropertyAudioDataByteCount    =   'bcnt',
+    kAudioFilePropertyAudioDataPacketCount  =   'pcnt',
+    kAudioFilePropertyMaximumPacketSize     =   'psze',
+    kAudioFilePropertyDataOffset            =   'doff',
+    kAudioFilePropertyChannelLayout         =   'cmap',
+    kAudioFilePropertyDeferSizeUpdates      =   'dszu',
+    kAudioFilePropertyDataFormatName        =   'fnme',
+    kAudioFilePropertyMarkerList            =   'mkls',
+    kAudioFilePropertyRegionList            =   'rgls',
+    kAudioFilePropertyPacketToFrame         =   'pkfr',
+    kAudioFilePropertyFrameToPacket         =   'frpk',
+    kAudioFilePropertyRestrictsRandomAccess =   'rrap',
+    kAudioFilePropertyPacketToRollDistance  =   'pkrl',
+    kAudioFilePropertyPreviousIndependentPacket = 'pind',
+    kAudioFilePropertyNextIndependentPacket =   'nind',
+    kAudioFilePropertyPacketToDependencyInfo =  'pkdp',
+    kAudioFilePropertyPacketToByte          =   'pkby',
+    kAudioFilePropertyByteToPacket          =   'bypk',
+    kAudioFilePropertyChunkIDs              =   'chid',
+    kAudioFilePropertyInfoDictionary        =   'info',
+    kAudioFilePropertyPacketTableInfo       =   'pnfo',
+    kAudioFilePropertyFormatList            =   'flst',
+    kAudioFilePropertyPacketSizeUpperBound  =   'pkub',
+    kAudioFilePropertyPacketRangeByteCountUpperBound = 'prub',
+    kAudioFilePropertyReserveDuration       =   'rsrv',
+    kAudioFilePropertyEstimatedDuration     =   'edur',
+    kAudioFilePropertyBitRate               =   'brat',
+    kAudioFilePropertyID3Tag                =   'id3t',
+    kAudioFilePropertyID3TagOffset          =   'id3o',
+    kAudioFilePropertySourceBitDepth        =   'sbtd',
+    kAudioFilePropertyAlbumArtwork          =   'aart',
+    kAudioFilePropertyAudioTrackCount       =   'atct',
+    kAudioFilePropertyUseAudioTrack         =   'uatk'
+};
+</code></pre>
+<h5 id="kaudiofilepropertydataformat" tabindex="-1">kAudioFilePropertyDataFormat</h5>
+<p>基础文件格式, 这个属性用于获取音频流的数据格式. 通过查询这个属性, 你可以获得有关音频流的基本信息, 如采样率、声道数、编码格式等.</p>
+<pre><code class="language-Objective-C">UInt32 size = sizeof(AudioStreamBasicDescription);
+AudioStreamBasicDescription baseFormat;
+AudioFileGetProperty(_fileID, kAudioFilePropertyDataFormat, &amp;size, &amp;baseFormat);
+</code></pre>
+<h5 id="kaudiofilepropertyformatlist" tabindex="-1">kAudioFilePropertyFormatList</h5>
+<p>这个属性用于获取音频流支持的所有格式列表. 当一个音频流支持多种格式时, 你可以使用这个属性来获取所有支持的格式列表.</p>
+<pre><code class="language-Objective-C">UInt32 size;
+OSStatus status;
+
+status = AudioFileGetPropertyInfo(_fileID, kAudioFilePropertyFormatList, &amp;size, NULL);
+if (status != noErr)
+{
+  return NO;
+}
+
+UInt32 numFormats = size / sizeof(AudioFormatListItem);
+AudioFormatListItem *formatList = (AudioFormatListItem *)malloc(size);
+status = AudioFileGetProperty(_fileID, kAudioFilePropertyFormatList, &amp;size, formatList);
+if (status != noErr)
+{
+    free(formatList);
+    return NO;
+}
+
+if (numFormats == 1)
+{
+    fileFormat = formatList[0].mASBD;
+}
+else
+{
+    status = AudioFormatGetPropertyInfo(kAudioFormatProperty_DecodeFormatIDs, 0, NULL, &amp;size);
+    if (status != noErr) {
+      free(formatList);
+      return NO;
+    }
+
+    UInt32 numDecoders = size / sizeof(OSType);
+    OSType *decoderIDS = (OSType *)malloc(size);
+
+    status = AudioFormatGetProperty(kAudioFormatProperty_DecodeFormatIDs, 0, NULL, &amp;size, decoderIDS);
+    if (status != noErr) {
+      free(formatList);
+      free(decoderIDS);
+      return NO;
+    }
+
+    UInt32 i;
+    for (i = 0; i &lt; numFormats; ++i) {
+      OSType decoderID = formatList[i].mASBD.mFormatID;
+
+      BOOL found = NO;
+      for (UInt32 j = 0; j &lt; numDecoders; ++j) {
+        if (decoderID == decoderIDS[j]) {
+          found = YES;
+          break;
+        }
+      }
+
+      if (found) {
+        break;
+      }
+    }
+
+    free(decoderIDS);
+
+    if (i &gt;= numFormats)
+    {
+      free(formatList);
+      return NO;
+    }
+
+    fileFormat = formatList[i].mASBD;
+}
+
+free(formatList);
+</code></pre>
+<h5 id="kaudiofilepropertybitrate" tabindex="-1">kAudioFilePropertyBitRate</h5>
+<p>获取音频数据的码率, 以每秒传输的比特数（bps）为单位.</p>
+<pre><code class="language-Objective-C">UInt32 bitRate = 0;
+UInt32 size = sizeof(bitRate);
+AudioFileGetProperty(_fileID, kAudioFilePropertyBitRate, &amp;size, &amp;bitRate);
+</code></pre>
+<h5 id="kaudiofilepropertydataoffset" tabindex="-1">kAudioFilePropertyDataOffset</h5>
+<p>获取音频内容在音频流中开始的位置</p>
+<pre><code class="language-Objective-C">SInt64 dataOffset = 0;
+UInt32 size = sizeof(dataOffset);
+AudioFileGetProperty(_fileID, kAudioFilePropertyDataOffset, &amp;size, &amp;dataOffset);
+</code></pre>
+<h5 id="kaudiofilepropertyaudiodatabytecount" tabindex="-1">kAudioFilePropertyAudioDataByteCount</h5>
+<p>获取音频内容数据长度</p>
+<pre><code class="language-Objective-C">SInt64 audioDataByteCount = 0;
+UInt32 size = sizeof(audioDataByteCount);
+AudioFileGetProperty(_fileID, kAudioFilePropertyAudioDataByteCount, &amp;size, &amp;audioDataByteCount);
+</code></pre>
+<h5 id="kaudiofilepropertyestimatedduration" tabindex="-1">kAudioFilePropertyEstimatedDuration</h5>
+<p>获取音频预估时长, 不一定准确.</p>
+<pre><code class="language-Objective-C">Float64 estimatedDuration = 0.0;
+UInt32 size = sizeof(estimatedDuration);
+AudioFileGetProperty(_fileID, kAudioFilePropertyEstimatedDuration, &amp;size, &amp;estimatedDuration);
+</code></pre>
+<h5 id="kaudiofilepropertymaximumpacketsize" tabindex="-1">kAudioFilePropertyMaximumPacketSize</h5>
+<p>获取音频文件的最大包大小</p>
+<pre><code class="language-Objective-C">UInt32 realityMaxPacketSize = 0.0;
+UInt32 size = sizeof(realityMaxPacketSize);
+AudioFileGetProperty(_fileID, kAudioFilePropertyMaximumPacketSize, &amp;size, &amp;realityMaxPacketSize);
+</code></pre>
+<h5 id="kaudiofilepropertypacketsizeupperbound" tabindex="-1">kAudioFilePropertyPacketSizeUpperBound</h5>
+<p>获取音频文件的最大包大小上限</p>
+<pre><code class="language-Objective-C">UInt32 maxPacketSize = 0.0;
+UInt32 size = sizeof(maxPacketSize);
+AudioFileGetProperty(_fileID, kAudioFilePropertyPacketSizeUpperBound, &amp;size, &amp;maxPacketSize);
+</code></pre>
+<h5 id="kaudiofilepropertyaudiodatapacketcount" tabindex="-1">kAudioFilePropertyAudioDataPacketCount</h5>
+<p>获取音频帧(packet)总数, 此信息存在误差或不准确.</p>
+<pre><code class="language-Objective-C">SInt64 packetCount = 0.0;
+UInt32 size = sizeof(packetCount);
+AudioFileGetProperty(_fileID, kAudioFilePropertyAudioDataPacketCount, &amp;size, &amp;packetCount);
+</code></pre>
+<h5 id="kaudiofilepropertymagiccookiedata" tabindex="-1">kAudioFilePropertyMagicCookieData</h5>
+<p>Magic Cookie 一种用于描述特定音频格式或编解码器配置信息的数据块, 解码器需要该信息.</p>
+<pre><code class="language-Objective-C">UInt32 cookieSize;
+OSStatus status = AudioFileGetPropertyInfo(_fileID, kAudioFilePropertyMagicCookieData, &amp;cookieSize, NULL);
+if (status != noErr)
+{
+    return nil;
+}
+
+void *cookieData = malloc(cookieSize);
+status = AudioFileGetProperty(_fileID, kAudioFilePropertyMagicCookieData, &amp;cookieSize, cookieData);
+if (status != noErr)
+{
+    return nil;
+}
+
+NSData *cookie = [NSData dataWithBytes:cookieData length:cookieSize];
+free(cookieData);
+</code></pre>
+<h3 id="读取音频数据" tabindex="-1">读取音频数据</h3>
+<h4 id="audiofilereadbytes" tabindex="-1">AudioFileReadBytes</h4>
+<pre><code class="language-Objective-C">extern OSStatus 
+AudioFileReadBytes (    AudioFileID     inAudioFile,
+                        Boolean         inUseCache,
+                        SInt64          inStartingByte, 
+                        UInt32          *ioNumBytes, 
+                        void            *outBuffer) 
+</code></pre>
+<ul>
+<li>inAudioFile: AudioFile 实例 ID.</li>
+<li>inUseCache: 是否需要缓存, 一般传 false.</li>
+<li>inStartingByte: 从第几个字节开始读取.</li>
+<li>ioNumBytes: 需要读取多少字节.</li>
+<li>outBuffer: 读取到的数据内容.</li>
+</ul>
+<p><strong>AudioFileReadBytes</strong> 仅负责读取数据, 不分离音频帧和解码.</p>
+<h4 id="audiofilereadpacketdata" tabindex="-1">AudioFileReadPacketData</h4>
+<pre><code class="language-Objective-C">extern OSStatus 
+AudioFileReadPacketData (   AudioFileID                     inAudioFile, 
+                            Boolean                         inUseCache,
+                            UInt32 *                        ioNumBytes,
+                            AudioStreamPacketDescription * __nullable outPacketDescriptions,
+                            SInt64                          inStartingPacket, 
+                            UInt32 *                        ioNumPackets,
+                            void * __nullable               outBuffer); 
+</code></pre>
+<ul>
+<li>inAudioFile: AudioFile 实例 ID.</li>
+<li>inUseCache: 是否需要缓存, 一般传 false.</li>
+<li>ioNumBytes: 输入时表示需要读取数据的大小, 输出后, 表示实际读取大小, 与 outBuffer 长度一致.</li>
+<li>outPacketDescriptions: <strong>AudioStreamPacketDescription</strong> 音频帧信息.</li>
+<li>inStartingPacket: 读第几个音频帧.</li>
+<li>ioNumPackets: 读取到的音频帧数量.</li>
+<li>outBuffer: 读取到的音频数据, 需要分配帧预估大小 * 帧数量内存空间, 分配的空间大小影响读取音频帧的数量.</li>
+</ul>
+<h4 id="audiofilereadpackets" tabindex="-1">AudioFileReadPackets</h4>
+<pre><code class="language-Objective-C">/// !废弃 API_DEPRECATED(&quot;no longer supported&quot;, macos(10.2, 10.10), ios(2.0, 8.0))
+extern OSStatus 
+AudioFileReadPackets (  AudioFileID                     inAudioFile, 
+                        Boolean                         inUseCache,
+                        UInt32 *                        outNumBytes,
+                        AudioStreamPacketDescription * __nullable outPacketDescriptions,
+                        SInt64                          inStartingPacket, 
+                        UInt32 *                        ioNumPackets,
+                        void * __nullable               outBuffer);
+</code></pre>
+<ul>
+<li>inAudioFile: AudioFile 实例 ID.</li>
+<li>inUseCache: 是否需要缓存, 一般传 false.</li>
+<li>outNumBytes: 实际读取的数据长度.</li>
+<li>outPacketDescriptions: <strong>AudioStreamPacketDescription</strong> 音频帧信息.</li>
+<li>ioNumPackets: 读取到的音频帧数量.</li>
+<li>outBuffer: 读取到的音频数据, 需要分配帧预估大小 * 最大帧大小/上界, 分配的空间大小影响读取音频帧的数量.</li>
+</ul>
+<h3 id="audiofile-seek" tabindex="-1">AudioFile Seek</h3>
+<p>AudioFile 可以根据下标去读取音频帧数据, 所以可以先计算需要 Seek 的音频帧下标, 就能简单实现 Seek 操作.</p>
+<p>AudioFile 下标读取音频帧是按顺序解析读取的, 因此在得到完整音频文件数据时, Seek 会比较快, 但如果是网络音频的话, 则需要缓冲加载到 Seek 位置音频帧数据时, 才能 Seek 成功, 因此 AudioFile 不适合与网络音频流播.</p>
+<p>如果非要用于网络音频流播, 就需配合使用 <strong>AudioFileStream</strong>. <strong>AudioFileReadBytes</strong> 读取音频数据, <strong>AudioFileStream</strong> 分离音频帧. 这需要计算得到音频帧对应的字节位置, CBR 编码和 VBR 编码计算方式不同.</p>
+<h3 id="关闭audiofile" tabindex="-1">关闭AudioFile</h3>
+<p>关闭AudioFile 使用完毕后需要调用 AudioFileClose 进行关闭.</p>
+<pre><code class="language-Objective-C">extern OSStatus AudioFileClose  (AudioFileID        inAudioFile)
+</code></pre>

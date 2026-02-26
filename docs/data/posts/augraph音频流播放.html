@@ -1,0 +1,155 @@
+<p>AUGraph 属于 Core Audio 框架, 用于描述音频单元（Audio Unit）之间的连接关系和信号流. AUGraph 抽象了音频流的处理过程, 它不直接控制 Audio Unit, 而是由基础单元节点 AUNode 管理. 一个 AUNode 对应一个 Audio Unit.</p>
+<!-- more -->
+<h3 id="augraph-构建" tabindex="-1">AUGraph 构建</h3>
+<h4 id="1创建-augraph-实例" tabindex="-1">1.创建 AUGraph 实例</h4>
+<pre><code class="language-Objective-C">AUGraph audioGraph;
+NewAUGraph(&amp;audioGraph);
+</code></pre>
+<h4 id="2创建并添加-aunode-节点" tabindex="-1">2.创建并添加 AUNode 节点</h4>
+<pre><code class="language-Objective-C">/// IO 播放单元
+- (AudioComponentDescription)audioUnitDescription
+{
+    AudioComponentDescription outputUnitDescription;
+    bzero(&amp;outputUnitDescription, sizeof(AudioComponentDescription));
+    outputUnitDescription.componentType = kAudioUnitType_Output;
+    outputUnitDescription.componentSubType = kAudioUnitSubType_RemoteIO;
+    outputUnitDescription.componentManufacturer = kAudioUnitManufacturer_Apple;
+    outputUnitDescription.componentFlags = 0;
+    outputUnitDescription.componentFlagsMask = 0;
+    return outputUnitDescription;
+}
+
+/// 混合 播放单元
+- (AudioComponentDescription)mixUnitDescription
+{
+    AudioComponentDescription mixerUnitDescription;
+    bzero(&amp;mixerUnitDescription, sizeof(AudioComponentDescription));
+    mixerUnitDescription.componentType = kAudioUnitType_Mixer;
+    mixerUnitDescription.componentSubType = kAudioUnitSubType_MultiChannelMixer;
+    mixerUnitDescription.componentManufacturer = kAudioUnitManufacturer_Apple;
+    mixerUnitDescription.componentFlags = 0;
+    mixerUnitDescription.componentFlagsMask = 0;
+    return mixerUnitDescription;
+}
+
+AUNode audioNode;
+AudioComponentDescription audioUnitDescription = [self audioUnitDescription];
+AUGraphAddNode(audioGraph, &amp;audioUnitDescription, &amp;audioNode);
+
+AUNode mixNode;
+AudioComponentDescription mixUnitDescription = [self mixUnitDescription];
+AUGraphAddNode(audioGraph, &amp;mixUnitDescription, &amp;mixNode);
+</code></pre>
+<h4 id="3打开-augraph" tabindex="-1">3.打开 AUGraph</h4>
+<pre><code class="language-Objective-C">AUGraphOpen(audioGraph)
+</code></pre>
+<h4 id="4初始化控制单元" tabindex="-1">4.初始化控制单元</h4>
+<pre><code class="language-Objective-C">AudioUnit audioUnit;
+AudioUnit mixUnit;
+AUGraphNodeInfo(audioGraph, audioNode, audioUnitDescription, audioUnit);
+AUGraphNodeInfo(audioGraph, mixNode, mixUnitDescription, mixUnit);
+</code></pre>
+<h4 id="5aunode-节点连接" tabindex="-1">5.AUNode 节点连接</h4>
+<pre><code>AUGraphConnectNodeInput(audioGraph, mixNode, 0, audioNode, 0);
+</code></pre>
+<h4 id="6设定输入源" tabindex="-1">6.设定输入源</h4>
+<pre><code class="language-Objective-C">OSStatus status = noErr;
+/// 设置音频输出格式描述
+AudioStreamBasicDescription destFormat = basicDescription;
+status = AudioUnitSetProperty(mixUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, 0, &amp;destFormat, sizeof(destFormat));
+status = AudioUnitSetProperty(mixUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, &amp;destFormat, sizeof(destFormat));
+
+/// 单元输出设置
+UInt32 maxFPS = 4096;
+status = AudioUnitSetProperty(mixUnit, kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global, 0,&amp;maxFPS, sizeof(maxFPS));
+status = AudioUnitAddPropertyListener(mixUnit, kAudioOutputUnitProperty_IsRunning, AudioUnitPropertyListenerProc, (__bridge void *)(self));
+
+/// 渲染音频
+AURenderCallbackStruct callbackStruct;
+callbackStruct.inputProcRefCon = (__bridge void *)(self);
+callbackStruct.inputProc = AURenderCallback;
+status = AUGraphSetNodeInputCallback(audioGraph, mixNode, 0, &amp;callbackStruct);
+</code></pre>
+<h4 id="7初始化-augraph" tabindex="-1">7.初始化 AUGraph</h4>
+<pre><code class="language-Objective-C">AUGraphInitialize(audioGraph);
+</code></pre>
+<h3 id="augraph-播放" tabindex="-1">AUGraph 播放</h3>
+<h4 id="1audiounitpropertylistenerproc" tabindex="-1">1.AudioUnitPropertyListenerProc</h4>
+<pre><code class="language-Objective-C">void AudioUnitPropertyListenerProc(void *inRefCon, AudioUnit inUnit, AudioUnitPropertyID inID, AudioUnitScope inScope, AudioUnitElement inElement)
+{
+    ...
+}
+</code></pre>
+<ul>
+<li>inRefCon: 上下文对象.</li>
+<li>inUnit: 监听的 AudioUnit.</li>
+<li>inID: 监听的属性</li>
+<li>inScope: 属性所属的范围，例如全局范围、输入范围或输出范围等.</li>
+<li>inElement: 属性所属的元素，用于指定属性作用的具体元素，如输入通道、输出通道等.</li>
+</ul>
+<p><strong>AudioUnitPropertyListenerProc</strong>是一个回调函数，用于在 Audio Unit 属性发生变化时接收通知。当注册了该回调函数后，当指定的音频单元属性发生更改时，系统会调用这个回调函数来通知应用程序。</p>
+<h4 id="2aurendercallback" tabindex="-1">2.AURenderCallback</h4>
+<pre><code class="language-Objective-C">static OSStatus AURenderCallback(void *userData, AudioUnitRenderActionFlags *ioActionFlags, const AudioTimeStamp *inTimeStamp, UInt32 inBusNumber, UInt32 inNumberFrames, AudioBufferList *ioData)
+{
+    ...
+}
+</code></pre>
+<ul>
+<li>userData: 上下文对象.</li>
+<li>ioActionFlags: 一个指向标志位的指针，用于指示音频单元的操作状态。</li>
+<li>inTimeStamp: 包含有关当前音频帧时间信息的结构体。</li>
+<li>inBusNumber: 指定了音频单元的总线号码，用于确定哪个输入或输出总线正在进行处理。</li>
+<li>inNumberFrames: 指定要处理的音频帧数。</li>
+<li>ioData: 一个指向音频缓冲区列表的指针，包含了输入和输出音频数据。</li>
+</ul>
+<p><strong>AURenderCallback</strong> 是音频渲染回调函数, 在此我们需要提供音频数据给 ioData 才能进行播放.</p>
+<h4 id="3提供音频数据给-iodata" tabindex="-1">3.提供音频数据给 ioData</h4>
+<p>首先我们需要使用 <strong>AudioFileStream</strong> 对音频数据流进行分离音频帧.</p>
+<pre><code class="language-Objective-C">AudioFileStreamParseBytes(_audioFileStreamID,(UInt32)[data length],[data bytes], 0);
+/// 输出分离的音频帧数据
+static void audio_file_stream_packets_proc(void *inClientData,
+                                           UInt32 inNumberBytes,
+                                           UInt32 inNumberPackets,
+                                           const void *inInputData,
+                                           AudioStreamPacketDescription    *inPacketDescriptions)
+{
+    /// inInputData 音频帧数据
+    // inNumberPackets 音频帧数量
+    // inPacketDescriptions 音频帧信息,包含数据字节起始位置和长度.
+    ...
+}
+</code></pre>
+<p>在得到音频帧后, 使用 <strong>AudioConverter</strong> 将音频帧从压缩格式转为 PCM 格式数据.</p>
+<pre><code class="language-Objective-C">AudioConverterFillComplexBuffer(_audioConverter, input_data_proc, (__bridge void *)(self), &amp;inNumberFrames, ioData, NULL);
+
+static OSStatus input_data_proc(AudioConverterRef inAudioConverter, UInt32 *ioNumberDataPackets, AudioBufferList *ioData, AudioStreamPacketDescription **outDataPacketDescription, void *inUserData)
+{
+    /// 伪代码
+    /// inInputData &lt;- audio_file_stream_packets_proc
+    /// inPacketDescriptions &lt;- audio_file_stream_packets_proc
+    ioData-&gt;mBuffers[0].mData = [inInputData bytes];
+    ioData-&gt;mBuffers[0].mDataByteSize = [inInputData length];
+    ioData-&gt;mBuffers[0].mNumberChannels = 1;
+    if (outDataPacketDescription != NULL) {
+        *outDataPacketDescription = inPacketDescriptions;
+    }
+    return noErr;
+}
+</code></pre>
+<h4 id="4开始播放" tabindex="-1">4.开始播放</h4>
+<pre><code class="language-Objective-C">AUGraphStart(audioGraph);
+AudioOutputUnitStart(audioUnit);
+</code></pre>
+<h4 id="5停止播放" tabindex="-1">5.停止播放</h4>
+<pre><code class="language-Objective-C">OSStatus status = AUGraphIsRunning(audioGraph, &amp;isRunning);
+if (status != noErr) {
+    return;
+}
+    
+if (isRunning) {
+    status = AUGraphStop(audioGraph);
+    if (status != noErr) {
+        return;
+    }
+}
+</code></pre>

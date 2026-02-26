@@ -1,0 +1,932 @@
+[
+  {
+    "id": "avaudioengine音频流播放",
+    "title": "AVAudioEngine音频流播放",
+    "url": "/post/avaudioengine音频流播放",
+    "date": "2024-03-14T20:51:30.000Z",
+    "category": "音视频",
+    "tags": [
+      "Audio"
+    ],
+    "keywords": [
+      "AVAudioEngine",
+      "Audio Engine",
+      "音频流播放"
+    ],
+    "description": "",
+    "image": "",
+    "prevId": null,
+    "nextId": "augraph音频流播放",
+    "short": "概述 Audio Engine 提供了强大、功能丰富的 API 来简化音频生成、处理和输入/输出任务。该引擎包含一组节点，这些节点连接起来形成音频信号处理链。这些节点在渲染到输出目的地之前对信号执行各种任务。Audio Engine 可以提供以下功能实现: 使用文件和缓冲区播放音"
+  },
+  {
+    "id": "augraph音频流播放",
+    "title": "AUGraph 音频流播放",
+    "url": "/post/augraph音频流播放",
+    "date": "2024-03-14T19:41:30.000Z",
+    "category": "音视频",
+    "tags": [
+      "Audio"
+    ],
+    "keywords": [
+      "AUGraph",
+      "AudioUnit",
+      "音频流播放"
+    ],
+    "description": "",
+    "image": "",
+    "prevId": "avaudioengine音频流播放",
+    "nextId": "audioconverter",
+    "short": "AUGraph 属于 Core Audio 框架, 用于描述音频单元（Audio Unit）之间的连接关系和信号流. AUGraph 抽象了音频流的处理过程, 它不直接控制 Audio Unit, 而是由基础单元节点 AUNode 管理. 一个 AUNode 对应一个 Audio"
+  },
+  {
+    "id": "audioconverter",
+    "title": "AudioConverter",
+    "url": "/post/audioconverter",
+    "date": "2024-03-14T18:51:30.000Z",
+    "category": "音视频",
+    "tags": [
+      "Audio"
+    ],
+    "keywords": [
+      "AudioConverter",
+      "音频解码"
+    ],
+    "description": "",
+    "image": "",
+    "prevId": "augraph音频流播放",
+    "nextId": "audiofile",
+    "short": "概述 AudioConverter 可以将各种线性 PCM 音频格式之间进行转换, 除此之外, 它还能将 PCM 音频格式转为压缩音频格式, 也能将压缩音频格式转为 PCM 音频格式, 达到解码的效果, 如果要实现压缩音频格式之间的转换, 则可以先转 PCM 音频格式, 再转目标"
+  },
+  {
+    "id": "audiofile",
+    "title": "AudioFile",
+    "url": "/post/audiofile",
+    "date": "2024-03-13T19:40:30.000Z",
+    "category": "音视频",
+    "tags": [
+      "Audio"
+    ],
+    "keywords": [
+      "AudioFile",
+      "音频播放"
+    ],
+    "description": "",
+    "image": "",
+    "prevId": "audioconverter",
+    "nextId": "cbr和vbr音频seektime",
+    "short": "概述 AudioFile 归属于 AudioToolBox 框架, 可以用于读取音频信息和分离音频帧, 与 AudioFileStream 功能类似, 但功能会相对强大. 它不仅可以读取并解析音频, 还可以写入音频. 但是它在解析音频时, 需要音频文件的完整性, 适合于本地音频文"
+  },
+  {
+    "id": "cbr和vbr音频seektime",
+    "title": "CBR、VBR音频 SeekTime",
+    "url": "/post/cbr和vbr音频seektime",
+    "date": "2024-03-12T19:50:30.000Z",
+    "category": "音视频",
+    "tags": [
+      "Audio"
+    ],
+    "keywords": [
+      "CBR",
+      "VBR",
+      "SeekTime"
+    ],
+    "description": "",
+    "image": "",
+    "prevId": "audiofile",
+    "nextId": "audiofilestream",
+    "short": "音频 Seek Time 功能需要我们在音频文件中找到对应播放时间点的字节位置, 这样才能实现播放时间点的跳跃. 音频存在 CBR、VBR、CVBR 等码率编码方式, 影响每一帧的数据长度大小. 这意味着对于不同码率编码的音频, 实现 Seek Time 的方式也不一样, 这里主"
+  },
+  {
+    "id": "audiofilestream",
+    "title": "AudioFileStream",
+    "url": "/post/audiofilestream",
+    "date": "2024-03-12T12:42:30.000Z",
+    "category": "音视频",
+    "tags": [
+      "Audio"
+    ],
+    "keywords": [
+      "AudioFileStream",
+      "Audio File Stream Services",
+      "音频流播放"
+    ],
+    "description": "",
+    "image": "",
+    "prevId": "cbr和vbr音频seektime",
+    "nextId": "h264",
+    "short": "概述 Audio File Stream Services provides the interface for parsing streamed audio files—in which only a limited window of data is available at"
+  },
+  {
+    "id": "h264",
+    "title": "H.264",
+    "url": "/post/h264",
+    "date": "2023-11-24T18:54:47.000Z",
+    "category": "音视频",
+    "tags": [
+      "H.264"
+    ],
+    "keywords": [
+      "H.264"
+    ],
+    "description": "",
+    "image": "",
+    "prevId": "audiofilestream",
+    "nextId": "音视频基础知识",
+    "short": "H.264 H.264码流结构分为两层: 网络提取层 (Network Abstraction Layer, NAL) 视讯编码层 (Video Coding Layer, VCL) VCL数据即被压缩编码后的视频数据序列, 需要通过封装到 NAL 单元中之后, 才可以用来传输或"
+  },
+  {
+    "id": "音视频基础知识",
+    "title": "音视频基础知识",
+    "url": "/post/音视频基础知识",
+    "date": "2023-11-23T18:54:47.000Z",
+    "category": "音视频",
+    "tags": [
+      "音视频"
+    ],
+    "keywords": [
+      "音视频"
+    ],
+    "description": "",
+    "image": "",
+    "prevId": "h264",
+    "nextId": "mac-本地部署-stable-diffusion",
+    "short": "音视频 音视频（Audio-Visual）是指结合声音和图像的媒体形式。它可以包括电影、电视节目、音乐视频、广告等各种形式的媒体内容，通过同时传递声音和图像来提供更丰富的观感和沟通方式。音视频技术涉及录制、编辑、传输和播放等方面，包括音频编解码、视频编解码、流媒体传输、多媒体容器"
+  },
+  {
+    "id": "mac-本地部署-stable-diffusion",
+    "title": "Mac 本地部署 Stable Diffusion",
+    "url": "/post/mac-本地部署-stable-diffusion",
+    "date": "2023-11-14T18:35:47.000Z",
+    "category": "工具",
+    "tags": [
+      "Stable Diffusion"
+    ],
+    "keywords": [
+      "Stable Diffusion,Mac"
+    ],
+    "description": "",
+    "image": "",
+    "prevId": "音视频基础知识",
+    "nextId": "ffmpeg安装",
+    "short": "使用的 Mac 配置 MacBook Pro (2022) 芯片: Apple M2 内存: 16GB 存储: 512GB 系统: Ventura 13.0 环境要求 Homebrew 官方安装 (需要梯子) 安装命令: /bin/zsh -c \"$(curl -fsSL htt"
+  },
+  {
+    "id": "ffmpeg安装",
+    "title": "FFmpeg 安装",
+    "url": "/post/ffmpeg安装",
+    "date": "2023-09-19T19:35:47.000Z",
+    "category": "工具",
+    "tags": [
+      "FFmpeg"
+    ],
+    "keywords": [
+      "FFmpeg,rtmp,SRS,H.256"
+    ],
+    "description": "",
+    "image": "",
+    "prevId": "mac-本地部署-stable-diffusion",
+    "nextId": "mac-ruby-和-cocoapods-安装-适用-m-系列芯片",
+    "short": "Homebrew 方式安装 1、执行安装命令 brew install ffmpeg brew install ffmpeg --HEAD # 安装最新 2、选择第三方仓库: homebrew-ffmpeg 和 varenc-homebrew-ffmpeg brew tap ho"
+  },
+  {
+    "id": "mac-ruby-和-cocoapods-安装-适用-m-系列芯片",
+    "title": "Mac Ruby 和 Cocoapods 安装 (适用 M 系列芯片)",
+    "url": "/post/mac-ruby-和-cocoapods-安装-适用-m-系列芯片",
+    "date": "2023-07-06T19:35:47.000Z",
+    "category": "工具",
+    "tags": [
+      "Ruby",
+      "Cocoapods"
+    ],
+    "keywords": [
+      "Ruby,Cocoapods,HomeBrew,M1,M2,Mac"
+    ],
+    "description": "",
+    "image": "",
+    "prevId": "ffmpeg安装",
+    "nextId": "autoreleasepool详解",
+    "short": "前言 Ruby 和 Cocoapods 是 iOSer 必接触的工具, Cocoapods 是 Ruby 程序包, 因此安装 Cocoapods 前置条件要有一个适用的 Ruby 版本, 系统有自带 Ruby, 但版本比较低且其执行目录无权限访问, 所以我们需要去下载安装一个比较"
+  },
+  {
+    "id": "autoreleasepool详解",
+    "title": "AutoreleasePool详解",
+    "url": "/post/autoreleasepool详解",
+    "date": "2022-03-11T16:25:19.000Z",
+    "category": "iOS",
+    "tags": [
+      "AutoreleasePool"
+    ],
+    "keywords": [
+      "AutoreleasePool",
+      "Autorelease",
+      "内存管理"
+    ],
+    "description": "",
+    "image": "",
+    "prevId": "mac-ruby-和-cocoapods-安装-适用-m-系列芯片",
+    "nextId": "swiftobjective-c-访问控制修饰符",
+    "short": "一、前言 iOS 的内存管理是通过引用计数管理的，当对象的引用计数为 0 时，说明该对象要释放回收内存了。在 iOS 5 之前，内存管理是需要开发者负责的，需要手动调用 retain、release、autorelease 去操作对象的引用计数，这种手动管理模式称为 MRC（Ma"
+  },
+  {
+    "id": "swiftobjective-c-访问控制修饰符",
+    "title": "Swift、Objective-C 访问控制修饰符",
+    "url": "/post/swiftobjective-c-访问控制修饰符",
+    "date": "2022-03-10T16:17:14.000Z",
+    "category": "iOS",
+    "tags": [
+      "访问控制修饰符"
+    ],
+    "keywords": [
+      "Swift",
+      "Objective-C",
+      "访问控制",
+      "修饰符"
+    ],
+    "description": "",
+    "image": "",
+    "prevId": "autoreleasepool详解",
+    "nextId": "ios-事件分发处理-runloop",
+    "short": "一、引言 Swift、Objective-C 都具有面向对象的三大特征：封装、继承和多态，访问控制修饰符应“封装”特性诞生的，“封装”需将对象的实现信息隐藏在内部，不允许外部直接访问对象内部信息，只能通过向外开放途径去访问对象。对象的那些信息需要隐藏或者开放，这可通过 “访问控制"
+  },
+  {
+    "id": "ios-事件分发处理-runloop",
+    "title": "iOS-事件分发处理-RunLoop",
+    "url": "/post/ios-事件分发处理-runloop",
+    "date": "2022-03-08T17:31:02.000Z",
+    "category": "iOS",
+    "tags": [
+      "RunLoop"
+    ],
+    "keywords": [
+      "RunLoop",
+      "事件分发"
+    ],
+    "description": "",
+    "image": "",
+    "prevId": "swiftobjective-c-访问控制修饰符",
+    "nextId": "cocoapods-私有库和公开库",
+    "short": "一、初识 RunLoop 1.1 线程 iOS开发是单进程，所以一般来说，一个应用程序就是一个进程，进程之间是相互独立的，每个进程都有独立的内存空间和资源。进程若需处理事件，则需要基本执行单元：线程。进程的所有事件都必须在线程中处理，因此进程在开辟时，会默认创建并开启一条线程，程"
+  },
+  {
+    "id": "cocoapods-私有库和公开库",
+    "title": "cocoapods-私有库和公开库",
+    "url": "/post/cocoapods-私有库和公开库",
+    "date": "2022-02-10T17:40:13.000Z",
+    "category": "iOS",
+    "tags": [
+      "Cocoapods"
+    ],
+    "keywords": [
+      "Cocoapods,私有库,公开库"
+    ],
+    "description": "",
+    "image": "",
+    "prevId": "ios-事件分发处理-runloop",
+    "nextId": "http协议",
+    "short": "私有库：git 仓库设置为私有不对外公开 公开库：提交到 Cocoapods Specs 上，可以 pod search 到库 私有库 私有索引库 私有索引库用于保存私有库的 .podspec 文件，pod install 私有库时会去私有索引库找到对应的 .podspec 文件"
+  },
+  {
+    "id": "http协议",
+    "title": "HTTP 协议",
+    "url": "/post/http协议",
+    "date": "2022-02-10T17:35:47.000Z",
+    "category": "后端",
+    "tags": [
+      "HTTP 协议"
+    ],
+    "keywords": [
+      "HTTP 协议"
+    ],
+    "description": "",
+    "image": "",
+    "prevId": "cocoapods-私有库和公开库",
+    "nextId": "uitableview-invalid-update",
+    "short": "超文本传输协议（Hyper Text Transfer Protocol，HTTP）是一个简单的请求-响应协议，它通常运行在TCP之上。它指定了客户端可能发送给服务器什么样的消息以及得到什么样的响应。请求和响应消息的头以ASCII形式给出；而消息内容则具有一个类似MIME的格式。"
+  },
+  {
+    "id": "uitableview-invalid-update",
+    "title": "UITableView-Invalid-update",
+    "url": "/post/uitableview-invalid-update",
+    "date": "2022-02-10T17:32:11.000Z",
+    "category": "iOS",
+    "tags": [
+      "UITableView Error"
+    ],
+    "keywords": [
+      "UITableView,Invalid,update"
+    ],
+    "description": "",
+    "image": "",
+    "prevId": "http协议",
+    "nextId": "restful-api架构",
+    "short": "控制台错误日志： Invalid update: invalid number of rows in section 0. The number of rows contained in an existing section after the update (3) must "
+  },
+  {
+    "id": "restful-api架构",
+    "title": "RESTful Api架构",
+    "url": "/post/restful-api架构",
+    "date": "2022-02-10T16:53:59.000Z",
+    "category": "后端",
+    "tags": [
+      "RESTful"
+    ],
+    "keywords": [
+      "RESTful"
+    ],
+    "description": "",
+    "image": "",
+    "prevId": "uitableview-invalid-update",
+    "nextId": "ios-wkwebview秒开优化方案",
+    "short": "API API 是什么？ API（Application Programming Interface，应用程序接口）是一些预先定义的接口（如函数、HTTP接口），或指软件系统不同组成部分衔接的约定。 用来提供应用程序与开发人员基于某软件或硬件得以访问的一组例程，而又无需访问源码，"
+  },
+  {
+    "id": "ios-wkwebview秒开优化方案",
+    "title": "iOS-WKWebView秒开优化方案",
+    "url": "/post/ios-wkwebview秒开优化方案",
+    "date": "2022-02-10T16:50:46.000Z",
+    "category": "iOS",
+    "tags": [
+      "WKWebView秒开优化方案"
+    ],
+    "keywords": [
+      "WKWebView秒开优化方案"
+    ],
+    "description": "",
+    "image": "",
+    "prevId": "restful-api架构",
+    "nextId": "swift-属性包装器",
+    "short": "简要 解决场景 后台支持使用 HTML 文本编辑器发表 HTML 格式的帖子，移动端要兼容 HTML 格式帖子展示，必然要采用 WebView 加载 HTML 格式帖子，以达到同样的呈现效果。 存在的问题 WebView 内容加载速度较原生有肉眼可见的延迟，在进入帖子详情页时，W"
+  },
+  {
+    "id": "swift-属性包装器",
+    "title": "Swift-属性包装器",
+    "url": "/post/swift-属性包装器",
+    "date": "2022-02-10T16:48:14.000Z",
+    "category": "iOS",
+    "tags": [
+      "属性包装器"
+    ],
+    "keywords": [
+      "Swift,属性包装器"
+    ],
+    "description": "",
+    "image": "",
+    "prevId": "ios-wkwebview秒开优化方案",
+    "nextId": "swift-自定义运算符",
+    "short": "Property wrapper Property wrapper 类似于 java 中的注解，一种给属性附加逻辑的特性。在类、结构体、枚举声明时使用该特性，可以让其成为一个属性包装器。属性包装器可复用统一规则对属性进行包装，降低重复工作。 @propertyWrapper st"
+  },
+  {
+    "id": "swift-自定义运算符",
+    "title": "Swift-自定义运算符",
+    "url": "/post/swift-自定义运算符",
+    "date": "2022-02-10T16:44:17.000Z",
+    "category": "iOS",
+    "tags": [
+      "自定义运算符"
+    ],
+    "keywords": [
+      "Swift,自定义运算符"
+    ],
+    "description": "",
+    "image": "",
+    "prevId": "swift-属性包装器",
+    "nextId": "单元测试-xctest",
+    "short": "运算符定义类型 var a = 0 var b = 1 a += 1 a ^ b a-- --a 上面代码的运算是如何实现的呢？ 在 Swift 中提供三种类型运算符： prefix：前置运算符，像 --a、++a infix：中间运算符，像 a += 1、a + b postf"
+  },
+  {
+    "id": "单元测试-xctest",
+    "title": "单元测试-XCTest",
+    "url": "/post/单元测试-xctest",
+    "date": "2021-12-09T15:23:38.000Z",
+    "category": "iOS",
+    "tags": [
+      "单元测试"
+    ],
+    "keywords": [
+      "单元测试,XCTest"
+    ],
+    "description": "",
+    "image": "",
+    "prevId": "swift-自定义运算符",
+    "nextId": "xcode13-第三方库swiftui错误",
+    "short": "单元测试（Unit Testing）又称为模块测试，是针对程序模块软件设计来进行正确性检验的测试工作。程序单元是应用的最小可测试部件。对于面向对象编程，最小单元就是方法，包括基类、抽象类、或者派生类中的方法。 单元测试通常由软件开发人员编写，用于确保他们所写的代码符合软件需求和遵"
+  },
+  {
+    "id": "xcode13-第三方库swiftui错误",
+    "title": "Xcode13 Kingfisher、RealmSwift Release模式编译报错",
+    "url": "/post/xcode13-第三方库swiftui错误",
+    "date": "2021-11-01T16:38:42.000Z",
+    "category": "iOS",
+    "tags": [
+      "iOS 问题集"
+    ],
+    "keywords": [
+      "Xcode13",
+      "Kingfisher",
+      "RealmSwift",
+      "Swift UI"
+    ],
+    "description": "",
+    "image": "",
+    "prevId": "单元测试-xctest",
+    "nextId": "ios-加密算法",
+    "short": "Xcode 13 发行说明中提到： Swift 库可能无法为使用 armv7 的 iOS 目标构建。(74120874) 解决方法：将包的平台依赖性增加到 v12 或更高版本。 依赖于 Combine 的 Swift 库可能无法为包括 armv7 和 i386 架构在内的目标构建"
+  },
+  {
+    "id": "ios-加密算法",
+    "title": "iOS 加密算法",
+    "url": "/post/ios-加密算法",
+    "date": "2021-09-13T20:02:08.000Z",
+    "category": "iOS",
+    "tags": [
+      "加密算法"
+    ],
+    "keywords": [
+      "AES",
+      "DES",
+      "MD5"
+    ],
+    "description": "",
+    "image": "",
+    "prevId": "xcode13-第三方库swiftui错误",
+    "nextId": "swift-指针",
+    "short": "数据加密的基本过程就是对原来为明文的文件或数据按某种算法进行处理，通常用于达到以下目的： 保密性：防止内容被第三方获取 数据完整性：防止数据被篡改 身份验证：确保数据是正确方发送的 摘要算法 消息摘要算法的主要特征是加密过程不需要密钥，并且经过加密的数据无法被解密，目前可以被解密"
+  },
+  {
+    "id": "swift-指针",
+    "title": "Swift 指针",
+    "url": "/post/swift-指针",
+    "date": "2021-09-13T19:59:34.000Z",
+    "category": "iOS",
+    "tags": [
+      "Swift"
+    ],
+    "keywords": [
+      "指针"
+    ],
+    "description": "",
+    "image": "",
+    "prevId": "ios-加密算法",
+    "nextId": "app-启动",
+    "short": "在 OC 中指针的使用采用 C 语法方式，通过 *、& 操作指针，在 Swift 需要初始化相应的的指针类，其中分为两类： typed pointer 指向的内存分配了数据类型 raw pointer 指向的内存未分配数据类型 swift OC 说明 unsafePointer "
+  },
+  {
+    "id": "app-启动",
+    "title": "App 启动",
+    "url": "/post/app-启动",
+    "date": "2021-09-13T19:19:46.000Z",
+    "category": "iOS",
+    "tags": [
+      "启动优化"
+    ],
+    "keywords": [
+      "App启动流程,启动优化"
+    ],
+    "description": "",
+    "image": "",
+    "prevId": "swift-指针",
+    "nextId": "ios-内存地址二级指针",
+    "short": "APP 启动流程 App 启动情况有： 冷启动：系统里没有任何进程的缓存信息，如：重启手机后直接启动 App，或者杀死App 等待一段时间，缓存被清除后再启动。 热启动：系统里还存在进程的缓存信息，如：刚把App 杀死后立即启动App。 启动过程中分为两阶段：pre-main、m"
+  },
+  {
+    "id": "ios-内存地址二级指针",
+    "title": "iOS 内存地址、二级指针",
+    "url": "/post/ios-内存地址二级指针",
+    "date": "2021-09-13T19:16:48.000Z",
+    "category": "iOS",
+    "tags": [
+      "内存管理"
+    ],
+    "keywords": [
+      "内存地址,二级指针"
+    ],
+    "description": "",
+    "image": "",
+    "prevId": "app-启动",
+    "nextId": "swift-函数调度",
+    "short": "%p 用于输出变量内存地址 NSString *a = @\"six god\"; NSLog(@\"%p\", a); NSLog(@\"%p\", &a); print: 0x100004008 print: 0x16fdff418 在日志输出中，a 和 &a 的区别是： 0x10000"
+  },
+  {
+    "id": "swift-函数调度",
+    "title": "Swift 函数调度",
+    "url": "/post/swift-函数调度",
+    "date": "2021-09-13T19:06:54.000Z",
+    "category": "iOS",
+    "tags": [
+      "Swift"
+    ],
+    "keywords": [
+      "函数调度"
+    ],
+    "description": "",
+    "image": "",
+    "prevId": "ios-内存地址二级指针",
+    "nextId": "category-探究",
+    "short": "在 OC 中方法的调用是要经过 runtime 消息转发机制找到方法实现，然后调用方法实现，在 Swift 中函数的调度分为两种：静态调度、动态调度。 函数调度方式 静态调度 静态调度也被称为直接调度（Direct Dispatch），函数在编译、链接完成后，函数的地址就已经确定"
+  },
+  {
+    "id": "category-探究",
+    "title": "Category 探究",
+    "url": "/post/category-探究",
+    "date": "2018-12-21T14:37:21.000Z",
+    "category": "iOS",
+    "tags": [
+      "category"
+    ],
+    "keywords": [
+      "category",
+      "分类",
+      "实例变量",
+      "+ load",
+      "关联对象",
+      "runtime"
+    ],
+    "description": "",
+    "image": "https://destinmure.github.io/pic/postCover/Category-探究.png",
+    "prevId": "swift-函数调度",
+    "nextId": "eventkit-日历事件",
+    "short": "简介 人类在进步，社会在发展，随着时间变化我们会遇到不同的问题，由此也诞生了对应的解决方法。我们编写的类也是如此，在随着业务的发展，原定类的方法也就不足以处理新的业务，因此我们开始想方设法去扩展类以处理新业务。在 Objective-C 2.0 提供的 category 特性，此"
+  },
+  {
+    "id": "eventkit-日历事件",
+    "title": "EventKit 日历事件",
+    "url": "/post/eventkit-日历事件",
+    "date": "2018-12-19T13:39:24.000Z",
+    "category": "iOS",
+    "tags": [
+      "EventKit"
+    ],
+    "keywords": [
+      "日历事件",
+      "EventKit",
+      "event",
+      "reminders"
+    ],
+    "description": "",
+    "image": "https://destinmure.github.io/pic/postCover/EventKit-日历事件.png",
+    "prevId": "category-探究",
+    "nextId": "weak-修饰符",
+    "short": "EventKit 框架 此框架可以访问手机系统日历和提醒事项APP的数据，用此框架可以添加日历事件和提醒事项。 info.plist 配置 在 info.plist 添加访问日历权限和提醒实现的key：Privacy - Calendars Usage Description、P"
+  },
+  {
+    "id": "weak-修饰符",
+    "title": "__weak 修饰符",
+    "url": "/post/weak-修饰符",
+    "date": "2018-12-19T12:03:55.000Z",
+    "category": "iOS",
+    "tags": [
+      "__weak"
+    ],
+    "keywords": [
+      "__weak",
+      "weak",
+      "循环引用",
+      "SideTables"
+    ],
+    "description": "",
+    "image": "",
+    "prevId": "eventkit-日历事件",
+    "nextId": "runtime-探究",
+    "short": "SideTables SideTables 是全局表，管理着对象的引用计数和weak引用指针，每个对象在此表中都有对应的一个 SideTable，让我们来看看 SideTables 源码定义 static StripedMap<SideTable>& SideTables() {"
+  },
+  {
+    "id": "runtime-探究",
+    "title": "Runtime 探究",
+    "url": "/post/runtime-探究",
+    "date": "2018-12-19T11:00:51.000Z",
+    "category": "iOS",
+    "tags": [
+      "Runtime"
+    ],
+    "keywords": [
+      "Runtime",
+      "消息转发机制",
+      "Runtime的应用",
+      "Swizzling"
+    ],
+    "description": "",
+    "image": "https://destinmure.github.io/pic/postCover/runtime探究.png",
+    "prevId": "weak-修饰符",
+    "nextId": "cocoapods-pod-setup太慢",
+    "short": "对于 Runtime 的了解一直很少，面试的时候，总是会提及，因此开始去了解 Runtime。在网上找寻这类资料和文章并开始详读，在详读后对于 Runtime 有了更深了解，但是有些地方仍有些模糊，这样半知半解的状态可不是好事，因此我通过知识整理，模拟向人讲述的方式，以查解自己的"
+  },
+  {
+    "id": "cocoapods-pod-setup太慢",
+    "title": "CocoaPods pod setup太慢",
+    "url": "/post/cocoapods-pod-setup太慢",
+    "date": "2018-11-28T15:39:50.000Z",
+    "category": "iOS",
+    "tags": [
+      "Cocoapods"
+    ],
+    "keywords": [
+      "CocoaPods",
+      "pod setup",
+      "pod setup太慢"
+    ],
+    "description": "",
+    "image": "",
+    "prevId": "runtime-探究",
+    "nextId": "ios-error",
+    "short": "更换镜像pod setup 1.升级Ruby环境 $ sudo gem update --system 2.更换Ruby镜像 $ gem sources --remove https://rubygems.org/ 移除现有镜像 $ gem sources -a https://"
+  },
+  {
+    "id": "ios-error",
+    "title": "iOS Error",
+    "url": "/post/ios-error",
+    "date": "2018-11-28T15:38:08.000Z",
+    "category": "iOS",
+    "tags": [
+      "iOS 问题集"
+    ],
+    "keywords": [
+      "Error",
+      "iOS Error",
+      "报错",
+      "错误"
+    ],
+    "description": "",
+    "image": "",
+    "prevId": "cocoapods-pod-setup太慢",
+    "nextId": "ios-warning",
+    "short": "离开页面后，网络请求使用 delegate 回调崩溃 原因：用的是 assgin 修饰 delegate，像数值类型一样 delegate对象被销毁了但不置 nil。 解决方案： 使用weak修饰delegate对象，离开页面后，delegate对像销毁并置 nil。 离开页面时"
+  },
+  {
+    "id": "ios-warning",
+    "title": "iOS Warning",
+    "url": "/post/ios-warning",
+    "date": "2018-11-28T15:36:02.000Z",
+    "category": "iOS",
+    "tags": [
+      "iOS 问题集"
+    ],
+    "keywords": [
+      "Warning",
+      "iOS 警告",
+      "警告"
+    ],
+    "description": "",
+    "image": "",
+    "prevId": "ios-error",
+    "nextId": "appstrore上架拒审问题",
+    "short": "ld: warning: directory not found for option“XXXXXX 原因：从项目中删除了文件和文件夹的文件夹路径没有删除，编译器访问不到该路径而警告⚠️ 解决方案：targets => Build Settings => Library Sear"
+  },
+  {
+    "id": "appstrore上架拒审问题",
+    "title": "AppStrore上架拒审问题",
+    "url": "/post/appstrore上架拒审问题",
+    "date": "2018-11-28T15:33:13.000Z",
+    "category": "iOS",
+    "tags": [
+      "iOS 问题集"
+    ],
+    "keywords": [
+      "AppStrore上架",
+      "上架拒审"
+    ],
+    "description": "",
+    "image": "",
+    "prevId": "ios-warning",
+    "nextId": "git-仓库搭建",
+    "short": "Guideline 2.5.1 - Performance - Software Requirement，通过\"prefs:root =\"调用私有Api 解决方案： 通过\"prefs:root =\"调用私有Api在iOS8之前可用，iOS8之后不再通过私有Api跳转到相应设置，统"
+  },
+  {
+    "id": "git-仓库搭建",
+    "title": "Git 仓库搭建",
+    "url": "/post/git-仓库搭建",
+    "date": "2018-11-28T15:29:59.000Z",
+    "category": "Server",
+    "tags": [
+      "Git仓库搭建"
+    ],
+    "keywords": [
+      "Git 仓库搭建",
+      "Git",
+      "服务器",
+      "Server"
+    ],
+    "description": "",
+    "image": "",
+    "prevId": "appstrore上架拒审问题",
+    "nextId": "nginx-安装",
+    "short": "创建git新用户管理git仓库 创建git用户并配置 # adduser git // 创建git用户 # passwd git // 设置git用户的密码 # chmod -v u+w /etc/sudoers // 赋予读写权限 // 添加新用户信息至/etc/sudoers"
+  },
+  {
+    "id": "nginx-安装",
+    "title": "Nginx 安装",
+    "url": "/post/nginx-安装",
+    "date": "2018-11-28T15:26:11.000Z",
+    "category": "Server",
+    "tags": [
+      "Nginx"
+    ],
+    "keywords": [
+      "Nginx 安装",
+      "Nginx"
+    ],
+    "description": "",
+    "image": "",
+    "prevId": "git-仓库搭建",
+    "nextId": "centos-用户管理",
+    "short": "Nginx (engine x) 是一个高性能的HTTP和反向代理服务，也是一个IMAP/POP3/SMTP服务。Nginx是由伊戈尔·赛索耶夫为俄罗斯访问量第二的Rambler.ru站点（俄文：Рамблер）开发的，第一个公开版本0.1.0发布于2004年10月4日。 Ngi"
+  },
+  {
+    "id": "centos-用户管理",
+    "title": "CentOS 用户管理",
+    "url": "/post/centos-用户管理",
+    "date": "2018-11-28T15:16:47.000Z",
+    "category": "Linux",
+    "tags": [
+      "CentOS"
+    ],
+    "keywords": [
+      "CentOS",
+      "用户管理"
+    ],
+    "description": "",
+    "image": "",
+    "prevId": "nginx-安装",
+    "nextId": "next主题集成不蒜子统计",
+    "short": "整理来源：《鸟哥的Linux私房菜第四版》的第十三章 “账号管理与 ACL 权限设定” 用户账号 Linux 如何辨别使用者身份 我们登录 Linux时，输入的是我们的账号，其实 Linux 使用的并不是你的账号，而是账号所对应的UID（UserID）,账号只是为了让使用者更好记"
+  },
+  {
+    "id": "next主题集成不蒜子统计",
+    "title": "next主题集成不蒜子统计",
+    "url": "/post/next主题集成不蒜子统计",
+    "date": "2018-11-28T15:14:59.000Z",
+    "category": "hexo",
+    "tags": [
+      "next 主题配置"
+    ],
+    "keywords": [
+      "不蒜子统计",
+      "next主题"
+    ],
+    "description": "",
+    "image": "",
+    "prevId": "centos-用户管理",
+    "nextId": "hexo-seo设置",
+    "short": "打开next主题配置文件_config.yml 搜索busuanzi_count修改配置 // next 6.0 的配置样式 busuanzi_count: enable: true total_visitors: true total_visitors_icon: user t"
+  },
+  {
+    "id": "hexo-seo设置",
+    "title": "Hexo SEO设置",
+    "url": "/post/hexo-seo设置",
+    "date": "2018-11-28T15:09:05.000Z",
+    "category": "hexo",
+    "tags": [
+      "hexo 配置"
+    ],
+    "keywords": [
+      "hexo",
+      "hexo seo",
+      "seo"
+    ],
+    "description": "",
+    "image": "",
+    "prevId": "next主题集成不蒜子统计",
+    "nextId": "hexo项目同步github",
+    "short": "SEO（Search Engine Optimization）:汉译为搜索引擎优化。是一种方式:利用搜索引擎的规则提高网站在有关搜索引擎内的自然排名。目的是：为网站提供生态式的自我营销解决方案，让其在行业内占据领先地位，获得品牌收益；SEO包含站外SEO和站内SEO两方面；为了从"
+  },
+  {
+    "id": "hexo项目同步github",
+    "title": "Hexo项目同步github",
+    "url": "/post/hexo项目同步github",
+    "date": "2018-11-28T15:04:50.000Z",
+    "category": "hexo",
+    "tags": [
+      "hexo 文件管理"
+    ],
+    "keywords": [
+      "hexo",
+      "hexo同步github",
+      "hexo托管到github"
+    ],
+    "description": "",
+    "image": "",
+    "prevId": "hexo-seo设置",
+    "nextId": "上传封装工具到cocoapods",
+    "short": "hexo文件托管到github 克隆gitHub上的XXX.github.io项目的文件到本地 git clone https://github.com/yourname/xxx.github.io.git 删除文件夹里除了.git的其他所有文件 把hexo项目文件下的所有文件全"
+  },
+  {
+    "id": "上传封装工具到cocoapods",
+    "title": "上传封装工具到Cocoapods",
+    "url": "/post/上传封装工具到cocoapods",
+    "date": "2018-11-28T14:58:55.000Z",
+    "category": "iOS",
+    "tags": [
+      "Cocoapods"
+    ],
+    "keywords": [
+      "cocoapods",
+      "上传到Cocoapods"
+    ],
+    "description": "",
+    "image": "",
+    "prevId": "hexo项目同步github",
+    "nextId": "git-安装",
+    "short": "准备 在github、码云上创建项目，并把项目代码上传到项目仓库。 注册cocoapods // 验证是否注册 $ pod trunk me $ pod trunk register 邮箱号 昵称 // 然后该邮箱会收到一封cocoapods的邮件，只需打开查看邮件即可验证。 创"
+  },
+  {
+    "id": "git-安装",
+    "title": "Git 安装",
+    "url": "/post/git-安装",
+    "date": "2018-11-28T14:56:29.000Z",
+    "category": "Git",
+    "tags": [
+      "Git 使用"
+    ],
+    "keywords": [
+      "Git 安装",
+      "Git"
+    ],
+    "description": "",
+    "image": "",
+    "prevId": "上传封装工具到cocoapods",
+    "nextId": "git-创建仓库和更换远程仓库地址",
+    "short": "Git是什么？ Git是分布式版本控制系统，用于敏捷高效地处理任何或小或大的项目，它采用了分布式版本库的方式，不必服务器端软件支持。 Git安装 首先在shell中输入git，看看系统有没有安装Git。 Linux 如果用的是Debian或Ubuntu Linux可用下面命令安装"
+  },
+  {
+    "id": "git-创建仓库和更换远程仓库地址",
+    "title": "Git 创建仓库和更换远程仓库地址",
+    "url": "/post/git-创建仓库和更换远程仓库地址",
+    "date": "2018-11-28T14:50:14.000Z",
+    "category": "Git",
+    "tags": [
+      "Git 使用"
+    ],
+    "keywords": [
+      "Git创建仓库",
+      "更换远程仓库地址",
+      "Git使用"
+    ],
+    "description": "",
+    "image": "",
+    "prevId": "git-安装",
+    "nextId": "block",
+    "short": "创建仓库 本地初始化git仓库 // cd 至项目目录下，初始化本地仓库 $ git init 添加远程仓库 // 首先需在github、码云创建远程仓库（项目） // 复制远程仓库地址 $ git remote add origin 仓库地址 本地仓库与远程仓库关联 $ git"
+  },
+  {
+    "id": "block",
+    "title": "Block 探究",
+    "url": "/post/block",
+    "date": "2018-11-28T14:37:57.000Z",
+    "category": "iOS",
+    "tags": [
+      "block"
+    ],
+    "keywords": [
+      "block",
+      "block变量",
+      "__block",
+      "循环引用",
+      "block的实现",
+      "block的本质"
+    ],
+    "description": "",
+    "image": "",
+    "prevId": "git-创建仓库和更换远程仓库地址",
+    "nextId": "mv系列和viper架构学习",
+    "short": "Block是OSX Snow Leopard和iOS 4引入的C语言扩充功能，是一个带有自动变量（局部变量）的匿名函数，也被称为闭包。 Block语法 Block的表达式语法 ^ 返回值类型 参数列表 表达式 ^ int (int count) { return count + "
+  },
+  {
+    "id": "mv系列和viper架构学习",
+    "title": "MV系列和VIPER架构学习",
+    "url": "/post/mv系列和viper架构学习",
+    "date": "2018-11-28T14:08:59.000Z",
+    "category": "iOS",
+    "tags": [
+      "架构学习"
+    ],
+    "keywords": [
+      "MV系列架构",
+      "VIPER架构",
+      "架构学习"
+    ],
+    "description": "",
+    "image": "",
+    "prevId": "block",
+    "nextId": "github使用",
+    "short": "由于个人对一些流行的架构的分辨和其各模块的分工很模糊，所以通过网上查询整理关于架构模式的知识，并且根据自己的了解写了一个小demo。 架构 iOS 下的架构设计常用模式有：MVC、MVP、MVVM以及VIPER，架构设计是将项目中的视图、数据模型、逻辑等进行角色定义，将任务分摊给"
+  },
+  {
+    "id": "github使用",
+    "title": "github使用",
+    "url": "/post/github使用",
+    "date": "2018-11-04T15:12:55.000Z",
+    "category": "Git",
+    "tags": [
+      "github"
+    ],
+    "keywords": [
+      "github使用",
+      "github"
+    ],
+    "description": "",
+    "image": "",
+    "prevId": "mv系列和viper架构学习",
+    "nextId": null,
+    "short": "什么是github？ github是一个基于git的代码托管平台，付费用户可以建私人仓库，我们一般的免费用户只能使用公共仓库，也就是代码要公开。 gitHub是一个面向开源及私有软件项目的托管平台，因为只支持git 作为唯一的版本库格式进行托管，故名gitHub。 gitHub于"
+  }
+]

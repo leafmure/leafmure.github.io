@@ -1,0 +1,30 @@
+<h3 id="离开页面后网络请求使用-delegate-回调崩溃" tabindex="-1">离开页面后，网络请求使用 delegate 回调崩溃</h3>
+<p>原因：用的是 assgin 修饰 delegate，像数值类型一样 delegate对象被销毁了但不置 nil。</p>
+<!-- more -->
+<p>解决方案：</p>
+<ul>
+<li>使用weak修饰delegate对象，离开页面后，delegate对像销毁并置 nil。</li>
+<li>离开页面时，手动将delegate对象置nil。</li>
+<li>离开页面时，取消这个网络请求。</li>
+</ul>
+<h3 id="this-application-is-modifying-the-autolayout-engin-from-a-background-thread" tabindex="-1">This application is modifying the autolayout engin from a background thread</h3>
+<p>原因：未回主线程刷新UI</p>
+<p>解决方案：</p>
+<pre><code class="language-Objective-C">dispatch_async(dispatch_get_main_queue(), ^{
+// 有关UI的操作
+});
+</code></pre>
+<h3 id="target-编译报错-build-input-file-cannot-be-found" tabindex="-1">Target 编译报错: Build input file cannot be found</h3>
+<p>Build 构建信息中提示:
+None of the architectures in ARCHS (arm64) are valid. Consider setting ARCHS to $(ARCHS_STANDARD) or updating it to include at least one value from VALID_ARCHS (arm64, arm64e, armv7, armv7s) which is not in EXCLUDED_ARCHS (arm64, armv7).</p>
+<p>需要检查 [Build Settings] 以下配置,</p>
+<ul>
+<li><a href="arm64">Architectures</a> 表示使用的架构,</li>
+<li><a href="arm64%E3%80%81armv7">Excluded Architectures</a> 表示需要排除的架构,</li>
+</ul>
+<p>此处问题在于:</p>
+<ul>
+<li></li>
+<li></li>
+</ul>
+<p><a href="arm64">Architectures</a> 配置被无效了, 导致无法编译. 需将 <a href="arm64%E3%80%81armv7">Excluded Architectures</a> 中的 arm64 删除.</p>

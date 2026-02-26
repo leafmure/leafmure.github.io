@@ -1,0 +1,14 @@
+<h3 id="ld-warning-directory-not-found-for-optionxxxxxx" tabindex="-1">ld: warning: directory not found for option“XXXXXX</h3>
+<p>原因：从项目中删除了文件和文件夹的文件夹路径没有删除，编译器访问不到该路径而警告⚠️</p>
+<!-- more -->
+<p>解决方案：targets =&gt; Build Settings =&gt;  Library Search Paths &amp; Framework Search Paths，删掉编译报warning的路径。</p>
+<h3 id="block-implicitly-retains-self-explicitly-mention-self-to-indicate-this警告" tabindex="-1">Block implicitly retains ‘self’; explicitly mention ‘self’ to indicate this…警告</h3>
+<p>解决方案：Building Settings -&gt;搜索implicit retain of ‘self’
+将对应的值改为NO。</p>
+<h3 id="消除cocoapods时导入的第三方警告" tabindex="-1">消除CocoaPods时导入的第三方警告</h3>
+<p>inhibit_warnings参数的小问题
+解决方案：</p>
+<ol>
+<li>在podfile中加入inhibit_all_warnings! 。</li>
+<li>pods -&gt; targets -&gt; 选择报警告的第三方 -&gt; build settings 搜索inhibit_warnings，选择YES。</li>
+</ol>

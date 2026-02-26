@@ -1,0 +1,32 @@
+<h3 id="git是什么" tabindex="-1">Git是什么？</h3>
+<p>Git是分布式版本控制系统，用于敏捷高效地处理任何或小或大的项目，它采用了分布式版本库的方式，不必服务器端软件支持。</p>
+<!-- more -->
+<h3 id="git安装" tabindex="-1">Git安装</h3>
+<p>首先在shell中输入git，看看系统有没有安装Git。</p>
+<h4 id="linux" tabindex="-1">Linux</h4>
+<ul>
+<li>如果用的是Debian或Ubuntu Linux可用下面命令安装。</li>
+</ul>
+<pre><code>$ apt-get install git
+</code></pre>
+<ul>
+<li>可以通过yum 安装，只不过yum源中的版本比较旧点</li>
+</ul>
+<pre><code>$ yum install git
+</code></pre>
+<ul>
+<li>通过<a href="https://git-scm.com/">Git官网</a>下载源码，然后解压，依次输入：./config，make， make install这几个命令安装就好了。</li>
+</ul>
+<h4 id="mac-os-x-上安装git" tabindex="-1">Mac OS X 上安装Git</h4>
+<p>1.通过<a href="http://brew.sh/">homebrew</a>安装Git。</p>
+<pre><code>$ brew install git
+</code></pre>
+<p>2.通过Xcode -&gt; Preferences,Downloads Command Line Tools，点击install就可以完成安装。</p>
+<h4 id="windows" tabindex="-1">Windows</h4>
+<p>通过<a href="https://git-scm.com/">Git官网</a>下载安装程序，在开始菜单找到Git - Git Bash出现 welcome to Git (version x.x.x -xxxx)，说明Git安装成功。</p>
+<p>安装Git完成后，进行全局设置，表示你这台机器上所有的Git仓库都会使用这个配置，当然也可以对某个仓库指定不同的用户名和Email地址。</p>
+<pre><code>$ git config --global user.name &quot;Your Name&quot;
+$ git config --global user.email &quot;email@example.com&quot;
+$ git config 单个仓库 user.email &quot;email@example.com&quot;
+$ git config 单个仓库 user.email &quot;email@example.com&quot;
+</code></pre>

@@ -1,0 +1,95 @@
+<h3 id="使用的-mac-配置" tabindex="-1">使用的 Mac 配置</h3>
+<p>MacBook Pro (2022)
+芯片: Apple M2
+内存: 16GB
+存储: 512GB
+系统: Ventura 13.0</p>
+<!-- more -->
+<h3 id="环境要求" tabindex="-1">环境要求</h3>
+<h4 id="homebrew" tabindex="-1">Homebrew</h4>
+<h5 id="官方安装-需要梯子" tabindex="-1">官方安装 (需要梯子)</h5>
+<p>安装命令:</p>
+<pre><code class="language-bash">/bin/zsh -c &quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)&quot;
+</code></pre>
+<p>卸载命令:</p>
+<pre><code class="language-bash">/bin/zsh -c &quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall.sh)&quot;
+</code></pre>
+<h5 id="国内维护镜像" tabindex="-1">国内维护镜像</h5>
+<p>安装命令:</p>
+<pre><code class="language-bash">/bin/zsh -c &quot;$(curl -fsSL https://gitee.com/cunkai/HomebrewCN/raw/master/Homebrew.sh)&quot;
+</code></pre>
+<p>卸载命令:</p>
+<pre><code class="language-bash">/bin/zsh -c &quot;$(curl -fsSL https://gitee.com/cunkai/HomebrewCN/raw/master/HomebrewUninstall.sh)&quot;
+</code></pre>
+<h5 id="homebrew-基础指令" tabindex="-1">Homebrew 基础指令</h5>
+<pre><code class="language-bash"># 查看版本
+brew -v
+
+# 安装
+brew install xxx
+</code></pre>
+<h4 id="python" tabindex="-1">Python</h4>
+<p>查看 Python 是否安装</p>
+<pre><code class="language-bash">python3 -V
+
+输出: Python 3.10.10
+</code></pre>
+<p>如果没有输出版本号, 前往 <a href="https://www.python.org/downloads/macos/">Python 官网</a> 下载, 教程使用的 Python 3.10.10, 具体以 <a href="https://github.com/AUTOMATIC1111/stable-diffusion-webui">stable-diffusion-webui</a> 要求.</p>
+<p>安装后, 需要配置环境变量.</p>
+<pre><code class="language-bash"># 1.编辑 ~/.zprofile
+vim ~/.zprofile
+
+# 2.在 zprofile 加入以下内容:
+PATH=&quot;/Library/Frameworks/Python.framework/Versions/3.10/bin:${PATH}&quot;
+export PATH
+alias python=&quot;/Library/Frameworks/Python.framework/Versions/3.10/bin/python3&quot;
+
+# 3.使配置生效
+source ~/.zprofile
+</code></pre>
+<h3 id="下载-stable-diffusion" tabindex="-1">下载 Stable Diffusion</h3>
+<p>使用 git clone Stable Diffusino WebUI 仓库</p>
+<pre><code class="language-bash">git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui
+</code></pre>
+<h3 id="下载模型" tabindex="-1">下载模型</h3>
+<h4 id="模型类型" tabindex="-1">模型类型</h4>
+<p>模型主要分为三大类: 大模型(checkpoint)、Lora、VAE, 不同类型的模型放置路径不一样.</p>
+<h5 id="大模型checkpoint" tabindex="-1">大模型(checkpoint)</h5>
+<p>模型文件后缀为: ckpt 或者 safetensors, 需放置在 /stable-diffusion-webui/models/Stable-diffusion 目录下.</p>
+<h5 id="lora-模型" tabindex="-1">Lora 模型</h5>
+<p>需放置在 /stable-diffusion-webui/models/Lora 目录下, Lora 文件夹需要执行 ./webui.sh 生成.</p>
+<h5 id="vae-模型" tabindex="-1">VAE 模型</h5>
+<p>需放置在 /stable-diffusion-webui/models/VAE 目录下</p>
+<h4 id="模型获取" tabindex="-1">模型获取</h4>
+<p>需在启动 WebUI 前下载好一个大模型放置目录下, 否则会自动下载默认模型, 比较耗费时间.</p>
+<h5 id="c站" tabindex="-1"><a href="https://civitai.com/">C站</a></h5>
+<p><img src="https://destinmure.github.io/pic/postImage/Mac-%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2-StableDiffusion/C%E7%AB%99%E6%A8%A1%E5%9E%8B%E8%8E%B7%E5%8F%96.png" alt="image"></p>
+<h5 id="hugging-face" tabindex="-1"><a href="https://huggingface.co/models?pipeline_tag=text-to-image&amp;sort=downloads">Hugging Face</a></h5>
+<p><img src="https://destinmure.github.io/pic/postImage/Mac-%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2-StableDiffusion/HuggingFace1.png" alt="image">
+<img src="https://destinmure.github.io/pic/postImage/Mac-%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2-StableDiffusion/HuggingFace1.png" alt="image"></p>
+<h5 id="liblibai" tabindex="-1"><a href="https://www.liblib.ai/modelinfo/8b4b7eb6aa2c480bbe65ca3d4625632d">LiblibAI</a></h5>
+<p><img src="https://destinmure.github.io/pic/postImage/Mac-%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2-StableDiffusion/LiblibAI.png" alt="image"></p>
+<h3 id="启动-webui" tabindex="-1">启动 WebUI</h3>
+<h4 id="准备依赖工具" tabindex="-1">准备依赖工具</h4>
+<pre><code class="language-bash">brew install cmake protobuf rust wget
+</code></pre>
+<h4 id="执行-webuish" tabindex="-1">执行 <a href="http://webui.sh">webui.sh</a></h4>
+<p>进入从 git 拉取下来的 stable-diffusion-webui 目录, 执行下面命令.</p>
+<pre><code class="language-bash"> cd stable-diffusion-webui
+
+./webui.sh
+</code></pre>
+<p><img src="https://destinmure.github.io/pic/postImage/Mac-%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2-StableDiffusion/%E5%BA%94%E7%94%A8%E7%95%8C%E9%9D%A2.png" alt="image"></p>
+<h3 id="汉化" tabindex="-1">汉化</h3>
+<p>可使用 <a href="https://github.com/VinsonLaro/stable-diffusion-webui-chinese">stable-diffusion-webui-chinese</a> 扩展进行汉化, 具体使用方法请阅读<a href="https://github.com/VinsonLaro/stable-diffusion-webui-chinese#%E6%96%B9%E6%B3%951%E9%80%9A%E8%BF%87webui%E6%8B%93%E5%B1%95%E8%BF%9B%E8%A1%8C%E5%AE%89%E8%A3%85">安装说明</a></p>
+<h4 id="遇到的问题" tabindex="-1">遇到的问题</h4>
+<h5 id="1-failed-building-wheel-for-basicsr" tabindex="-1">1. <a href="https://github.com/AUTOMATIC1111/stable-diffusion-webui/issues/13113">Failed building wheel for basicsr</a></h5>
+<p>在 stable-diffusion-webui/modules/launch_utils.py 文件第138行中的 python 命令中插入 --use-pep517</p>
+<pre><code>return run(f'&quot;{python}&quot; -m pip {command} --use-pep517 --prefer-binary{index_url_line}', desc=f&quot;Installing {desc}&quot;, errdesc=f&quot;Couldn't install {desc}&quot;, live=live)
+</code></pre>
+<p><a href="https://github.com/AUTOMATIC1111/stable-diffusion-webui/issues/13113">github issues</a></p>
+<h5 id="2-stable-diffusion-webui-extensions-加载-ssl-错误" tabindex="-1">2. [stable-diffusion-webui-extensions 加载 SSL 错误]</h5>
+<p>在 launch_utils.py 中的 from module.paths_internal import script_path, extensions_dir 后面添加:</p>
+<pre><code>import ssl ssl._create_default_https_context = ssl._create_unverified_context
+</code></pre>
+<p><a href="https://github.com/AUTOMATIC1111/stable-diffusion-webui/issues/9285">github issues</a></p>

@@ -1,0 +1,78 @@
+<h3 id="homebrew-方式安装" tabindex="-1">Homebrew 方式安装</h3>
+<p>1、执行安装命令</p>
+<pre><code>brew install ffmpeg
+brew install ffmpeg --HEAD # 安装最新
+</code></pre>
+<p>2、选择第三方仓库: homebrew-ffmpeg 和 varenc-homebrew-ffmpeg</p>
+<pre><code>brew tap homebrew-ffmpeg/ffmpeg # homebrew-ffmpeg 仓库
+</code></pre>
+<!-- more -->
+<p>3、根据第三方仓库安装</p>
+<pre><code>brew install homebrew-ffmpeg/ffmpeg/ffmpeg
+</code></pre>
+<p>4、关联 options</p>
+<pre><code># 获取支持的options
+brew options homebrew-ffmpeg/ffmpeg/ffmpeg
+
+# 关联options
+brew install homebrew-ffmpeg/ffmpeg/ffmpeg --with-aribb24 --with-chromaprint --with-decklink --with-fdk-aac --with-game-music-emu --with-jack --with-jpeg-xl --with-libaribb24 --with-libbluray --with-libbs2b --with-libcaca --with-libflite --with-libgsm --with-libmodplug --with-libopenmpt --with-librist --with-librsvg --with-libsoxr --with-libssh --with-libvidstab --with-libvmaf --with-libxml2 --with-libzvbi --with-opencore-amr --with-openh264 --with-openjpeg --with-openssl --with-openssl@1.1 --with-rav1e --with-rtmpdump --with-rubberband --with-speex --with-srt --with-svt-av1 --with-tesseract --with-two-lame --with-webp --with-xvid --with-zeromq --with-zimg
+</code></pre>
+<h3 id="ffmpeg-支持-rtmp-h265" tabindex="-1">FFmpeg 支持 RTMP H265</h3>
+<h4 id="安装-libx264" tabindex="-1">安装 libx264</h4>
+<pre><code>git clone https://code.videolan.org/videolan/x264.git
+cd x264
+mkdir build
+./configure --prefix=$(pwd)/build --disable-asm --disable-cli --disable-shared --enable-static
+make -j10
+make install
+</code></pre>
+<h4 id="安装-libx265" tabindex="-1">安装 libx265</h4>
+<pre><code>git clone https://bitbucket.org/multicoreware/x265_git.git
+cd x265_git/build/linux
+mkdir build
+cmake -DCMAKE_INSTALL_PREFIX=$(pwd)/build -DENABLE_SHARED=OFF ../../source
+make -j10
+make install
+</code></pre>
+<h4 id="设置-libx264libx265-环境变量" tabindex="-1">设置 libx264、libx265 环境变量</h4>
+<pre><code>export PKG_CONFIG_PATH=~/x264/build/lib/pkgconfig:~/x265_git/build/linux/build/lib/pkgconfig
+</code></pre>
+<h4 id="ffmpeg-中-rtmpflv-模块支持-h265" tabindex="-1">ffmpeg 中 rtmp/flv 模块支持 h.265</h4>
+<pre><code>git clone -b 5.1 https://github.com/runner365/ffmpeg_rtmp_h265.git
+cd ffmpeg_rtmp_h265
+cp flv.h ~/FFmpeg/libavformat/
+cp flv*.c ~/FFmpeg/libavformat/
+</code></pre>
+<h4 id="ffmpeg-重新编译安装" tabindex="-1">ffmpeg 重新编译安装</h4>
+<pre><code>git clone https://github.com/FFmpeg/FFmpeg.git
+cd FFmpeg
+git checkout n6.0
+mkdir build
+./configure \
+  --prefix=$(pwd)/build \
+  --enable-gpl --enable-nonfree --enable-pthreads --extra-libs=-lpthread \
+  --disable-asm --disable-x86asm --disable-inline-asm \
+  --enable-decoder=aac --enable-decoder=aac_fixed --enable-decoder=aac_latm --enable-encoder=aac \
+  --enable-libx264 --enable-libx265 \
+  --pkg-config-flags='--static'
+make -j10
+make install
+</code></pre>
+<h3 id="rtmpflv-h265-服务器支持" tabindex="-1">rtmp/flv h.265 服务器支持</h3>
+<p>nginx-rtmp 只支持 h.264, SRS 已支持 rtmp/flv h.265, 因此建议使用 SRS 服务.</p>
+<pre><code>git clone https://github.com/ossrs/srs.git
+cd trunk
+./configure --osx --h265=on
+make
+</code></pre>
+<p>SRS 相关操作指令</p>
+<pre><code># 启动
+./objs/srs -c conf/rtmp.conf
+
+# 查看日志
+tail -n 30 -f ./objs/srs.log
+
+# 查看服务器状态
+./etc/init.d/srs status
+</code></pre>
+<p>具体详细见文档<a href="https://ossrs.net/lts/zh-cn/docs/v5/doc/getting-started-build">SRS</a></p>

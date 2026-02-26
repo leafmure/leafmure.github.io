@@ -1,0 +1,32 @@
+<h4 id="更换镜像pod-setup" tabindex="-1">更换镜像pod setup</h4>
+<p>1.升级Ruby环境</p>
+<pre><code>$ sudo gem update --system
+</code></pre>
+<!-- more -->
+<p>2.更换Ruby镜像</p>
+<pre><code>$ gem sources --remove https://rubygems.org/   移除现有镜像
+$ gem sources -a https://gems.ruby-china.org/  添加国内最新镜像
+$ gem sources -l  查看当前镜像
+$ sudo gem install cocoapods  安装cocoapods
+$ sudo gem install -n /usr/local/bin cocoapods
+$ pod setup  挂vpn，耐心等待
+</code></pre>
+<p>3.pod setup后，pod search 第三方框架名，结果如下则为成功
+<img src="https://upload-images.jianshu.io/upload_images/3850436-fd1eaaafdc4f8cbd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"></p>
+<p>4.如果pod search 出现Unable to find a pod with name, author, summary, or descriptionmatching，删除~/Library/Caches/CocoaPods目录下的search_index.json文件</p>
+<pre><code>$ rm ~/Library/Caches/CocoaPods/search_index.json
+$ pod search '第三方框架名'
+</code></pre>
+<h4 id="手动pod-setup-未尝试" tabindex="-1">手动pod setup (未尝试)</h4>
+<pre><code>$ cd ~/.cocoapods/repos  该文件夹pod setup会创建
+$ git clone https://github.com/CocoaPods/Specs.git  克隆git仓库
+</code></pre>
+<p>下载完后，将Specs 改名为master，然后执行</p>
+<pre><code>$ pod repo
+</code></pre>
+<h4 id="import-pod第三方库不提示" tabindex="-1">import pod第三方库不提示</h4>
+<ol>
+<li>选择target —&gt; BuildSettings —&gt; search Paths 下的 User Header Search Paths。</li>
+<li>双击User Header Search Paths后面的空白区域。</li>
+<li>点击“+”号添加一项：并且输入：“$(PODS_ROOT)”（没有引号），选择：recursive（会在相应的目录递归搜索文件）。</li>
+</ol>

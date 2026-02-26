@@ -1,0 +1,692 @@
+[
+  {
+    "id": "git-创建仓库和更换远程仓库地址",
+    "title": "Git 创建仓库和更换远程仓库地址",
+    "url": "/post/git-创建仓库和更换远程仓库地址",
+    "content": "创建仓库 本地初始化git仓库 // cd 至项目目录下，初始化本地仓库 $ git init 添加远程仓库 // 首先需在github、码云创建远程仓库（项目） // 复制远程仓库地址 $ git remote add origin 仓库地址 本地仓库与远程仓库关联 $ git branch --set-upstream-to=origin/master $ git branch --set-upstream-to=origin/<branch> master 拉取远程仓库内容到本地仓库 $ git pull // 若git pull提示：fatal: refusing to merge unrelated histories // 改用以下命令 $ git pull origin master --allow-unrelated-histories 将最新新内容推送至远程仓库 // 使用git status 查看是否有内容未添加至暂存区 $ git status // 将内容添加至暂存区 $ git add -A // 全部添加 // 将暂存区内容提交至本地仓库 $ git commit -m \"本次提交内容信息\" // 将本地仓库推送至远程仓库 $ git push 更换远程仓库地址 通过命令直接修改地址 // 查看仓库地址 $ git remote -v // 更换仓库地址",
+    "category": "Git",
+    "tags": [
+      "Git 使用"
+    ],
+    "keywords": [
+      "Git创建仓库",
+      "更换远程仓库地址",
+      "Git使用"
+    ]
+  },
+  {
+    "id": "git-安装",
+    "title": "Git 安装",
+    "url": "/post/git-安装",
+    "content": "Git是什么？ Git是分布式版本控制系统，用于敏捷高效地处理任何或小或大的项目，它采用了分布式版本库的方式，不必服务器端软件支持。 Git安装 首先在shell中输入git，看看系统有没有安装Git。 Linux 如果用的是Debian或Ubuntu Linux可用下面命令安装。 $ apt-get install git 可以通过yum 安装，只不过yum源中的版本比较旧点 $ yum install git 通过Git官网下载源码，然后解压，依次输入：./config，make， make install这几个命令安装就好了。 Mac OS X 上安装Git 1.通过homebrew安装Git。 $ brew install git 2.通过Xcode -> Preferences,Downloads Command Line Tools，点击install就可以完成安装。 Windows 通过Git官网下载安装程序，在开始菜单找到Git - Git Bash出现 welcome to Git (version x.x.x -xxxx)，说明Git安装成功。 安装Git完成后，进行全局设置，表示你这台机器上所有的Git仓库都会使用这个配置，当然也可以对某个仓库指定不同的用户名和Email地址。 $ git config --global user.name \"Your Nam",
+    "category": "Git",
+    "tags": [
+      "Git 使用"
+    ],
+    "keywords": [
+      "Git 安装",
+      "Git"
+    ]
+  },
+  {
+    "id": "github使用",
+    "title": "github使用",
+    "url": "/post/github使用",
+    "content": "什么是github？ github是一个基于git的代码托管平台，付费用户可以建私人仓库，我们一般的免费用户只能使用公共仓库，也就是代码要公开。 gitHub是一个面向开源及私有软件项目的托管平台，因为只支持git 作为唯一的版本库格式进行托管，故名gitHub。 gitHub于2008年4月10日正式上线，除了git代码仓库托管及基本的 Web管理界面以外，还提供了订阅、讨论组、文本渲染、在线文件编辑器、协作图谱（报表）、代码片段分享（Gist）等功能。目前，其注册用户已经超过350万，托管版本数量也是非常之多，其中不乏知名开源项目 Ruby on Rails、jQuery、python 等。github百度百科 注册github 点击github signUp注册， 创建仓库 配置ssh key 复制下方“显示隐藏文件”命令至终端，，前往Users/lianghui/.ssh查看是否有.ssh文件，如果有建议删除。 显示隐藏文件 $ defaults write com.apple.finder AppleShowAllFiles Yes && killall Finder 不显示隐藏文件 $ defaults write com.apple.finder AppleShowAllFiles No && killall Finder 终端里输入指令,创建一个 .ssh 文件夹 ",
+    "category": "Git",
+    "tags": [
+      "github"
+    ],
+    "keywords": [
+      "github使用",
+      "github"
+    ]
+  },
+  {
+    "id": "centos-用户管理",
+    "title": "CentOS 用户管理",
+    "url": "/post/centos-用户管理",
+    "content": "整理来源：《鸟哥的Linux私房菜第四版》的第十三章 “账号管理与 ACL 权限设定” 用户账号 Linux 如何辨别使用者身份 我们登录 Linux时，输入的是我们的账号，其实 Linux 使用的并不是你的账号，而是账号所对应的UID（UserID）,账号只是为了让使用者更好记忆。有关UID与账号的对应信息存储在 /etc/passwd，除了UID外还有一个群组ID：GID（GroupID），GID与账号对应的信息存储在 /etc/group中。当用户登录时，Linux时便会根据账号去 /etc/passwd和/etc/group的信息中找到 UID和GID对应的账号与组名显示出来。 Linux 登录 登录Linux时，Liunx 对于用户的账号、密码输入进行了以下几个步骤 先查询 /etc/passwd 中是否有你输入的账号，如果有的话则将账号对应的 UID 读出来并去 /etc/group 中将GID也读出来，另外对于该账号的家目录与 shell 设定也一并读出。 Linux 会进入 /etc/shadow 里找出对应的应的账号和 UID去核对用户输入的登录密码。 核对成功的话，就进入shell。 账号密码信息相关文件 /etc/passwd 存储着账号信息，每一行代表一个账号，里面除了用户账号还有许多系统账号（系统运作所需），每一行的行的账号信息格式如下 // 以 “:” ",
+    "category": "Linux",
+    "tags": [
+      "CentOS"
+    ],
+    "keywords": [
+      "CentOS",
+      "用户管理"
+    ]
+  },
+  {
+    "id": "git-仓库搭建",
+    "title": "Git 仓库搭建",
+    "url": "/post/git-仓库搭建",
+    "content": "创建git新用户管理git仓库 创建git用户并配置 # adduser git // 创建git用户 # passwd git // 设置git用户的密码 # chmod -v u+w /etc/sudoers // 赋予读写权限 // 添加新用户信息至/etc/sudoers # vim /etc/sudoers // 添加新用户信息如下 // Allow root to run any commands anywhere root ALL=(ALL) ALL git ALL=(ALL) ALL 生成密钥（在电脑的shell中执行） $ ssh-keygen -t rsa // 一直回车会出现 key’s randomart image $ pbcopy < ~/.ssh/id_rsa.pub // 复制id_rsa.pub中的密钥 密钥配置（在服务器配置） # su git // 切换至git用户，如果当前是不必执行 # mkdir ~/.ssh // 创建.ssh文件 # vim ~/.ssh/authorized_keys // 将上步骤获取的密钥复制到authorized_keys文件里 # cd ～ // git用户下的根目录 // 设置权限 # chmod 600 .ssh/authorzied_keys # chmod 700 .ssh 测试是否能连接服务器 $ ",
+    "category": "Server",
+    "tags": [
+      "Git仓库搭建"
+    ],
+    "keywords": [
+      "Git 仓库搭建",
+      "Git",
+      "服务器",
+      "Server"
+    ]
+  },
+  {
+    "id": "nginx-安装",
+    "title": "Nginx 安装",
+    "url": "/post/nginx-安装",
+    "content": "Nginx (engine x) 是一个高性能的HTTP和反向代理服务，也是一个IMAP/POP3/SMTP服务。Nginx是由伊戈尔·赛索耶夫为俄罗斯访问量第二的Rambler.ru站点（俄文：Рамблер）开发的，第一个公开版本0.1.0发布于2004年10月4日。 Nginx安装 yum源中的nginx版本比较旧，包安装可以指定安装版本，安装目录地址为 /usr/local/ 包安装 安装nginx所需的依赖库（需在root身份下） pcre库 下载 pcre库 安装包 # wget ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.36.tar.gz 解压安装包 # tar -zxvf pcre-8.36.tar.gz 编译安装 # cd pcre-8.36 # ./configure # make && make install zlib库 下载 zlib库 安装包 # wget http://zlib.net/zlib-1.2.8.tar.gz 解压安装包 # tar -zxvf zlib-1.2.8.tar.gz 编译安装 # cd zlib-1.2.8 # ./configure # make && make install ssl库 下载 zlib库 安装包 # wget http://ww",
+    "category": "Server",
+    "tags": [
+      "Nginx"
+    ],
+    "keywords": [
+      "Nginx 安装",
+      "Nginx"
+    ]
+  },
+  {
+    "id": "http协议",
+    "title": "HTTP 协议",
+    "url": "/post/http协议",
+    "content": "超文本传输协议（Hyper Text Transfer Protocol，HTTP）是一个简单的请求-响应协议，它通常运行在TCP之上。它指定了客户端可能发送给服务器什么样的消息以及得到什么样的响应。请求和响应消息的头以ASCII形式给出；而消息内容则具有一个类似MIME的格式。这个简单模型是早期Web成功的有功之臣，因为它使开发和部署非常地直截了当。 HTTP 1.0 为了提高系统的效率，HTTP 1.0 规定浏览器与服务器只保持短暂的连接，浏览器的每次请求都需要与服务器建立一个TCP连接，服务器完成请求处理后立即断开TCP连接，服务器不记录请求。 然而，这种短连接的方式，也造成了一些性能上的缺陷，例如：网页加载中，要通过链接访问图片、JavaScript文件、CSS文件等内容时，每次请求都需要重新建立连接，每次连接只能传输相对应请求的内容，并且连接的建立和关闭又比较费时，这严重影响客户端和服务端的性能，导致网页加载比较慢。连接无法复用导致每次请求都经历三次握手和慢启动。三次握手在高延迟的场景下影响较明显，慢启动则对文件类大请求影响较大。 客户端是依据域名来向服务器建立连接，连接数越多，资源开销和整体延迟都会随之增大。因此，一般PC端浏览器会针对单个域名的 server 控制在6～8个连接，手机端的连接数则一般控制在4～6个。连接数有限，每个请求要在得到响应才算完成，因此在多个请",
+    "category": "后端",
+    "tags": [
+      "HTTP 协议"
+    ],
+    "keywords": [
+      "HTTP 协议"
+    ]
+  },
+  {
+    "id": "restful-api架构",
+    "title": "RESTful Api架构",
+    "url": "/post/restful-api架构",
+    "content": "API API 是什么？ API（Application Programming Interface，应用程序接口）是一些预先定义的接口（如函数、HTTP接口），或指软件系统不同组成部分衔接的约定。 用来提供应用程序与开发人员基于某软件或硬件得以访问的一组例程，而又无需访问源码，或理解内部工作机制的细节。 REST 概念 REST全称是Representational State Transfer，中文意思是：表现层状态转移。这一概念由 Roy Fielding 提出，设计理念是想 在符合架构原理的前提下，理解和评估以网络为基础的应用软件的架构设计，得到一个功能强、性能好、适宜通信的架构。REST 并非是一种协议，它是一种设计规范，如果一个架构符合REST的约束条件和原则，就能称为 RESTful 架构。Roy Fielding 在2000年定义了REST API设计时制定了六项基本原则，六项指导原则如下： REST本身并没有创造新的技术、组件或服务，而隐藏在RESTful背后的理念就是使用Web的现有特征和能力， 更好地使用现有Web标准中的一些准则和约束。虽然REST本身受Web技术的影响很深， 但是理论上REST架构风格并不是绑定在HTTP上，只不过目前HTTP是唯一与REST相关的实例。 REST 具体理解 资源与URI REST全称是表述性状态转移，那究竟指的是什么的表述",
+    "category": "后端",
+    "tags": [
+      "RESTful"
+    ],
+    "keywords": [
+      "RESTful"
+    ]
+  },
+  {
+    "id": "app-启动",
+    "title": "App 启动",
+    "url": "/post/app-启动",
+    "content": "APP 启动流程 App 启动情况有： 冷启动：系统里没有任何进程的缓存信息，如：重启手机后直接启动 App，或者杀死App 等待一段时间，缓存被清除后再启动。 热启动：系统里还存在进程的缓存信息，如：刚把App 杀死后立即启动App。 启动过程中分为两阶段：pre-main、main pre-main pre-main 是在 main 函数执行前的阶段，在这期间主要有以下几个阶段： Load dylibs Rebase images Bind images Objc SetUp Initializers image 指的是一个被编译过的符号、代码等的二进制文件 dyld(动态链接器) dyld 是启动的辅助程序，是 in-process 的，即启动的时候会把 dyld 加载到进程的地址空间里，然后把后续的启动过程交给 dyld。其过程如下： 系统先读取App的可执行文件(Mach-O文件)，从里面获得 dyld 的路径，然后加载 dyld。 dyld 去初始化运行环境，开启缓存策略(缓存命中)，加载程序相关依赖库(其中也包含可执行文件)，并对这些库进行链接。 最后调用每个依赖库的初始化方法，在这一步，runtime被初始化。 当所有依赖库的初始化后，轮到最后一位(程序可执行文件)进行初始化，在这时 runtime 会对项目中所有类进行类结构初始化，然后调用所有的load方法。 最",
+    "category": "iOS",
+    "tags": [
+      "启动优化"
+    ],
+    "keywords": [
+      "App启动流程,启动优化"
+    ]
+  },
+  {
+    "id": "appstrore上架拒审问题",
+    "title": "AppStrore上架拒审问题",
+    "url": "/post/appstrore上架拒审问题",
+    "content": "Guideline 2.5.1 - Performance - Software Requirement，通过\"prefs:root =\"调用私有Api 解决方案： 通过\"prefs:root =\"调用私有Api在iOS8之前可用，iOS8之后不再通过私有Api跳转到相应设置，统一跳到设置界面。 [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]]; 将\"prefs:root =\"字段转化，将转换结果再还原调用。 //iOS10 [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@\"prefs:root= Bluetooth\"] options:@{} completionHandler:nil]; [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@\"prefs:root= Bluetooth\"]]; // 将字符串转换为16进制 // (unsigned char []){0x70,0x72,0x65,0x66,0x73,0x3a,0x72,0x6f,0x6f,0x74,0x3d",
+    "category": "iOS",
+    "tags": [
+      "iOS 问题集"
+    ],
+    "keywords": [
+      "AppStrore上架",
+      "上架拒审"
+    ]
+  },
+  {
+    "id": "autoreleasepool详解",
+    "title": "AutoreleasePool详解",
+    "url": "/post/autoreleasepool详解",
+    "content": "一、前言 iOS 的内存管理是通过引用计数管理的，当对象的引用计数为 0 时，说明该对象要释放回收内存了。在 iOS 5 之前，内存管理是需要开发者负责的，需要手动调用 retain、release、autorelease 去操作对象的引用计数，这种手动管理模式称为 MRC（Manual Reference Counting）。iOS 5 后引入 ARC（Automatic Reference Counting），LLVM 编译器会在编译时自动插入 retain、release、autorelease 的调用方法。autorelease 标记的对象会添加到 AutoreleasePool，由 AutoreleasePool 管理内存释放。 二、AutoreleasePool 是什么？ 2.1 创建自动释放池 在 MRC 下，我们可以用 NSAutoreleasePool 或者@autoreleasepool 去手动创建一个 AutoreleasePool NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init]; Class *obj = [[Class alloc] init]; /// 加入 pool [obj autorelease]; [pool release] 在 ARC 下，已经禁止使用 NSAutorele",
+    "category": "iOS",
+    "tags": [
+      "AutoreleasePool"
+    ],
+    "keywords": [
+      "AutoreleasePool",
+      "Autorelease",
+      "内存管理"
+    ]
+  },
+  {
+    "id": "block",
+    "title": "Block 探究",
+    "url": "/post/block",
+    "content": "Block是OSX Snow Leopard和iOS 4引入的C语言扩充功能，是一个带有自动变量（局部变量）的匿名函数，也被称为闭包。 Block语法 Block的表达式语法 ^ 返回值类型 参数列表 表达式 ^ int (int count) { return count + 1; } // 可省略返回值类型，如果表达式中有返回值就使用返回值的类型 ^(int count) { return count + 1; } // 如果没有参数，参数列表也可以省略 ^{ printf(\"hello Blocks\\n\"); } Block 类型变量 Block类型变量与一般的C语言变量完全相同，可作为：自动变量、函数参数、静态变量、静态全局变量、全局变量。 声明Block类型变量的方式 使用Block语法将Block赋值为Block类型变量 返回值 (^变量名)(参数列表) = ^参数列表 表达式 int (^block)(int) = ^(int count) { return count + 1; } 使用typedef来声明Block类型变量 // 定义Block类型 typedef 返回值 (^变量名)(参数列表) typedef int (^block_t)(int count); // 声明block_t类型的Block变量 block_t block; Block的实现与本质",
+    "category": "iOS",
+    "tags": [
+      "block"
+    ],
+    "keywords": [
+      "block",
+      "block变量",
+      "__block",
+      "循环引用",
+      "block的实现",
+      "block的本质"
+    ]
+  },
+  {
+    "id": "category-探究",
+    "title": "Category 探究",
+    "url": "/post/category-探究",
+    "content": "简介 人类在进步，社会在发展，随着时间变化我们会遇到不同的问题，由此也诞生了对应的解决方法。我们编写的类也是如此，在随着业务的发展，原定类的方法也就不足以处理新的业务，因此我们开始想方设法去扩展类以处理新业务。在 Objective-C 2.0 提供的 category 特性，此特性可为已有类添加新的方法。除了为已有类添加新方法外，我们可以运用分类的特性去抽离出复杂类的业务，降低类的复杂度。 与 category 相似的 extension extension(类扩展) 从代码看起来和 category 十分相像，代码如下: // extension @interface Father () @property (nonatomic,strong) NSString *name; - (void)say; @end // category @interface Father (skill) - (void)fastTalk; @end 虽然代码看上去只有括号中有名称的不同，但其实它们是完全不同的，它们的不同之处如下： 在编译上，extension 在编译期时被确定，而 category 是在运行期被确定的。 extension 一般是用来隐藏类的私有信息，而且你必须在类的源码文件处才能添加。而 category 不同，只要类存在，就能为其添加 category。 category ",
+    "category": "iOS",
+    "tags": [
+      "category"
+    ],
+    "keywords": [
+      "category",
+      "分类",
+      "实例变量",
+      "+ load",
+      "关联对象",
+      "runtime"
+    ]
+  },
+  {
+    "id": "cocoapods-pod-setup太慢",
+    "title": "CocoaPods pod setup太慢",
+    "url": "/post/cocoapods-pod-setup太慢",
+    "content": "更换镜像pod setup 1.升级Ruby环境 $ sudo gem update --system 2.更换Ruby镜像 $ gem sources --remove https://rubygems.org/ 移除现有镜像 $ gem sources -a https://gems.ruby-china.org/ 添加国内最新镜像 $ gem sources -l 查看当前镜像 $ sudo gem install cocoapods 安装cocoapods $ sudo gem install -n /usr/local/bin cocoapods $ pod setup 挂vpn，耐心等待 3.pod setup后，pod search 第三方框架名，结果如下则为成功 4.如果pod search 出现Unable to find a pod with name, author, summary, or descriptionmatching，删除~/Library/Caches/CocoaPods目录下的search_index.json文件 $ rm ~/Library/Caches/CocoaPods/search_index.json $ pod search '第三方框架名' 手动pod setup (未尝试) $ cd ~/.cocoapods/repos 该",
+    "category": "iOS",
+    "tags": [
+      "Cocoapods"
+    ],
+    "keywords": [
+      "CocoaPods",
+      "pod setup",
+      "pod setup太慢"
+    ]
+  },
+  {
+    "id": "eventkit-日历事件",
+    "title": "EventKit 日历事件",
+    "url": "/post/eventkit-日历事件",
+    "content": "EventKit 框架 此框架可以访问手机系统日历和提醒事项APP的数据，用此框架可以添加日历事件和提醒事项。 info.plist 配置 在 info.plist 添加访问日历权限和提醒实现的key：Privacy - Calendars Usage Description、Privacy - Reminders Usage Description，目前只使用到日历事件的操作。 EKEventStore EKEventStore 类似一个数据库，管理着日历事件和提醒事项，我们通过它来操作日历事件和提醒事项。 首先我们创建一个 EKEventStore： EKEventStore *eventStore = [[EKEventStore alloc] init]; 获取授权，entityType 是授权实体类型，completion 是授权状态回调 /* typedef NS_ENUM(NSUInteger, EKEntityType) { EKEntityTypeEvent, // 日历事件 EKEntityTypeReminder // 提醒事项 }; */ - (void)requestAccessToEntityType:(EKEntityType)entityType completion:(EKEventStoreRequestAccessCompletionHandl",
+    "category": "iOS",
+    "tags": [
+      "EventKit"
+    ],
+    "keywords": [
+      "日历事件",
+      "EventKit",
+      "event",
+      "reminders"
+    ]
+  },
+  {
+    "id": "mv系列和viper架构学习",
+    "title": "MV系列和VIPER架构学习",
+    "url": "/post/mv系列和viper架构学习",
+    "content": "由于个人对一些流行的架构的分辨和其各模块的分工很模糊，所以通过网上查询整理关于架构模式的知识，并且根据自己的了解写了一个小demo。 架构 iOS 下的架构设计常用模式有：MVC、MVP、MVVM以及VIPER，架构设计是将项目中的视图、数据模型、逻辑等进行角色定义，将任务分摊给相对应的角色。 为什么要使用架构 当随着业务的增加，项目的复杂度也随之在提升。这个时候会出现某些类中的代码量巨大并且分工模糊，里面的内聚性很高，牵一发而动全身。尤其是当出现bug进行调试的时候，由于分工模糊没办法快速定位bug的发生处，如果bug所处类中复杂度过高，阅读代码也比较耗费时间，一般会出现的情况如下(即使你使用的是Apple的MVC架构)： UIViewController中含有大量的代码：视图的创建、逻辑处理、建立数据模型等 数据在UIViewController中进行获取并读存 UIView除了视图的布局不处理其他事情，当然也可能没有UIView类，都在UIViewController中 Model仅仅是一个数据结构，只有属性 无法进行单元测试 如何选择框架 一个好的架构应该具备的特点： 分布性 虽然当开发工作越多的时候，大脑越能习惯复杂的思维，但是思维能力是有限的，所以我们在弄清一些功能原理时，应遵循“单一功能原则”(一个方法做一件事，一个功能类只做本份的事情)将功能划分给不同的角色实体以保",
+    "category": "iOS",
+    "tags": [
+      "架构学习"
+    ],
+    "keywords": [
+      "MV系列架构",
+      "VIPER架构",
+      "架构学习"
+    ]
+  },
+  {
+    "id": "runtime-探究",
+    "title": "Runtime 探究",
+    "url": "/post/runtime-探究",
+    "content": "对于 Runtime 的了解一直很少，面试的时候，总是会提及，因此开始去了解 Runtime。在网上找寻这类资料和文章并开始详读，在详读后对于 Runtime 有了更深了解，但是有些地方仍有些模糊，这样半知半解的状态可不是好事，因此我通过知识整理，模拟向人讲述的方式，以查解自己的模糊之处。若整理的有误之处，望各位大神指出，谢谢！ Runtime 简介 Runtime 又叫运行时，是一套用 C 和 汇编编语言 写的 API库。Objective-C 扩展了 C 语言，并加入了面向对象特性和 Smalltalk 式的消息传递机制，使得 Objective-C 具有面向对象和动态机制的特性，这两个特性便是用 Runtime 来实现的。 Runtime其实有两个版本: “modern” 和 “legacy”。我们现在用的 Objective-C 2.0 采用的是现行 (Modern) 版的 Runtime 系统，只能运行在 iOS 和 macOS 10.5 之后的 64 位程序中。而 macOS 较老的32位程序仍采用 Objective-C 1 中的（早期）Legacy 版本的 Runtime 系统。这两个版本最大的区别在于当你更改一个类的实例变量的布局时，在早期版本中你需要重新编译它的子类，而现行版就不需要。 Runtime 基本是用 C 和汇编写的，可见苹果为了动态系统的高效而作出的",
+    "category": "iOS",
+    "tags": [
+      "Runtime"
+    ],
+    "keywords": [
+      "Runtime",
+      "消息转发机制",
+      "Runtime的应用",
+      "Swizzling"
+    ]
+  },
+  {
+    "id": "swift-函数调度",
+    "title": "Swift 函数调度",
+    "url": "/post/swift-函数调度",
+    "content": "在 OC 中方法的调用是要经过 runtime 消息转发机制找到方法实现，然后调用方法实现，在 Swift 中函数的调度分为两种：静态调度、动态调度。 函数调度方式 静态调度 静态调度也被称为直接调度（Direct Dispatch），函数在编译、链接完成后，函数的地址就已经确定了，函数的地址存放在代码段。在调用函数时，直接跳转到这个地址来执行，因此它的效率最快。 动态调度 对于动态调度的方法，编译器不知道它的内存地址，所以无法对代码进行优化，可能导致一些性能问题的出现。动态调度可以为覆写父类中的方法提供支持，使得Swift也可以实现多态。 动态调度又可分为现两种： 表调度 表调度是编译语言中最常用的方法之一，在编译时，为每个类构造一个 v-table，其中包含类中实现的函数指针，拥有继承关系的子类会在虚函数表内通过继承顺序去展示虚函数表指针。与静态调度相比，表调度需要两条额外的指令（读和跳转）来确定在运行时函数的地址。 对于值类型来说，并没有构造虚函数表指针，但对于属于结构体的 Protocol，Protocol 可以拥有属性和实现方法，为管理 Protocol 的函数调用，所以加入了 The Protocol Witness Table (PWT) 函数表用于协议类型方法的调度。 消息调度 消息调度是最灵活也是最慢的调度技术，最快是在方法缓存表中找到方法实现，最慢的时候，运行时",
+    "category": "iOS",
+    "tags": [
+      "Swift"
+    ],
+    "keywords": [
+      "函数调度"
+    ]
+  },
+  {
+    "id": "swift-属性包装器",
+    "title": "Swift-属性包装器",
+    "url": "/post/swift-属性包装器",
+    "content": "Property wrapper Property wrapper 类似于 java 中的注解，一种给属性附加逻辑的特性。在类、结构体、枚举声明时使用该特性，可以让其成为一个属性包装器。属性包装器可复用统一规则对属性进行包装，降低重复工作。 @propertyWrapper struct increase { } 使用 @propertyWrapper 声明后，必须定义一个 wrappedValue 属性和 init(wrappedValue: Int) 构造器方法。 wrappedValue 属性是一个计算类型属性，包装处理在 wrappedValue 的 set、get 方法中进行，由于计算类型属性无法储值，因此还需另定义一个属性存值 init(wrappedValue: Int) 在包装器对属性声明时会自动调用，根据属性默认值进行初始化。 @propertyWrapper struct increase { /// 存储值 private var truelyValue: Int = 0 /// 包装 var wrappedValue: Int { get { truelyValue + 20 } set { truelyValue = newValue } } init(wrappedValue: Int) { self.wrappedValue = wrappedValu",
+    "category": "iOS",
+    "tags": [
+      "属性包装器"
+    ],
+    "keywords": [
+      "Swift,属性包装器"
+    ]
+  },
+  {
+    "id": "swift-指针",
+    "title": "Swift 指针",
+    "url": "/post/swift-指针",
+    "content": "在 OC 中指针的使用采用 C 语法方式，通过 *、& 操作指针，在 Swift 需要初始化相应的的指针类，其中分为两类： typed pointer 指向的内存分配了数据类型 raw pointer 指向的内存未分配数据类型 swift OC 说明 unsafePointer const T * 指针及所指向的内容都不可变 unsafeMutablePointer T * 指针及其所指向的内存内容均可变 unsafeRawPointer const void * 指针指向未知类型 unsafeMutableRawPointer void * 指针指向未知类型 typed pointer unsafePointer / UnsafeMutablePointer unsafePointer 对于 T 可以指定指针指向的类型，没有直接的初始化方法，只能通过 withUnsafePointer 转换获得。 var a = 7 let pointer: UnsafePointer<Int> = withUnsafePointer(to: &a) { $0} 对于 UnsafeMutablePointer 需要我们手动进行内存的申请和释放，因此它提供了初始化方法和释放方法。 // 申请 1 个 Int 类型的内存空间 let pointer = UnsafeMutablePointer<In",
+    "category": "iOS",
+    "tags": [
+      "Swift"
+    ],
+    "keywords": [
+      "指针"
+    ]
+  },
+  {
+    "id": "swift-自定义运算符",
+    "title": "Swift-自定义运算符",
+    "url": "/post/swift-自定义运算符",
+    "content": "运算符定义类型 var a = 0 var b = 1 a += 1 a ^ b a-- --a 上面代码的运算是如何实现的呢？ 在 Swift 中提供三种类型运算符： prefix：前置运算符，像 --a、++a infix：中间运算符，像 a += 1、a + b postfix：后置运算符，像 a++、a– 具体应用如下： prefix func --(v: inout Int) { v = v - 1 } var a = 0 --a infix operator ++ func ++(leftv: Int, rightv: Int) -> Int { return leftv + rightv + rightv } a ++ 1 postfix func --(v: inout Int) { v = v - 1 } a-- 可以对系统的运算符的实现函数重载，但是对于“=” 类型的运算符是无法重载的。(注意：重载和重写的区别，运算符实现不支持重写) 自定义运算符 Swift 支持声明和实现自定义运算符，自定义运算符需要在全局作用域，通过关键字 operator 进行定义，同时要指定运算符类型，运算符命名只能包含这些字符：/ = - + * % < >！& | ^。~ / = - + * % < >！& | ^。~ postfix operator ~",
+    "category": "iOS",
+    "tags": [
+      "自定义运算符"
+    ],
+    "keywords": [
+      "Swift,自定义运算符"
+    ]
+  },
+  {
+    "id": "swiftobjective-c-访问控制修饰符",
+    "title": "Swift、Objective-C 访问控制修饰符",
+    "url": "/post/swiftobjective-c-访问控制修饰符",
+    "content": "一、引言 Swift、Objective-C 都具有面向对象的三大特征：封装、继承和多态，访问控制修饰符应“封装”特性诞生的，“封装”需将对象的实现信息隐藏在内部，不允许外部直接访问对象内部信息，只能通过向外开放途径去访问对象。对象的那些信息需要隐藏或者开放，这可通过 “访问控制修饰符” 修饰，告知编译器。 二、Swift 的访问控制修饰符 2.1 private private 修饰的信息，仅能在当前定义的作用域访问，让我们看一下，Swift 中常使用的 “单例”实现模式： class Single { static let instance = Single() private init() {} } let share = Single.instance 将 init() 构造器用 private 修饰后，Single 外部无法通过构造器创建实例，只能通过静态变量 instance 获取 Single 实例 2.2 filePrivate filePrivate 修饰的信息，只能在当前定义的源文件中才能访问 /// Person.swift fileprivate class Person { var name: String? } class XiaoMing: Person { var father: Person } /// Family.swift 不能访问 Pers",
+    "category": "iOS",
+    "tags": [
+      "访问控制修饰符"
+    ],
+    "keywords": [
+      "Swift",
+      "Objective-C",
+      "访问控制",
+      "修饰符"
+    ]
+  },
+  {
+    "id": "uitableview-invalid-update",
+    "title": "UITableView-Invalid-update",
+    "url": "/post/uitableview-invalid-update",
+    "content": "控制台错误日志： Invalid update: invalid number of rows in section 0. The number of rows contained in an existing section after the update (3) must be equal to the number of rows contained in that section before the update (2), plus or minus the number of rows inserted or deleted from that section (0 inserted, 0 deleted) and plus or minus the number of rows moved into or out of that section (0 moved in, 0 moved out). 无效更新：节0中的行数无效。行数 更新（3）后现有节中包含的行必须是 等于该节中包含的行数，在 更新（2），加上或减去从中插入或删除的行数 该部分（插入0，删除0）加上或减去 移入或移出该节的行（0移入，0移出）。 出现情况 <!--UITableView 处于 reload 中--> tableView.beginUpdates() tableView.endUpdat",
+    "category": "iOS",
+    "tags": [
+      "UITableView Error"
+    ],
+    "keywords": [
+      "UITableView,Invalid,update"
+    ]
+  },
+  {
+    "id": "xcode13-第三方库swiftui错误",
+    "title": "Xcode13 Kingfisher、RealmSwift Release模式编译报错",
+    "url": "/post/xcode13-第三方库swiftui错误",
+    "content": "Xcode 13 发行说明中提到： Swift 库可能无法为使用 armv7 的 iOS 目标构建。(74120874) 解决方法：将包的平台依赖性增加到 v12 或更高版本。 依赖于 Combine 的 Swift 库可能无法为包括 armv7 和 i386 架构在内的目标构建。(82183186, 82189214) 解决方法：使用不受影响的库的更新版本（如果可用）或删除 armv7 和 i386 支持（ 例如，将库的部署目标增加到 iOS 11 或更高版本）。 Kingfisher、RealmSwift 库处于上述情况，如果项目中使用的是 Swift UI 则需要将最低兼容版本改为 iOS 12。由于个人项目需要兼容 iOS 10 并且项目中也没有使用到 Swift UI，所以修改 pod file，在 pod install 时将Kingfisher、RealmSwift库的 Swift UI 相关代码删除。 pre_install do |installer| remove_Kingfisher_swiftui() remove_RealmSwift_swiftui() end def remove_Kingfisher_swiftui code_file = \"./Pods/Kingfisher/Sources/General/KFOptionsSetter.swift",
+    "category": "iOS",
+    "tags": [
+      "iOS 问题集"
+    ],
+    "keywords": [
+      "Xcode13",
+      "Kingfisher",
+      "RealmSwift",
+      "Swift UI"
+    ]
+  },
+  {
+    "id": "cocoapods-私有库和公开库",
+    "title": "cocoapods-私有库和公开库",
+    "url": "/post/cocoapods-私有库和公开库",
+    "content": "私有库：git 仓库设置为私有不对外公开 公开库：提交到 Cocoapods Specs 上，可以 pod search 到库 私有库 私有索引库 私有索引库用于保存私有库的 .podspec 文件，pod install 私有库时会去私有索引库找到对应的 .podspec 文件。 首先去git托管平台(如：Github)创建私有索引库：Private-Specs，然后将该仓库加入到本地索引库。 # 加入到本地索引库 $ pod repo add 索引库名 仓库地址 es: pod repo add Private-Specs https://github.com/es/Private-Specs.git # 查看本地索引库 $ pod repo # ====== Out-print: ====== master - Type: git (master) - URL: https://github.com/CocoaPods/Specs.git - Path: /Users/name/.cocoapods/repos/master Private-Specs - Type: git (main) - URL: https://github.com/es/Private-Specs.git - Path: /Users/name/.cocoapods/repos/podSpecs t",
+    "category": "iOS",
+    "tags": [
+      "Cocoapods"
+    ],
+    "keywords": [
+      "Cocoapods,私有库,公开库"
+    ]
+  },
+  {
+    "id": "ios-error",
+    "title": "iOS Error",
+    "url": "/post/ios-error",
+    "content": "离开页面后，网络请求使用 delegate 回调崩溃 原因：用的是 assgin 修饰 delegate，像数值类型一样 delegate对象被销毁了但不置 nil。 解决方案： 使用weak修饰delegate对象，离开页面后，delegate对像销毁并置 nil。 离开页面时，手动将delegate对象置nil。 离开页面时，取消这个网络请求。 This application is modifying the autolayout engin from a background thread 原因：未回主线程刷新UI 解决方案： dispatch_async(dispatch_get_main_queue(), ^{ // 有关UI的操作 }); Target 编译报错: Build input file cannot be found Build 构建信息中提示: None of the architectures in ARCHS (arm64) are valid. Consider setting ARCHS to $(ARCHS_STANDARD) or updating it to include at least one value from VALID_ARCHS (arm64, arm64e, armv7, armv7s) which is not in E",
+    "category": "iOS",
+    "tags": [
+      "iOS 问题集"
+    ],
+    "keywords": [
+      "Error",
+      "iOS Error",
+      "报错",
+      "错误"
+    ]
+  },
+  {
+    "id": "ios-wkwebview秒开优化方案",
+    "title": "iOS-WKWebView秒开优化方案",
+    "url": "/post/ios-wkwebview秒开优化方案",
+    "content": "简要 解决场景 后台支持使用 HTML 文本编辑器发表 HTML 格式的帖子，移动端要兼容 HTML 格式帖子展示，必然要采用 WebView 加载 HTML 格式帖子，以达到同样的呈现效果。 存在的问题 WebView 内容加载速度较原生有肉眼可见的延迟，在进入帖子详情页时，WebView 内容还未加载完成，页面显示空白。WebView 内容高度无法快速获得，导致原生列表嵌入 WebView 的布局中会出现内容突然撑开的效果，对于用户浏览来说，感观不太好。 解决思路 优化 WebView 的加载效率，关于 HTML 类型帖子内容，后端接口返回的是 HTML 字符串，其中比较影响加载速度是对于图片的加载，所以需考虑对图片进行缓存，当再次加载时可以直接取缓存的数据，不需要网络请求获取。但是，即使这样优化后，加载速度还是无法达到原生页面加载的效果。 建立 WebView 缓存池，把加载完成的 WebView 放入缓存池中并设置对应的映射标识，下次加载同一帖子时，根据标识直接取出 WebView 展示。为考虑内存占用量问题，不能无限制数量的缓存 WebView 对象，得限制最大缓存数量。 WebView 缓存池也仅仅只是对于首次加载后的情况做处理，并且缓存池的数量还做了限制，有可能出现无法命中缓存情况。因此，首次加载前得进行预加载处理，在帖子列表页时，对于当前屏幕展示的帖子内容进行预加载",
+    "category": "iOS",
+    "tags": [
+      "WKWebView秒开优化方案"
+    ],
+    "keywords": [
+      "WKWebView秒开优化方案"
+    ]
+  },
+  {
+    "id": "ios-warning",
+    "title": "iOS Warning",
+    "url": "/post/ios-warning",
+    "content": "ld: warning: directory not found for option“XXXXXX 原因：从项目中删除了文件和文件夹的文件夹路径没有删除，编译器访问不到该路径而警告⚠️ 解决方案：targets => Build Settings => Library Search Paths & Framework Search Paths，删掉编译报warning的路径。 Block implicitly retains ‘self’; explicitly mention ‘self’ to indicate this…警告 解决方案：Building Settings ->搜索implicit retain of ‘self’ 将对应的值改为NO。 消除CocoaPods时导入的第三方警告 inhibit_warnings参数的小问题 解决方案： 在podfile中加入inhibit_all_warnings! 。 pods -> targets -> 选择报警告的第三方 -> build settings 搜索inhibit_warnings，选择YES。",
+    "category": "iOS",
+    "tags": [
+      "iOS 问题集"
+    ],
+    "keywords": [
+      "Warning",
+      "iOS 警告",
+      "警告"
+    ]
+  },
+  {
+    "id": "ios-事件分发处理-runloop",
+    "title": "iOS-事件分发处理-RunLoop",
+    "url": "/post/ios-事件分发处理-runloop",
+    "content": "一、初识 RunLoop 1.1 线程 iOS开发是单进程，所以一般来说，一个应用程序就是一个进程，进程之间是相互独立的，每个进程都有独立的内存空间和资源。进程若需处理事件，则需要基本执行单元：线程。进程的所有事件都必须在线程中处理，因此进程在开辟时，会默认创建并开启一条线程，程序默认的事件处理和 UI 绘制都在这条线程处理，因此这条线程被称为主线程或者UI线程。 1.2 线程如何常驻处理事件 一般来讲，一个线程一次只能执行一个任务，执行完成后线程就会退出。主线程是程序是重要的事件处理单元，自然不能执行完任务后就退出，所以我们需要一个机制，让线程能随时处理事件但并不退出，通常的代码逻辑是这样的： func loop() { do { var message = get_next_message(); process_message(message); } while (message != quit); } 上述代码实现通常被称为 Event Loop，使用 while 语句创建一个死循环，让 CPU 进入忙等待，当程序一接收事件便能立即处理，但是这种方式极其消耗 CPU 资源。 Event Loop 在很多系统和框架里都有实现，比如 Node.js 的事件处理，比如 Windows 程序的消息循环，再比如 OSX/iOS 里的 RunLoop。它们不是通过“死循环”这种“忙等待”",
+    "category": "iOS",
+    "tags": [
+      "RunLoop"
+    ],
+    "keywords": [
+      "RunLoop",
+      "事件分发"
+    ]
+  },
+  {
+    "id": "ios-内存地址二级指针",
+    "title": "iOS 内存地址、二级指针",
+    "url": "/post/ios-内存地址二级指针",
+    "content": "%p 用于输出变量内存地址 NSString *a = @\"six god\"; NSLog(@\"%p\", a); NSLog(@\"%p\", &a); print: 0x100004008 print: 0x16fdff418 在日志输出中，a 和 &a 的区别是： 0x100004008 是字符串 @“six god” 内存首地址 0x16fdff418 是指针 *a 内存首地址，*a 保存着 0x100004008 内容地址 二级指针 在上面 *a 是一级指针，而二级指针就是指向指针的指针如： // 下面代码只支持在 MRC 模式 // 在MRC下，二级指针类型定义为属性、成员变量或者参数都是可行的 // 在ARC下，二级指针类型则不能定义为属性或成员变量，但是可以作为参数传递 NSString *a = @\"six god\"; NSString** p = &a; *p = @\"six six\" 可以通过*号来访问、操作内存，访问的过程为：二级指针访问一级指针的内容。一级指针存的是内容地址，系统会根据该地址访问一级指针指向的内容。二级指针 p 存的是 一级指针 a 的地址。 示例1： NSString *a = @\"six god\"; NSLog(@\"修改前: %@\", a); [self update:&a]; NSLog(@\"修改后：%@\", a); - (void)upd",
+    "category": "iOS",
+    "tags": [
+      "内存管理"
+    ],
+    "keywords": [
+      "内存地址,二级指针"
+    ]
+  },
+  {
+    "id": "ios-加密算法",
+    "title": "iOS 加密算法",
+    "url": "/post/ios-加密算法",
+    "content": "数据加密的基本过程就是对原来为明文的文件或数据按某种算法进行处理，通常用于达到以下目的： 保密性：防止内容被第三方获取 数据完整性：防止数据被篡改 身份验证：确保数据是正确方发送的 摘要算法 消息摘要算法的主要特征是加密过程不需要密钥，并且经过加密的数据无法被解密，目前可以被解密逆向的只有CRC32算法，只有输入相同的明文数据经过相同的消息摘要算法才能得到相同的密文。保证信息的完整性和不可否认性的方法。数据的完整性是指信宿接收到的消息一定是信源发送的信息，而中间绝无任何更改. 消息摘要算法主要应用在“数字签名”领域，作为对明文的摘要算法。著名的摘要算法有RSA公司的MD5算法和SHA-1算法及其大量的变体。 MD5 MD是应用非常广泛的一个算法家族，尤其是 MD5（Message-Digest Algorithm 5，消息摘要算法版本5），它由MD2、MD3、MD4发展而来，由Ron Rivest（RSA公司）在1992年提出，目前被广泛应用于数据完整性校验、数据（消息）摘要、数据加密等。MD2、MD4、MD5 都产生16字节（128位）的校验值，一般用32位十六进制数表示。MD2的算法较慢但相对安全，MD4速度很快，但安全性下降，MD5比MD4更安全、速度更快。 特点： 不可逆性：字符串的转换过程是不可逆的,不能通过加密结果,反向推导出原始内容 压缩性：任意长度的数据，算出的MD",
+    "category": "iOS",
+    "tags": [
+      "加密算法"
+    ],
+    "keywords": [
+      "AES",
+      "DES",
+      "MD5"
+    ]
+  },
+  {
+    "id": "weak-修饰符",
+    "title": "__weak 修饰符",
+    "url": "/post/weak-修饰符",
+    "content": "SideTables SideTables 是全局表，管理着对象的引用计数和weak引用指针，每个对象在此表中都有对应的一个 SideTable，让我们来看看 SideTables 源码定义 static StripedMap<SideTable>& SideTables() { return *reinterpret_cast<StripedMap<SideTable>*>(SideTableBuf); } 虽然看不懂，但从源码的定义可以看出 SideTables 是通过 StripedMap 来实现的，我们来看一下它的实现 template<typename T> class StripedMap { enum { CacheLineSize = 64 }; #if TARGET_OS_EMBEDDED // 嵌入式 enum { StripeCount = 8 }; #else enum { StripeCount = 64 }; #endif struct PaddedT { T value alignas(CacheLineSize); }; PaddedT array[StripeCount]; static unsigned int indexForPointer(const void *p) { uintptr_t addr = reinterpret_cast<u",
+    "category": "iOS",
+    "tags": [
+      "__weak"
+    ],
+    "keywords": [
+      "__weak",
+      "weak",
+      "循环引用",
+      "SideTables"
+    ]
+  },
+  {
+    "id": "上传封装工具到cocoapods",
+    "title": "上传封装工具到Cocoapods",
+    "url": "/post/上传封装工具到cocoapods",
+    "content": "准备 在github、码云上创建项目，并把项目代码上传到项目仓库。 注册cocoapods // 验证是否注册 $ pod trunk me $ pod trunk register 邮箱号 昵称 // 然后该邮箱会收到一封cocoapods的邮件，只需打开查看邮件即可验证。 创建Pod所对应的podspec文件 $ cd 项目下 $ pod spec create 项目名 配置podspec文件 Pod::Spec.new do |s| s.name = \"LHCategoryTool\" s.version = \"0.0.1\" s.summary = \"LHCategoryTool is foundation category methods\" s.description = <<-DESC you can select some category methods of foundation that you want,this methods can help own improve develop quickly DESC s.homepage = \"http://gitee.com/leafmure/LHCategoryTool\" s.license = \"MIT\" s.author = { \"Leafmure\" => \"1871382624@qq.com\" } s.pla",
+    "category": "iOS",
+    "tags": [
+      "Cocoapods"
+    ],
+    "keywords": [
+      "cocoapods",
+      "上传到Cocoapods"
+    ]
+  },
+  {
+    "id": "单元测试-xctest",
+    "title": "单元测试-XCTest",
+    "url": "/post/单元测试-xctest",
+    "content": "单元测试（Unit Testing）又称为模块测试，是针对程序模块软件设计来进行正确性检验的测试工作。程序单元是应用的最小可测试部件。对于面向对象编程，最小单元就是方法，包括基类、抽象类、或者派生类中的方法。 单元测试通常由软件开发人员编写，用于确保他们所写的代码符合软件需求和遵循开发目标。通常来说，每修改一次程序就会进行最少一次单元测试，在编写程序的过程中前后很可能要进行多次单元测试，以证实程序达到工作目标要求。 Unit Tests 创建项目或文件时，底部勾选 Unit Tests 会创建对应的测试类，该类继承 XCTestCase，提供测试方法如下： setUpWithError：在进行测试前会调用该方法，用于准备测试中需要的条件如：对象初始化、测试数据准备等等。 tearDownWithError：在测试结束后会调用该方法 testExample：功能测试用例的示例，可自定义创建多个类似的方法，方法命名规则：test+XXX，且方法不能声明传入参数，测试方法的执行顺序是按照方法名中 test 后面的字符顺序来执行的。 testPerformanceExample：性能测试用例的示例，可自定义创建，命名规则和 testExample 一样，他们区别在于，testPerformanceExample 中需调用 measure，将需要性能测试的代码放入 measure的 bloc",
+    "category": "iOS",
+    "tags": [
+      "单元测试"
+    ],
+    "keywords": [
+      "单元测试,XCTest"
+    ]
+  },
+  {
+    "id": "ffmpeg安装",
+    "title": "FFmpeg 安装",
+    "url": "/post/ffmpeg安装",
+    "content": "Homebrew 方式安装 1、执行安装命令 brew install ffmpeg brew install ffmpeg --HEAD # 安装最新 2、选择第三方仓库: homebrew-ffmpeg 和 varenc-homebrew-ffmpeg brew tap homebrew-ffmpeg/ffmpeg # homebrew-ffmpeg 仓库 3、根据第三方仓库安装 brew install homebrew-ffmpeg/ffmpeg/ffmpeg 4、关联 options # 获取支持的options brew options homebrew-ffmpeg/ffmpeg/ffmpeg # 关联options brew install homebrew-ffmpeg/ffmpeg/ffmpeg --with-aribb24 --with-chromaprint --with-decklink --with-fdk-aac --with-game-music-emu --with-jack --with-jpeg-xl --with-libaribb24 --with-libbluray --with-libbs2b --with-libcaca --with-libflite --with-libgsm --with-libmodplug --with-lib",
+    "category": "工具",
+    "tags": [
+      "FFmpeg"
+    ],
+    "keywords": [
+      "FFmpeg,rtmp,SRS,H.256"
+    ]
+  },
+  {
+    "id": "mac-ruby-和-cocoapods-安装-适用-m-系列芯片",
+    "title": "Mac Ruby 和 Cocoapods 安装 (适用 M 系列芯片)",
+    "url": "/post/mac-ruby-和-cocoapods-安装-适用-m-系列芯片",
+    "content": "前言 Ruby 和 Cocoapods 是 iOSer 必接触的工具, Cocoapods 是 Ruby 程序包, 因此安装 Cocoapods 前置条件要有一个适用的 Ruby 版本, 系统有自带 Ruby, 但版本比较低且其执行目录无权限访问, 所以我们需要去下载安装一个比较高版本的 Ruby Ruby 安装 RVM Ruby 的下载和管理, 一般会通过 rvm 包管理工具, 如何检查 rvm 是否安装? 终端执行以下命令, 有输出版本号即为成功. rvm --version output: rvm 1.29.12 (latest) by Michal Papis, Piotr Kuczynski, Wayne E. Seguin [https://rvm.io] 如果无安装, 可通过以下步骤进行安装 # 安装 rvm \\curl -sSL https://get.rvm.io | bash -s stable # 更新 rvm rvm get stable 安装 rvm 成功后, 即可通过 rvm 去安装 ruby, 如何安装可参考以下命令 # 列出 ruby 可安装的版本信息 rvm list known # 安装指定版本 rvm install 版本名 # 查看已安装版本 rvm list # 当前 shell 指定使用版本 rvm use 版本名 # 设置默认使用版本 ",
+    "category": "工具",
+    "tags": [
+      "Ruby",
+      "Cocoapods"
+    ],
+    "keywords": [
+      "Ruby,Cocoapods,HomeBrew,M1,M2,Mac"
+    ]
+  },
+  {
+    "id": "mac-本地部署-stable-diffusion",
+    "title": "Mac 本地部署 Stable Diffusion",
+    "url": "/post/mac-本地部署-stable-diffusion",
+    "content": "使用的 Mac 配置 MacBook Pro (2022) 芯片: Apple M2 内存: 16GB 存储: 512GB 系统: Ventura 13.0 环境要求 Homebrew 官方安装 (需要梯子) 安装命令: /bin/zsh -c \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\" 卸载命令: /bin/zsh -c \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall.sh)\" 国内维护镜像 安装命令: /bin/zsh -c \"$(curl -fsSL https://gitee.com/cunkai/HomebrewCN/raw/master/Homebrew.sh)\" 卸载命令: /bin/zsh -c \"$(curl -fsSL https://gitee.com/cunkai/HomebrewCN/raw/master/HomebrewUninstall.sh)\" Homebrew 基础指令 # 查看版本 brew -v # 安装 brew install xxx Python 查看 Python 是否安装 python3 -V 输出:",
+    "category": "工具",
+    "tags": [
+      "Stable Diffusion"
+    ],
+    "keywords": [
+      "Stable Diffusion,Mac"
+    ]
+  },
+  {
+    "id": "hexo-seo设置",
+    "title": "Hexo SEO设置",
+    "url": "/post/hexo-seo设置",
+    "content": "SEO（Search Engine Optimization）:汉译为搜索引擎优化。是一种方式:利用搜索引擎的规则提高网站在有关搜索引擎内的自然排名。目的是：为网站提供生态式的自我营销解决方案，让其在行业内占据领先地位，获得品牌收益；SEO包含站外SEO和站内SEO两方面；为了从搜索引擎中获得更多的免费流量，从网站结构、内容建设方案、用户互动传播、页面等角度进行合理规划，还会使搜索引擎中显示的网站相关信息对用户来说更具有吸引力 =>百度百科 百度收录站点 登录百度站长平台，在用户中心 => 站点管理添加你的站点网址 配置完站点属性后，进入最后一步：验证网站。有三种方式：文件验证、HTML标签验证、CNAME验证，文件验证和CNAME验证都比较简单，也有相对应的帮助文本，在此我选择的是HTML标签验证。 在主题的_config.yml文件中，设置：baidu_site_verification: true，如果没有该字段就手动添加。 在themes/next/layout/_partials/head.swig文件中添加下列代码 // 每个人的content值都不一致，请注意更换成你的content值 {% if theme.baidu_site_verification %} <meta name=\"baidu-site-verification\" content=\"6K5YmdK",
+    "category": "hexo",
+    "tags": [
+      "hexo 配置"
+    ],
+    "keywords": [
+      "hexo",
+      "hexo seo",
+      "seo"
+    ]
+  },
+  {
+    "id": "hexo项目同步github",
+    "title": "Hexo项目同步github",
+    "url": "/post/hexo项目同步github",
+    "content": "hexo文件托管到github 克隆gitHub上的XXX.github.io项目的文件到本地 git clone https://github.com/yourname/xxx.github.io.git 删除文件夹里除了.git的其他所有文件 把hexo项目文件下的所有文件全部复制过来(除了.git) 里面应该有一个叫.gitignore的文件，如果没有就输入 touch .gitignore，创建一个,并输入以下内容 .DS_Store Thumbs.db db.json *.log node_modules/ public/ .deploy*/ 创建一个叫hexo的分支并切换到这个分支上 git checkout -b hexo 提交复制过来的文件到暂存区 $ git add --all 因为thme/next是一个git仓库，所以git add 会失败 解决方案一 删除主题next中的.git文件，然后就可以add了。 解决方案二 新建一个github仓库，将next本地仓库所关联的远程仓库更改为自己新建的仓库地址并上传文件，然后将新建的仓库作为hexo分支的子模块 // 查看所有远程仓库 $ git remote // 删除所关联的远程仓库地址 $ git remote rm origin // 添加新仓库地址 $ git remote add origin 新仓库地址",
+    "category": "hexo",
+    "tags": [
+      "hexo 文件管理"
+    ],
+    "keywords": [
+      "hexo",
+      "hexo同步github",
+      "hexo托管到github"
+    ]
+  },
+  {
+    "id": "next主题集成不蒜子统计",
+    "title": "next主题集成不蒜子统计",
+    "url": "/post/next主题集成不蒜子统计",
+    "content": "打开next主题配置文件_config.yml 搜索busuanzi_count修改配置 // next 6.0 的配置样式 busuanzi_count: enable: true total_visitors: true total_visitors_icon: user total_views: true total_views_icon: eye post_views: true post_views_icon: eye // next 5.0 的配置样式 busuanzi_count: enable: true site_uv: true site_uv_header: <i class=\"fa fa-user\"></i> 本站访问数 site_uv_footer: 人 site_pv: true site_pv_header: <i class=\"fa fa-eye\"></i> 本站总访问量 site_pv_footer: 次 page_pv: false page_pv_header: <i class=\"fa fa-file-o\"></i> 本文总阅读量 page_pv_footer: 次 配置完后如发现不能统计, 可能是引用网址更换了，检查 themes\\next\\layout_third-party\\analytics\\busuanzi-counter.swig",
+    "category": "hexo",
+    "tags": [
+      "next 主题配置"
+    ],
+    "keywords": [
+      "不蒜子统计",
+      "next主题"
+    ]
+  },
+  {
+    "id": "augraph音频流播放",
+    "title": "AUGraph 音频流播放",
+    "url": "/post/augraph音频流播放",
+    "content": "AUGraph 属于 Core Audio 框架, 用于描述音频单元（Audio Unit）之间的连接关系和信号流. AUGraph 抽象了音频流的处理过程, 它不直接控制 Audio Unit, 而是由基础单元节点 AUNode 管理. 一个 AUNode 对应一个 Audio Unit. AUGraph 构建 1.创建 AUGraph 实例 AUGraph audioGraph; NewAUGraph(&audioGraph); 2.创建并添加 AUNode 节点 /// IO 播放单元 - (AudioComponentDescription)audioUnitDescription { AudioComponentDescription outputUnitDescription; bzero(&outputUnitDescription, sizeof(AudioComponentDescription)); outputUnitDescription.componentType = kAudioUnitType_Output; outputUnitDescription.componentSubType = kAudioUnitSubType_RemoteIO; outputUnitDescription.componentManufacturer = kAudioUn",
+    "category": "音视频",
+    "tags": [
+      "Audio"
+    ],
+    "keywords": [
+      "AUGraph",
+      "AudioUnit",
+      "音频流播放"
+    ]
+  },
+  {
+    "id": "avaudioengine音频流播放",
+    "title": "AVAudioEngine音频流播放",
+    "url": "/post/avaudioengine音频流播放",
+    "content": "概述 Audio Engine 提供了强大、功能丰富的 API 来简化音频生成、处理和输入/输出任务。该引擎包含一组节点，这些节点连接起来形成音频信号处理链。这些节点在渲染到输出目的地之前对信号执行各种任务。Audio Engine 可以提供以下功能实现: 使用文件和缓冲区播放音频 在处理链中的任意点捕获音频 添加内置效果，如混响、延迟、失真和您的自定义效果 执行立体声和 3D 混合 提供 MIDI 播放和对采样器乐器的控制 引用来自: Apple Document AVAudioEngine 构建 1.初始化 AVAudioEngine _audioEngine = [[AVAudioEngine alloc] init]; 2.创建并添加 AVAudioPlayerNode _playerNode = [[AVAudioPlayerNode alloc] init]; [_audioEngine attachNode:_playerNode]; 3.连接 AVAudioPlayerNode 到输出节点 [_audioEngine connect:_playerNode to:_audioEngine.mainMixerNode format:nil]; 4.AVAudioEngine 准备 [_audioEngine prepare]; AVAudioEngine 播放 1.创",
+    "category": "音视频",
+    "tags": [
+      "Audio"
+    ],
+    "keywords": [
+      "AVAudioEngine",
+      "Audio Engine",
+      "音频流播放"
+    ]
+  },
+  {
+    "id": "audioconverter",
+    "title": "AudioConverter",
+    "url": "/post/audioconverter",
+    "content": "概述 AudioConverter 可以将各种线性 PCM 音频格式之间进行转换, 除此之外, 它还能将 PCM 音频格式转为压缩音频格式, 也能将压缩音频格式转为 PCM 音频格式, 达到解码的效果, 如果要实现压缩音频格式之间的转换, 则可以先转 PCM 音频格式, 再转目标压缩音频格式, 支持的压缩音频格式有: MP3 WAV AAC FLAC OGG WMA AIFF M4A ALAC AC3 AudioStreamBasicDescription struct AudioStreamBasicDescription { Float64 mSampleRate; 音频流的采样率（每秒采样次数）44100.0 AudioFormatID mFormatID; 音频数据的格式标识符，例如 kAudioFormatLinearPCM 表示线性 PCM 格式。 AudioFormatFlags mFormatFlags; 音频数据的格式标志位，用于指定特定的格式选项和特性。kAudioFormatFlagIsSignedInteger | kAudioFormatFlagIsPacked UInt32 mBytesPerPacket; 每个数据包中的字节数。 2 UInt32 mFramesPerPacket; 每个数据包中的帧数。 1 UInt32 mBytesPerFrame;",
+    "category": "音视频",
+    "tags": [
+      "Audio"
+    ],
+    "keywords": [
+      "AudioConverter",
+      "音频解码"
+    ]
+  },
+  {
+    "id": "audiofile",
+    "title": "AudioFile",
+    "url": "/post/audiofile",
+    "content": "概述 AudioFile 归属于 AudioToolBox 框架, 可以用于读取音频信息和分离音频帧, 与 AudioFileStream 功能类似, 但功能会相对强大. 它不仅可以读取并解析音频, 还可以写入音频. 但是它在解析音频时, 需要音频文件的完整性, 适合于本地音频文件, 不适合用于流播. AudioFile 初始化 AudioFileOpenURL typedef CF_ENUM(SInt8, AudioFilePermissions) { kAudioFileReadPermission = 0x01, kAudioFileWritePermission = 0x02, kAudioFileReadWritePermission = 0x03 }; extern OSStatus AudioFileOpenURL ( CFURLRef inFileRef, AudioFilePermissions inPermissions, AudioFileTypeID inFileTypeHint, AudioFileID __nullable * __nonnull outAudioFile); inFileRef: 传入 CFURLRef url, 只支持本地文件. inPermissions: 枚举 AudioFilePermissions 授予读取权限. inFile",
+    "category": "音视频",
+    "tags": [
+      "Audio"
+    ],
+    "keywords": [
+      "AudioFile",
+      "音频播放"
+    ]
+  },
+  {
+    "id": "audiofilestream",
+    "title": "AudioFileStream",
+    "url": "/post/audiofilestream",
+    "content": "概述 Audio File Stream Services provides the interface for parsing streamed audio files—in which only a limited window of data is available at a time. 音频文件流服务提供了用于解析流式音频文件的接口, 其中一次只能使用有限的数据窗口. Audio file streams, by nature, are not random access. When you request data from a stream, earlier data might no longer be accessible and later data might not yet be available. In addition, the data you obtain (and then provide to a parser) might include partial packets. To parse streamed audio data, then, a parser must remember data from partially satisfied requests, and must be able to wait for the remai",
+    "category": "音视频",
+    "tags": [
+      "Audio"
+    ],
+    "keywords": [
+      "AudioFileStream",
+      "Audio File Stream Services",
+      "音频流播放"
+    ]
+  },
+  {
+    "id": "cbr和vbr音频seektime",
+    "title": "CBR、VBR音频 SeekTime",
+    "url": "/post/cbr和vbr音频seektime",
+    "content": "音频 Seek Time 功能需要我们在音频文件中找到对应播放时间点的字节位置, 这样才能实现播放时间点的跳跃. 音频存在 CBR、VBR、CVBR 等码率编码方式, 影响每一帧的数据长度大小. 这意味着对于不同码率编码的音频, 实现 Seek Time 的方式也不一样, 这里主要针对 CBR 和 VBR. CBR CBR代表恒定比特率（Constant Bit Rate）, 其中音频数据以恒定的比特率进行传输或存储. 在CBR编码中, 每秒传输的比特数保持不变, 这意味着无论音频内容复杂度如何, 文件大小也会保持一致. CBR 的音频每一帧的大小和时长都保持一致, 对于 CBR 的 Seek Time 实现也就比较容易. 由于 CBR 音频每帧大小一致, 我们可以近似的算出时间点对应的字节位置: /// dataOffset kAudioFileStreamProperty_DataOffset /// audioDataByteCount kAudioFileStreamProperty_AudioDataByteCount NSTimeInterval estimatedDuration = (audioDataByteCount * 8.0) / bitRate * 1000 NSUInteger byteSeekOffset = dataOffset + seekTime",
+    "category": "音视频",
+    "tags": [
+      "Audio"
+    ],
+    "keywords": [
+      "CBR",
+      "VBR",
+      "SeekTime"
+    ]
+  },
+  {
+    "id": "h264",
+    "title": "H.264",
+    "url": "/post/h264",
+    "content": "H.264 H.264码流结构分为两层: 网络提取层 (Network Abstraction Layer, NAL) 视讯编码层 (Video Coding Layer, VCL) VCL数据即被压缩编码后的视频数据序列, 需要通过封装到 NAL 单元中之后, 才可以用来传输或存储. H.264码流结构主要由一系列 GOP 构成, 一个 GOP 是一个视频编码序列, 每个 GOP 的第一帧是 IDR 帧, 此外还包含了 SPS 和 PPS 信息, 每个 GOP 都可以独立解码。 一个 GOP 由一系列 I、P、B帧构成, 一个视频帧又可以划分为 Slice（切片）, 一个 Slice 则由宏块构成. NALU H.264 码流由 NALU 为基本单元组成, 方便传输和保存, 其主要格式有两种: AVCC、Annex-B, 内容组成为: [NALU] = [NALU Header] + [NALU Payload] AVCC AVCC是由 NALU Size + NALU构成, 码流前四个字节表示 NALU Size, 主要适用于Mp4、FLV和MKV等封装容器. [NALU Size] + [NALU Header] + [NALU Payload] + [NALU Size] + [NALU Header] + [NALU Payload] Annex-B Annex-B是由S",
+    "category": "音视频",
+    "tags": [
+      "H.264"
+    ],
+    "keywords": [
+      "H.264"
+    ]
+  },
+  {
+    "id": "音视频基础知识",
+    "title": "音视频基础知识",
+    "url": "/post/音视频基础知识",
+    "content": "音视频 音视频（Audio-Visual）是指结合声音和图像的媒体形式。它可以包括电影、电视节目、音乐视频、广告等各种形式的媒体内容，通过同时传递声音和图像来提供更丰富的观感和沟通方式。音视频技术涉及录制、编辑、传输和播放等方面，包括音频编解码、视频编解码、流媒体传输、多媒体容器格式等。在现代社会中，音视频已经成为人们日常生活中不可或缺的一部分，广泛应用于娱乐、教育、通信、广告等领域。 PCM PCM (Pulse Code Modulation)是一种用于数字音频和视频的编码格式。它将模拟信号转换为数字信号，通过对模拟信号进行采样和量化来表示音频或视频数据。 在音频领域，PCM通常指的是线性脉冲编码调制（Linear Pulse Code Modulation），它将连续的模拟音频信号转换为离散的数字样本。每个样本的幅度值被量化为固定数量的位数，例如16位，以表示不同的音频级别。这些样本按照固定的采样率（例如44.1 kHz）进行连续采样，以便在播放或存储时能够还原出原始音频信号。 在视频领域，PCM可以用于音频部分的编码。对于视频本身，常见的编码格式是基于帧的压缩算法，如H.264或HEVC。这些视频编码格式使用PCM来编码视频中的音频轨道，以便与视频数据一起进行传输或存储。 总结而言，PCM是一种将模拟音频或视频信号转换为数字信号的编码格式，用于表示和处理音频或视频数据。 视",
+    "category": "音视频",
+    "tags": [
+      "音视频"
+    ],
+    "keywords": [
+      "音视频"
+    ]
+  }
+]
