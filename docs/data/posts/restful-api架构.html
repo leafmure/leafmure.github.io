@@ -121,7 +121,7 @@ API（Application Programming Interface，应用程序接口）是一些预先�
 <p>3、统一接口是否意味着不能扩展带特殊语义的方法?
 统一接口并不阻止你扩展方法，只要方法对资源的操作有着具体的、可识别的语义即可，并能够保持整个接口的统一性。</p>
 <p>像 WebDAV 就对 HTTP 方法进行了扩展，增加了LOCK、UPLOCK等方法。而github的API则支持使用PATCH方法来进行issue的更新，例如:</p>
-<pre><code>PATCH /repos/:owner/:repo/issues/:number
+<pre class="hljs codehilite"><code><span class="hljs-title class_">PATCH</span> /repos/<span class="hljs-symbol">:owner/</span><span class="hljs-symbol">:repo/issues/</span><span class="hljs-symbol">:number</span>
 </code></pre>
 <p>4、统一资源接口对URI有什么指导意义?</p>
 <p>统一资源接口要求使用标准的HTTP方法对资源进行操作，所以URI只应该来表示资源的名称，而不应该包括资源的操作。</p>
@@ -171,35 +171,35 @@ Accept: vnd.example-com.foo+json; version=2.0</p>
 <p>当你浏览Web网页时，从一个连接跳到一个页面，再从另一个连接跳到另外一个页面，就是利用了超媒体的概念：把一个个把资源链接起来.</p>
 <p>要达到这个目的，就要求在表述格式里边加入链接来引导客户端。在《RESTful Web Services》一书中，作者把这种具有链接的特性成为连通性。下面我们具体来看一些例子。</p>
 <p>下面展示的是github获取某个组织下的项目列表的请求，可以看到在响应头里边增加Link头告诉客户端怎么访问下一页和最后一页的记录。 而在响应体里边，用url来链接项目所有者和项目地址。</p>
-<pre><code># Request
-GET https://api.github.com/orgs/github/repos HTTP/1.1
-Accept: application/json
+<pre class="hljs codehilite"><code><span class="hljs-comment"># Request</span>
+GET https:<span class="hljs-symbol">//api.github.com/orgs/github/repos</span> HTTP<span class="hljs-symbol">/1.1</span>
+<span class="hljs-params">Accept:</span> application<span class="hljs-symbol">/json</span>
 
-# Response
-HTTP/1.1 Status: 200 OK
-Link: &lt;https://api.github.com/orgs/github/repos?page=2&gt;; rel=&quot;next&quot;,
-      &lt;https://api.github.com/orgs/github/repos?page=3&gt;; rel=,,last&quot;
+<span class="hljs-comment"># Response</span>
+HTTP<span class="hljs-symbol">/1.1</span> <span class="hljs-params">Status:</span> <span class="hljs-number">200</span> OK
+<span class="hljs-params">Link:</span> <span class="hljs-operator">&lt;</span>https:<span class="hljs-operator">//</span>api.github.com<span class="hljs-operator">/</span>orgs<span class="hljs-operator">/</span>github<span class="hljs-operator">/</span>repos<span class="hljs-operator">?</span>page<span class="hljs-operator">=</span><span class="hljs-number">2</span><span class="hljs-operator">&gt;</span>; <span class="hljs-attr">rel</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;next&quot;</span>,
+      <span class="hljs-operator">&lt;</span>https:<span class="hljs-operator">//</span>api.github.com<span class="hljs-operator">/</span>orgs<span class="hljs-operator">/</span>github<span class="hljs-operator">/</span>repos<span class="hljs-operator">?</span>page<span class="hljs-operator">=</span><span class="hljs-number">3</span><span class="hljs-operator">&gt;</span>; <span class="hljs-attr">rel</span><span class="hljs-operator">=</span>,,last<span class="hljs-string">&quot;
 Content-Type: application/json; charset=utf-8
 
 [
    {
-    &quot;id&quot;: 1296269,
-    &quot;owner&quot;: {
-       &quot;login&quot;: &quot;octocaf&quot;,
-       &quot;id&quot;: 1,
-       &quot;avatar_url&quot;: &quot;https://github.com/images/error/octocat_happy.gif&quot;, &quot;gravatar_id&quot;: &quot;somehexcode&quot;,
-       &quot;url&quot;: &quot;https://api.github.com/users/octocat&quot;
+    &quot;</span>id<span class="hljs-string">&quot;: 1296269,
+    &quot;</span>owner<span class="hljs-string">&quot;: {
+       &quot;</span>login<span class="hljs-string">&quot;: &quot;</span>octocaf<span class="hljs-string">&quot;,
+       &quot;</span>id<span class="hljs-string">&quot;: 1,
+       &quot;</span>avatar_url<span class="hljs-string">&quot;: &quot;</span>https:<span class="hljs-operator">//</span>github.com<span class="hljs-operator">/</span>images<span class="hljs-operator">/</span>error<span class="hljs-operator">/</span>octocat_happy.gif<span class="hljs-string">&quot;, &quot;</span>gravatar_id<span class="hljs-string">&quot;: &quot;</span>somehexcode<span class="hljs-string">&quot;,
+       &quot;</span>url<span class="hljs-string">&quot;: &quot;</span>https:<span class="hljs-operator">//</span>api.github.com<span class="hljs-operator">/</span>users<span class="hljs-operator">/</span>octocat<span class="hljs-string">&quot;
     },
-    &quot;name&quot;: &quot;Hello-World&quot;,
-    &quot;full_name&quot;: &quot;octocat/Hello-World&quot;,
-    &quot;description&quot;: &quot;This your first repo!&quot;,
-    &quot;private&quot;: false,
-    &quot;'fork&quot;: false,
-    &quot;url&quot;: &quot;https://api.github.com/repos/octocat/Hello-World&quot;,
-    &quot;html_url&quot;: &quot;https://github.com/octocat/Hello-World&quot;
+    &quot;</span>name<span class="hljs-string">&quot;: &quot;</span>Hello-World<span class="hljs-string">&quot;,
+    &quot;</span>full_name<span class="hljs-string">&quot;: &quot;</span>octocat<span class="hljs-operator">/</span>Hello-World<span class="hljs-string">&quot;,
+    &quot;</span>description<span class="hljs-string">&quot;: &quot;</span>This your first repo<span class="hljs-operator">!</span><span class="hljs-string">&quot;,
+    &quot;</span>private<span class="hljs-string">&quot;: false,
+    &quot;</span>&#x27;fork<span class="hljs-string">&quot;: false,
+    &quot;</span>url<span class="hljs-string">&quot;: &quot;</span>https:<span class="hljs-operator">//</span>api.github.com<span class="hljs-operator">/</span>repos<span class="hljs-operator">/</span>octocat<span class="hljs-operator">/</span>Hello-World<span class="hljs-string">&quot;,
+    &quot;</span>html_url<span class="hljs-string">&quot;: &quot;</span>https:<span class="hljs-operator">//</span>github.com<span class="hljs-operator">/</span>octocat<span class="hljs-operator">/</span>Hello-World<span class="hljs-string">&quot;
    }
 ]
-</code></pre>
+</span></code></pre>
 <p>上面的例子展示了如何使用超媒体来增强资源的连通性。很多人在设计 RESTful 架构时，使用很多时间来寻找漂亮的URI，而忽略了超媒体。所以，应该多花一些时间来给资源的表述提供链接，而不是专注于 “资源的CRUD”。</p>
 <h4 id="状态的转移" tabindex="-1">状态的转移</h4>
 <p>有了上面的铺垫，再讨论REST里边的状态转移就会很容易理解了。</p>
@@ -219,27 +219,27 @@ Content-Type: application/json; charset=utf-8
 <p>这些类似&quot;下一页&quot;之类的链接起的就是这种推进状态的作用——指引你如何从当前状态进入下一个可能的状态。</p>
 <h3 id="restful-api-与普通-api-形式" tabindex="-1">RESTful Api 与普通 Api 形式</h3>
 <p>假设我们有一个书籍库为 books，一般对于该库的增删改查的 Api 形式如下：</p>
-<pre><code># 形式表达，非正常代码
-GET /booksList do {
+<pre class="hljs codehilite"><code><span class="hljs-comment"># 形式表达，非正常代码</span>
+<span class="hljs-built_in">GET</span> /booksList <span class="hljs-keyword">do</span> {
   books.all
 }
-GET /bookDetail?id=x do {
+<span class="hljs-built_in">GET</span> /bookDetail?<span class="hljs-attribute">id</span>=x <span class="hljs-keyword">do</span> {
   books[x]
 }
-POST /addBook?newBook=x do {
+POST /addBook?<span class="hljs-attribute">newBook</span>=x <span class="hljs-keyword">do</span> {
   books.append(x)
 }
 </code></pre>
 <p>根据 RESTful 规范改造后如下：</p>
-<pre><code># 形式表达，非正常代码
-GET /books do {
+<pre class="hljs codehilite"><code><span class="hljs-comment"># 形式表达，非正常代码</span>
+GET /books <span class="hljs-keyword">do</span> {
   books.all
 }
-GET /books/x do {
-  id = x
-  books[id]
+GET /books/x <span class="hljs-keyword">do</span> {
+  <span class="hljs-built_in">id</span> = x
+  books[<span class="hljs-built_in">id</span>]
 }
-POST /books do {
+POST /books <span class="hljs-keyword">do</span> {
   newBook = RequestBody.value
   books.append(newBook)
 }

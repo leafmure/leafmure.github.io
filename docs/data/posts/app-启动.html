@@ -143,117 +143,117 @@
 <h6 id="clang-sanitizercoverage-插桩" tabindex="-1">clang SanitizerCoverage 插桩</h6>
 <p>在 <a href="https://clang.llvm.org/docs/SanitizerCoverage.html#tracing-pcs">Clang documentation </a> 中可以看到 LLVM 官方对 SanitizerCoverage 的详细介绍，包含了示例代码。简单来说 SanitizerCoverage 是 Clang 内置的一个代码覆盖工具。它把一系列以 _<em>sanitizer_cov_trace_pc</em> 为前缀的函数调用插入到用户定义的函数里，借此实现了全局 AOP。其覆盖之广，包含 Swift/Objective-C/C/C++ 等语言，Method/Function/Block 全支持。</p>
 <p>开启 SanitizerCoverage 的方法是：在 build settings 里的 “Other C Flags” 中添加 -fsanitize-coverage=func,trace-pc-guard。如果含有 Swift 代码的话，还需要在 “Other Swift Flags” 中加入 -sanitize-coverage=func 和 -sanitize=undefined。所有链接到 App 中的二进制都需要开启 SanitizerCoverage，这样才能完全覆盖到所有调，另外，设置了 -fsanitize-coverage=func,trace-pc-guard 则必须实现 __sanitizer_cov_trace_pc_guard_init 和 __sanitizer_cov_trace_pc_guard 函数。</p>
-<pre><code class="language-Objective-C">官方示例
-/// 插入 __sanitizer_cov_trace_pc_guard 函数的符号范围回调
-void __sanitizer_cov_trace_pc_guard_init(uint32_t *start,
-                                                    uint32_t *stop) {
-  static uint64_t N;  // Counter for the guards.
-  if (start == stop || *start) return;  // Initialize only once.
-  printf(&quot;INIT: %p %p\n&quot;, start, stop);
-  for (uint32_t *x = start; x &lt; stop; x++)
-    *x = ++N;  // Guards should start from 1.
+<pre class="hljs codehilite language-Objective-C"><code>官方示例
+<span class="hljs-comment">/// 插入 __sanitizer_cov_trace_pc_guard 函数的符号范围回调</span>
+<span class="hljs-type">void</span> __sanitizer_cov_trace_pc_guard_init(<span class="hljs-type">uint32_t</span> *start,
+                                                    <span class="hljs-type">uint32_t</span> *stop) {
+  <span class="hljs-type">static</span> <span class="hljs-type">uint64_t</span> N;  <span class="hljs-comment">// Counter for the guards.</span>
+  <span class="hljs-keyword">if</span> (start == stop || *start) <span class="hljs-keyword">return</span>;  <span class="hljs-comment">// Initialize only once.</span>
+  <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;INIT: %p %p\n&quot;</span>, start, stop);
+  <span class="hljs-keyword">for</span> (<span class="hljs-type">uint32_t</span> *x = start; x &lt; stop; x++)
+    *x = ++N;  <span class="hljs-comment">// Guards should start from 1.</span>
 }
 
-void __sanitizer_cov_trace_pc_guard(uint32_t *guard) {
-  if (!*guard) return;  // Duplicate the guard check.
+<span class="hljs-type">void</span> __sanitizer_cov_trace_pc_guard(<span class="hljs-type">uint32_t</span> *guard) {
+  <span class="hljs-keyword">if</span> (!*guard) <span class="hljs-keyword">return</span>;  <span class="hljs-comment">// Duplicate the guard check.</span>
 
-  void *PC = __builtin_return_address(0);
-  char PcDescr[1024];
-  //__sanitizer_symbolize_pc(PC, &quot;%p %F %L&quot;, PcDescr, sizeof(PcDescr));
-  printf(&quot;guard: %p %x PC %s\n&quot;, guard, *guard, PcDescr);
+  <span class="hljs-type">void</span> *PC = __builtin_return_address(<span class="hljs-number">0</span>);
+  <span class="hljs-type">char</span> PcDescr[<span class="hljs-number">1024</span>];
+  <span class="hljs-comment">//__sanitizer_symbolize_pc(PC, &quot;%p %F %L&quot;, PcDescr, sizeof(PcDescr));</span>
+  <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;guard: %p %x PC %s\n&quot;</span>, guard, *guard, PcDescr);
 }
 </code></pre>
 <p>编译时在每一个函数内部第一行代码处插入 __sanitizer_cov_trace_pc_guard 函数，所以可以通过该函数获取函数符号。函数嵌套时 , 在跳转子函数时，都会保存下一条指令的地址在 x30 (又叫 lr 寄存器) 里。</p>
 <p>例如：A函数中调用了B函数，在 arm 汇编中的体现为 bl + 0x**** 指令，该指令会首先将 A函数下一条汇编指令的地址保存在 x30 寄存器中。然后在跳转到 bl 后面传递的指定地址去执行。
 bl 能实现跳转到某个地址的汇编指令，其原理就是修改 pc 寄存器的值来指向到要跳转的地址，而且实际上 B 函数中也会对 x29 / x30 寄存器的值做保护，防止子函数又跳转其他函数会覆盖掉 x30 的值 , 当然叶子函数除外。
 当 B 函数执行 ret 也就是返回指令时，就会去读取 x30 寄存器的地址，跳转过去，因此也就回到了 A函数的下一步。</p>
-<pre><code class="language-Objective-C">void *PC = __builtin_return_address(0); 
+<pre class="hljs codehilite language-Objective-C"><code>void *PC <span class="hljs-operator">=</span> __builtin_return_address(<span class="hljs-number">0</span>)<span class="hljs-comment">; </span>
 </code></pre>
 <p>它的作用其实就是去读取 x30 中所存储的要返回到下一条指令的地址，也就是说可在 __sanitizer_cov_trace_pc_guard 获取到被插桩函数地址。</p>
 <p>在 dlfcn.h 中有一个方法如下:</p>
-<pre><code class="language-Objective-C">typedef struct dl_info {
-        const char      *dli_fname;     /* 所在文件 */
-        void            *dli_fbase;     /* 文件地址 */
-        const char      *dli_sname;     /* 符号名称 */
-        void            *dli_saddr;     /* 函数起始地址 */
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-keyword">typedef</span> <span class="hljs-keyword">struct</span> <span class="hljs-title class_">dl_info</span> {
+        <span class="hljs-type">const</span> <span class="hljs-type">char</span>      *dli_fname;     <span class="hljs-comment">/* 所在文件 */</span>
+        <span class="hljs-type">void</span>            *dli_fbase;     <span class="hljs-comment">/* 文件地址 */</span>
+        <span class="hljs-type">const</span> <span class="hljs-type">char</span>      *dli_sname;     <span class="hljs-comment">/* 符号名称 */</span>
+        <span class="hljs-type">void</span>            *dli_saddr;     <span class="hljs-comment">/* 函数起始地址 */</span>
 } Dl_info;
 
-//这个函数能通过函数内部地址找到函数符号
-int dladdr(const void *, Dl_info *);
+<span class="hljs-comment">//这个函数能通过函数内部地址找到函数符号</span>
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">dladdr</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">void</span> *, Dl_info *)</span></span>;
 </code></pre>
 <p>由于 __sanitizer_cov_trace_pc_guard 在不同函数里调用，所以涉及多线程调用，考虑到这个方法调用频率高，使用锁会影响性能，这里使用苹果底层的原子队列 (底层实际上是个栈结构，利用队列结构 + 原子性来保证顺序 ) 来实现。</p>
-<pre><code class="language-Objective-C">#import &lt;dlfcn.h&gt;
-#import &lt;libkern/OSAtomic.h&gt;
-#include &lt;sanitizer/coverage_interface.h&gt;
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-meta">#import <span class="hljs-string">&lt;dlfcn.h&gt;</span></span>
+<span class="hljs-meta">#import <span class="hljs-string">&lt;libkern/OSAtomic.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sanitizer/coverage_interface.h&gt;</span></span>
 
-//原子队列
-static OSQueueHead symbolList = OS_ATOMIC_QUEUE_INIT;
-//定义符号结构体
-typedef struct{
-    void * pc;
-    void * next;
+<span class="hljs-comment">//原子队列</span>
+<span class="hljs-keyword">static</span> OSQueueHead symbolList = OS_ATOMIC_QUEUE_INIT;
+<span class="hljs-comment">//定义符号结构体</span>
+<span class="hljs-keyword">typedef</span> <span class="hljs-keyword">struct</span>{
+    <span class="hljs-type">void</span> * pc;
+    <span class="hljs-type">void</span> * next;
 }SymbolNode;
 
-#pragma mark - 静态插桩代码
-void __sanitizer_cov_trace_pc_guard_init(uint32_t *start,
+<span class="hljs-meta">#<span class="hljs-keyword">pragma</span> mark - 静态插桩代码</span>
+<span class="hljs-type">void</span> __sanitizer_cov_trace_pc_guard_init(uint32_t *start,
                                          uint32_t *stop) {
-    static uint64_t N;  // Counter for the guards.
-    if (start == stop || *start) return;  // Initialize only once.
-    printf(&quot;INIT: %p %p\n&quot;, start, stop);
-    for (uint32_t *x = start; x &lt; stop; x++)
-        *x = ++N;  // Guards should start from 1.
+    <span class="hljs-keyword">static</span> uint64_t N;  <span class="hljs-comment">// Counter for the guards.</span>
+    <span class="hljs-keyword">if</span> (start == stop || *start) <span class="hljs-keyword">return</span>;  <span class="hljs-comment">// Initialize only once.</span>
+    printf(<span class="hljs-string">&quot;INIT: %p %p\n&quot;</span>, start, stop);
+    <span class="hljs-keyword">for</span> (uint32_t *x = start; x &lt; stop; x++)
+        *x = ++N;  <span class="hljs-comment">// Guards should start from 1.</span>
 }
 
-void __sanitizer_cov_trace_pc_guard(uint32_t *guard) {
-    // 有load 方法时，guard 是 0，所以注释 if (!*guard) return;
-    //if (!*guard) return;  // Duplicate the guard check.
+<span class="hljs-type">void</span> __sanitizer_cov_trace_pc_guard(uint32_t *guard) {
+    <span class="hljs-comment">// 有load 方法时，guard 是 0，所以注释 if (!*guard) return;</span>
+    <span class="hljs-comment">//if (!*guard) return;  // Duplicate the guard check.</span>
     
-    void *PC = __builtin_return_address(0);
+    <span class="hljs-type">void</span> *PC = __builtin_return_address(<span class="hljs-number">0</span>);
     
-    SymbolNode * node = malloc(sizeof(SymbolNode));
-    *node = (SymbolNode){PC,NULL};
+    SymbolNode * node = malloc(<span class="hljs-keyword">sizeof</span>(SymbolNode));
+    *node = (SymbolNode){PC,<span class="hljs-literal">NULL</span>};
     
-    //入队
-    // offsetof 用在这里是为了入队添加下一个节点找到 前一个节点next指针的位置
+    <span class="hljs-comment">//入队</span>
+    <span class="hljs-comment">// offsetof 用在这里是为了入队添加下一个节点找到 前一个节点next指针的位置</span>
     OSAtomicEnqueue(&amp;symbolList, node, offsetof(SymbolNode, next));
 }
 
-/// 获取符号并写入 order 文件
-+ (void)readSymbolAndWriteFile {
+<span class="hljs-comment">/// 获取符号并写入 order 文件</span>
++ (<span class="hljs-type">void</span>)readSymbolAndWriteFile {
     
-    NSMutableArray&lt;NSString *&gt; * symbolNames = [NSMutableArray array];
-    while (YES) {
-        //offsetof 就是针对某个结构体找到某个属性相对这个结构体的偏移量
+    <span class="hljs-built_in">NSMutableArray</span>&lt;<span class="hljs-built_in">NSString</span> *&gt; * symbolNames = [<span class="hljs-built_in">NSMutableArray</span> array];
+    <span class="hljs-keyword">while</span> (<span class="hljs-literal">YES</span>) {
+        <span class="hljs-comment">//offsetof 就是针对某个结构体找到某个属性相对这个结构体的偏移量</span>
         SymbolNode * node = OSAtomicDequeue(&amp;symbolList, offsetof(SymbolNode, next));
-        if (node == NULL) break;
+        <span class="hljs-keyword">if</span> (node == <span class="hljs-literal">NULL</span>) <span class="hljs-keyword">break</span>;
         Dl_info info;
         dladdr(node-&gt;pc, &amp;info);
         
-        NSString * name = @(info.dli_sname);
+        <span class="hljs-built_in">NSString</span> * name = @(info.dli_sname);
         
-        // 添加 _
-        BOOL isObjc = [name hasPrefix:@&quot;+[&quot;] || [name hasPrefix:@&quot;-[&quot;];
-        NSString * symbolName = isObjc ? name : [@&quot;_&quot; stringByAppendingString:name];
+        <span class="hljs-comment">// 添加 _</span>
+        <span class="hljs-type">BOOL</span> isObjc = [name hasPrefix:<span class="hljs-string">@&quot;+[&quot;</span>] || [name hasPrefix:<span class="hljs-string">@&quot;-[&quot;</span>];
+        <span class="hljs-built_in">NSString</span> * symbolName = isObjc ? name : [<span class="hljs-string">@&quot;_&quot;</span> stringByAppendingString:name];
         
-        //去重
-        if (![symbolNames containsObject:symbolName]) {
+        <span class="hljs-comment">//去重</span>
+        <span class="hljs-keyword">if</span> (![symbolNames containsObject:symbolName]) {
             [symbolNames addObject:symbolName];
         }
     }
 
-    //取反
-    NSArray * symbolAry = [[symbolNames reverseObjectEnumerator] allObjects];
-    NSLog(@&quot;%@&quot;,symbolAry);
+    <span class="hljs-comment">//取反</span>
+    <span class="hljs-built_in">NSArray</span> * symbolAry = [[symbolNames reverseObjectEnumerator] allObjects];
+    <span class="hljs-built_in">NSLog</span>(<span class="hljs-string">@&quot;%@&quot;</span>,symbolAry);
         
-    //将结果写入到文件
-    NSString * funcString = [symbolAry componentsJoinedByString:@&quot;\n&quot;];
-    NSString * filePath = [NSTemporaryDirectory() stringByAppendingPathComponent:@&quot;binary.order&quot;];
-    NSData * fileContents = [funcString dataUsingEncoding:NSUTF8StringEncoding];
-    BOOL result = [[NSFileManager defaultManager] createFileAtPath:filePath contents:fileContents attributes:nil];
-    if (result) {
-        NSLog(@&quot;%@&quot;,filePath);
-    }else{
-        NSLog(@&quot;文件写入出错&quot;);
+    <span class="hljs-comment">//将结果写入到文件</span>
+    <span class="hljs-built_in">NSString</span> * funcString = [symbolAry componentsJoinedByString:<span class="hljs-string">@&quot;\n&quot;</span>];
+    <span class="hljs-built_in">NSString</span> * filePath = [<span class="hljs-built_in">NSTemporaryDirectory</span>() stringByAppendingPathComponent:<span class="hljs-string">@&quot;binary.order&quot;</span>];
+    <span class="hljs-built_in">NSData</span> * fileContents = [funcString dataUsingEncoding:<span class="hljs-built_in">NSUTF8StringEncoding</span>];
+    <span class="hljs-type">BOOL</span> result = [[<span class="hljs-built_in">NSFileManager</span> defaultManager] createFileAtPath:filePath contents:fileContents attributes:<span class="hljs-literal">nil</span>];
+    <span class="hljs-keyword">if</span> (result) {
+        <span class="hljs-built_in">NSLog</span>(<span class="hljs-string">@&quot;%@&quot;</span>,filePath);
+    }<span class="hljs-keyword">else</span>{
+        <span class="hljs-built_in">NSLog</span>(<span class="hljs-string">@&quot;文件写入出错&quot;</span>);
     }
 }
 </code></pre>

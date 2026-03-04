@@ -9,23 +9,23 @@
 <p><img src="https://destinmure.github.io/pic/postImage/H.264/H.264%E7%A0%81%E6%B5%81%E7%BB%93%E6%9E%84.png" alt="image"></p>
 <h3 id="nalu" tabindex="-1">NALU</h3>
 <p>H.264 码流由 NALU 为基本单元组成, 方便传输和保存, 其主要格式有两种: AVCC、Annex-B, 内容组成为:</p>
-<pre><code>[NALU] = [NALU Header] + [NALU Payload]
+<pre class="hljs codehilite"><code><span class="hljs-comment">[NALU]</span> = <span class="hljs-comment">[NALU Header]</span> + <span class="hljs-comment">[NALU Payload]</span>
 </code></pre>
 <h4 id="avcc" tabindex="-1">AVCC</h4>
 <p>AVCC是由 NALU Size + NALU构成, 码流前四个字节表示 NALU Size, 主要适用于Mp4、FLV和MKV等封装容器.</p>
-<pre><code>[NALU Size] + [NALU Header] + [NALU Payload] + [NALU Size] + [NALU Header] + [NALU Payload]
+<pre class="hljs codehilite"><code><span class="hljs-selector-attr">[NALU Size]</span> + <span class="hljs-selector-attr">[NALU Header]</span> + <span class="hljs-selector-attr">[NALU Payload]</span> + <span class="hljs-selector-attr">[NALU Size]</span> + <span class="hljs-selector-attr">[NALU Header]</span> + <span class="hljs-selector-attr">[NALU Payload]</span>
 </code></pre>
 <h4 id="annex-b" tabindex="-1">Annex-B</h4>
 <p>Annex-B是由Start Code + NALU构成, 主要适用于TS封装容器.</p>
-<pre><code>[Start Code] + [NALU Header] + [NALU Payload] + [Start Code] + [NALU Header] + [NALU Payload]
+<pre class="hljs codehilite"><code><span class="hljs-selector-attr">[Start Code]</span> + <span class="hljs-selector-attr">[NALU Header]</span> + <span class="hljs-selector-attr">[NALU Payload]</span> + <span class="hljs-selector-attr">[Start Code]</span> + <span class="hljs-selector-attr">[NALU Header]</span> + <span class="hljs-selector-attr">[NALU Payload]</span>
 </code></pre>
 <p>Start Code 为: 0x00000001或0x000001, 3字节的0x000001只有一种场合下使用, 就是一个完整的帧被划分为多个Slice的时候, 从第二个Slice开始, 包含这些 Slice 的NALU使用3字节起始码。即若NALU包含的Slice为一帧的开始就用0x00000001, 否则就用0x000001。</p>
 <p>另外为了避免真实数据 0x00000001、0x000001 冲突, 使用 0x03 作为防竞争码, 即将其中 0x01 用 0x03 表示, 与 Start Code 区分开来.</p>
 <h4 id="nalu-header" tabindex="-1">NALU Header</h4>
 <p>H.264 的 NALU Header 固定占用1个字节, 主要标识了三部分内容:</p>
-<pre><code>| forbidden_zero_bit | nal_ref_idc | nal_unit_type |
-|--------------------|-------------|---------------|
-|        1 bit       |    2 bit    |    5 bit      |
+<pre class="hljs codehilite"><code>|<span class="hljs-string"> forbidden_zero_bit </span>|<span class="hljs-string"> nal_ref_idc </span>|<span class="hljs-string"> nal_unit_type </span>|
+|<span class="hljs-string">--------------------</span>|<span class="hljs-string">-------------</span>|<span class="hljs-string">---------------</span>|
+|<span class="hljs-string">        1 bit       </span>|<span class="hljs-string">    2 bit    </span>|<span class="hljs-string">    5 bit      </span>|
 
 </code></pre>
 <ul>
@@ -34,27 +34,27 @@
 <li>nal_unit_type 标识 NALU 的类型，决定了如何解析 NALU Payload.</li>
 </ul>
 <p>nal_unit_type:</p>
-<pre><code>0：未定义
-1：非IDR图像中不采用数据划分的片段
-2：非IDR图像中A类数据划分片段
-3：非IDR图像中B类数据划分片段
-4：非IDR图像中C类数据划分片段
-5：IDR图像的片段
-6：补充增强信息（SEI）
-7：序列参数集（SPS）
-8：图像参数集（PPS）
-9：分割符
-10：序列结束符
-11：流结束符
-12：填充数据
-13：序列参数集扩展
-14：带前缀的NAL单元
-15：子序列参数集
-16 – 18：保留
-19：不采用数据划分的辅助编码图像片段
-20：编码片段扩展
-21 – 23：保留
-24 – 31：未规定
+<pre class="hljs codehilite"><code><span class="hljs-number">0</span>：未定义
+<span class="hljs-number">1</span>：非IDR图像中不采用数据划分的片段
+<span class="hljs-number">2</span>：非IDR图像中A类数据划分片段
+<span class="hljs-number">3</span>：非IDR图像中B类数据划分片段
+<span class="hljs-number">4</span>：非IDR图像中C类数据划分片段
+<span class="hljs-number">5</span>：IDR图像的片段
+<span class="hljs-number">6</span>：补充增强信息（SEI）
+<span class="hljs-number">7</span>：序列参数集（SPS）
+<span class="hljs-number">8</span>：图像参数集（PPS）
+<span class="hljs-number">9</span>：分割符
+<span class="hljs-number">10</span>：序列结束符
+<span class="hljs-number">11</span>：流结束符
+<span class="hljs-number">12</span>：填充数据
+<span class="hljs-number">13</span>：序列参数集扩展
+<span class="hljs-number">14</span>：带前缀的NAL单元
+<span class="hljs-number">15</span>：子序列参数集
+<span class="hljs-symbol">16 </span>– <span class="hljs-number">18</span>：保留
+<span class="hljs-number">19</span>：不采用数据划分的辅助编码图像片段
+<span class="hljs-number">20</span>：编码片段扩展
+<span class="hljs-symbol">21 </span>– <span class="hljs-number">23</span>：保留
+<span class="hljs-symbol">24 </span>– <span class="hljs-number">31</span>：未规定
 </code></pre>
 <p>nal_ref_idc和nal_unit_type 具有一定的相关性:</p>
 <table>
@@ -206,152 +206,152 @@ slice的语法元素num_ref_idx_l0_active_minus1和num_ref_idx_l1_active_minus1�
 <h3 id="h264-videotoolbox-编解码" tabindex="-1">H.264 VideoToolbox 编解码</h3>
 <h4 id="h264-编码" tabindex="-1">H.264 编码</h4>
 <h5 id="1创建-vtcompressionsessionref-编码器" tabindex="-1">1、创建 VTCompressionSessionRef 编码器</h5>
-<pre><code class="language-Objective-C">/// 视频帧序列压缩的会话
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-comment">/// 视频帧序列压缩的会话</span>
 VTCompressionSessionRef _compressionSession;
 
-/// 创建编码session
-/// videoCompressonOutputCallback 编码结果回调函数
-OSStatus status = VTCompressionSessionCreate(NULL, _configuration.videoSize.width, _configuration.videoSize.height, kCMVideoCodecType_H264, NULL, NULL, NULL, videoCompressonOutputCallback, (__bridge void *)self, &amp;_compressionSession);
-if (status != noErr) {
-    NSLog(@&quot;HardwareVideoEncoder create fail&quot;);
-    return;
+<span class="hljs-comment">/// 创建编码session</span>
+<span class="hljs-comment">/// videoCompressonOutputCallback 编码结果回调函数</span>
+OSStatus status = <span class="hljs-built_in">VTCompressionSessionCreate</span>(<span class="hljs-literal">NULL</span>, _configuration.videoSize.width, _configuration.videoSize.height, kCMVideoCodecType_H264, <span class="hljs-literal">NULL</span>, <span class="hljs-literal">NULL</span>, <span class="hljs-literal">NULL</span>, videoCompressonOutputCallback, (__bridge <span class="hljs-type">void</span> *)self, &amp;_compressionSession);
+<span class="hljs-keyword">if</span> (status != noErr) {
+    <span class="hljs-built_in">NSLog</span>(@<span class="hljs-string">&quot;HardwareVideoEncoder create fail&quot;</span>);
+    <span class="hljs-keyword">return</span>;
 }
 </code></pre>
 <h5 id="2设置编码器参数" tabindex="-1">2、设置编码器参数</h5>
-<pre><code class="language-Objective-C">/// 设置最大关键帧间隔
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-comment">/// 设置最大关键帧间隔</span>
 VTSessionSetProperty(_compressionSession, kVTCompressionPropertyKey_MaxKeyFrameInterval, (__bridge CFTypeRef)@(_configuration.videoMaxKeyframeInterval));
     
-/// 设置最大关键帧时间
+<span class="hljs-comment">/// 设置最大关键帧时间</span>
 VTSessionSetProperty(_compressionSession, kVTCompressionPropertyKey_MaxKeyFrameIntervalDuration, (__bridge CFTypeRef)@(_configuration.videoMaxKeyframeInterval/_configuration.videoFrameRate));
     
-/// 设置视频的帧率
+<span class="hljs-comment">/// 设置视频的帧率</span>
 VTSessionSetProperty(_compressionSession, kVTCompressionPropertyKey_ExpectedFrameRate, (__bridge CFTypeRef)@(_configuration.videoFrameRate));
     
-/// 设置视频的平均码率，单位是 bps
+<span class="hljs-comment">/// 设置视频的平均码率，单位是 bps</span>
 VTSessionSetProperty(_compressionSession, kVTCompressionPropertyKey_AverageBitRate, (__bridge CFTypeRef)@(_configuration.videoBitRate));
     
-/// 设置码率范围限制
-NSArray *limit = @[@(_configuration.videoBitRate * 1.5 / 8), @(1)];
+<span class="hljs-comment">/// 设置码率范围限制</span>
+NSArray *limit = @[@(_configuration.videoBitRate * <span class="hljs-number">1.5</span> / <span class="hljs-number">8</span>), @(<span class="hljs-number">1</span>)];
 VTSessionSetProperty(_compressionSession, kVTCompressionPropertyKey_DataRateLimits, (__bridge CFArrayRef)limit);
     
-/// 是否启用实时压缩
+<span class="hljs-comment">/// 是否启用实时压缩</span>
 VTSessionSetProperty(_compressionSession, kVTCompressionPropertyKey_RealTime, kCFBooleanTrue);
     
-/// H264 编码
+<span class="hljs-comment">/// H264 编码</span>
 VTSessionSetProperty(_compressionSession, kVTCompressionPropertyKey_ProfileLevel, kVTProfileLevel_H264_Main_AutoLevel);
 
-/// 是否允许帧重新排序
+<span class="hljs-comment">/// 是否允许帧重新排序</span>
 VTSessionSetProperty(_compressionSession, kVTCompressionPropertyKey_AllowFrameReordering, kCFBooleanFalse);
 
-/// 指定 H.264 编码器的熵编码模式
+<span class="hljs-comment">/// 指定 H.264 编码器的熵编码模式</span>
 VTSessionSetProperty(_compressionSession, kVTCompressionPropertyKey_H264EntropyMode, kVTH264EntropyMode_CABAC);
 </code></pre>
 <h5 id="3准备开始编码" tabindex="-1">3、准备开始编码</h5>
-<pre><code class="language-Objective-C">VTCompressionSessionPrepareToEncodeFrames(_compressionSession);
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-built_in">VTCompressionSessionPrepareToEncodeFrames</span>(_compressionSession);
 </code></pre>
 <h5 id="4开始编码" tabindex="-1">4、开始编码</h5>
-<pre><code class="language-Objective-C">/// 编码数据
-- (void)encodeVideoData:(nullable CVPixelBufferRef)pixelBuffer timeStamp:(uint64_t)timeStamp {
-    if(_isBackGround) return;
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-comment">/// 编码数据</span>
+- (<span class="hljs-type">void</span>)encodeVideoData:(<span class="hljs-keyword">nullable</span> CVPixelBufferRef)pixelBuffer timeStamp:(uint64_t)timeStamp {
+    <span class="hljs-keyword">if</span>(_isBackGround) <span class="hljs-keyword">return</span>;
     frameCount++;
-    CMTime presentationTimeStamp = CMTimeMake(frameCount, (int32_t)_configuration.videoFrameRate);
+    <span class="hljs-built_in">CMTime</span> presentationTimeStamp = <span class="hljs-built_in">CMTimeMake</span>(frameCount, (int32_t)_configuration.videoFrameRate);
     VTEncodeInfoFlags flags;
-    CMTime duration = CMTimeMake(1, (int32_t)_configuration.videoFrameRate);
+    <span class="hljs-built_in">CMTime</span> duration = <span class="hljs-built_in">CMTimeMake</span>(<span class="hljs-number">1</span>, (int32_t)_configuration.videoFrameRate);
     
-    NSDictionary *properties = nil;
-    if (frameCount % (int32_t)_configuration.videoMaxKeyframeInterval == 0) {
-        properties = @{(__bridge NSString *)kVTEncodeFrameOptionKey_ForceKeyFrame: @YES};
+    <span class="hljs-built_in">NSDictionary</span> *properties = <span class="hljs-literal">nil</span>;
+    <span class="hljs-keyword">if</span> (frameCount % (int32_t)_configuration.videoMaxKeyframeInterval == <span class="hljs-number">0</span>) {
+        properties = @{(__bridge <span class="hljs-built_in">NSString</span> *)kVTEncodeFrameOptionKey_ForceKeyFrame: @YES};
     }
-    NSNumber *timeNumber = @(timeStamp);
+    <span class="hljs-built_in">NSNumber</span> *timeNumber = @(timeStamp);
     
-    OSStatus status = VTCompressionSessionEncodeFrame(_compressionSession, pixelBuffer, presentationTimeStamp, duration, (__bridge CFDictionaryRef)properties, (__bridge_retained void *)timeNumber, &amp;flags);
-    if (status != noErr) {
-        [self createCompressionSession];
+    OSStatus status = VTCompressionSessionEncodeFrame(_compressionSession, pixelBuffer, presentationTimeStamp, duration, (__bridge <span class="hljs-built_in">CFDictionaryRef</span>)properties, (__bridge_retained <span class="hljs-type">void</span> *)timeNumber, &amp;flags);
+    <span class="hljs-keyword">if</span> (status != noErr) {
+        [<span class="hljs-keyword">self</span> createCompressionSession];
     }
 }
 </code></pre>
 <h5 id="5编码输出" tabindex="-1">5、编码输出</h5>
-<pre><code class="language-Objective-C">static void videoCompressonOutputCallback(void *refCon, void *frameRef, OSStatus status, VTEncodeInfoFlags infoFlags, CMSampleBufferRef sampleBuffer) {
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-keyword">static</span> <span class="hljs-type">void</span> videoCompressonOutputCallback(<span class="hljs-type">void</span> *refCon, <span class="hljs-type">void</span> *frameRef, OSStatus status, VTEncodeInfoFlags infoFlags, <span class="hljs-built_in">CMSampleBufferRef</span> sampleBuffer) {
     
-    if (status != noErr) return;
+    <span class="hljs-keyword">if</span> (status != noErr) <span class="hljs-keyword">return</span>;
     
-    if (!sampleBuffer) return;
+    <span class="hljs-keyword">if</span> (!sampleBuffer) <span class="hljs-keyword">return</span>;
     
-    CFArrayRef array = CMSampleBufferGetSampleAttachmentsArray(sampleBuffer, true);
-    if (!array) return;
+    <span class="hljs-built_in">CFArrayRef</span> array = <span class="hljs-built_in">CMSampleBufferGetSampleAttachmentsArray</span>(sampleBuffer, <span class="hljs-literal">true</span>);
+    <span class="hljs-keyword">if</span> (!array) <span class="hljs-keyword">return</span>;
     
-    CFDictionaryRef dic = (CFDictionaryRef)CFArrayGetValueAtIndex(array, 0);
-    if (!dic) return;
+    <span class="hljs-built_in">CFDictionaryRef</span> dic = (<span class="hljs-built_in">CFDictionaryRef</span>)<span class="hljs-built_in">CFArrayGetValueAtIndex</span>(array, <span class="hljs-number">0</span>);
+    <span class="hljs-keyword">if</span> (!dic) <span class="hljs-keyword">return</span>;
     
-    // 判断当前帧是否为关键帧
-    BOOL keyframe = !CFDictionaryContainsKey(dic, kCMSampleAttachmentKey_NotSync);
+    <span class="hljs-comment">// 判断当前帧是否为关键帧</span>
+    <span class="hljs-type">BOOL</span> keyframe = !<span class="hljs-built_in">CFDictionaryContainsKey</span>(dic, kCMSampleAttachmentKey_NotSync);
     
     HardwareVideoEncoder *videoEncoder = (__bridge HardwareVideoEncoder *)refCon;
-    /// 读取sps、pps 数据
+    <span class="hljs-comment">/// 读取sps、pps 数据</span>
     readSPSAndPPSData(videoEncoder, sampleBuffer, keyframe);
-    /// 获取编码后的数据
+    <span class="hljs-comment">/// 获取编码后的数据</span>
     readBlockBuffer(sampleBuffer, frameRef, keyframe, videoEncoder);
 }
 
 </code></pre>
 <h5 id="6获取-spspps-数据" tabindex="-1">6、获取 sps、pps 数据</h5>
-<pre><code class="language-Objective-C">static void readSPSAndPPSData(HardwareVideoEncoder *videoEncoder, CMSampleBufferRef sampleBuffer, BOOL keyframe) {
-    if (keyframe &amp;&amp; !videoEncoder-&gt;sps) {
-        /// 格式信息
-        CMFormatDescriptionRef format = CMSampleBufferGetFormatDescription(sampleBuffer);
-        /// 获取 sps 数据
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-keyword">static</span> <span class="hljs-type">void</span> readSPSAndPPSData(HardwareVideoEncoder *videoEncoder, <span class="hljs-built_in">CMSampleBufferRef</span> sampleBuffer, <span class="hljs-type">BOOL</span> keyframe) {
+    <span class="hljs-keyword">if</span> (keyframe &amp;&amp; !videoEncoder-&gt;sps) {
+        <span class="hljs-comment">/// 格式信息</span>
+        <span class="hljs-built_in">CMFormatDescriptionRef</span> format = <span class="hljs-built_in">CMSampleBufferGetFormatDescription</span>(sampleBuffer);
+        <span class="hljs-comment">/// 获取 sps 数据</span>
         size_t sparameterSetSize, sparameterSetCount;
-        const uint8_t *sparameterSet;
-        OSStatus statusCode = CMVideoFormatDescriptionGetH264ParameterSetAtIndex(format, 0, &amp;sparameterSet, &amp;sparameterSetSize, &amp;sparameterSetCount, 0);
-        if (statusCode == noErr) {
-            /// 获取 pps 数据
+        <span class="hljs-keyword">const</span> uint8_t *sparameterSet;
+        OSStatus statusCode = <span class="hljs-built_in">CMVideoFormatDescriptionGetH264ParameterSetAtIndex</span>(format, <span class="hljs-number">0</span>, &amp;sparameterSet, &amp;sparameterSetSize, &amp;sparameterSetCount, <span class="hljs-number">0</span>);
+        <span class="hljs-keyword">if</span> (statusCode == noErr) {
+            <span class="hljs-comment">/// 获取 pps 数据</span>
             size_t pparameterSetSize, pparameterSetCount;
-            const uint8_t *pparameterSet;
-            OSStatus statusCode = CMVideoFormatDescriptionGetH264ParameterSetAtIndex(format, 1, &amp;pparameterSet, &amp;pparameterSetSize, &amp;pparameterSetCount, 0);
-            if (statusCode == noErr) {
-                videoEncoder-&gt;sps = [NSData dataWithBytes:sparameterSet length:sparameterSetSize];
-                videoEncoder-&gt;pps = [NSData dataWithBytes:pparameterSet length:pparameterSetSize];
+            <span class="hljs-keyword">const</span> uint8_t *pparameterSet;
+            OSStatus statusCode = <span class="hljs-built_in">CMVideoFormatDescriptionGetH264ParameterSetAtIndex</span>(format, <span class="hljs-number">1</span>, &amp;pparameterSet, &amp;pparameterSetSize, &amp;pparameterSetCount, <span class="hljs-number">0</span>);
+            <span class="hljs-keyword">if</span> (statusCode == noErr) {
+                videoEncoder-&gt;sps = [<span class="hljs-built_in">NSData</span> dataWithBytes:sparameterSet length:sparameterSetSize];
+                videoEncoder-&gt;pps = [<span class="hljs-built_in">NSData</span> dataWithBytes:pparameterSet length:pparameterSetSize];
             }
         }
     }
 }
 </code></pre>
 <h5 id="7编码后的帧数据" tabindex="-1">7、编码后的帧数据</h5>
-<pre><code class="language-Objective-C">/// 获取编码后的数据
-static void readBlockBuffer(CMSampleBufferRef sampleBuffer, void *frameRef, BOOL keyframe, HardwareVideoEncoder *videoEncoder) {
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-comment">/// 获取编码后的数据</span>
+<span class="hljs-keyword">static</span> <span class="hljs-type">void</span> readBlockBuffer(<span class="hljs-built_in">CMSampleBufferRef</span> sampleBuffer, <span class="hljs-type">void</span> *frameRef, <span class="hljs-type">BOOL</span> keyframe, HardwareVideoEncoder *videoEncoder) {
         
-    // 当前帧时间
-    uint64_t timeStamp = [((__bridge_transfer NSNumber *)frameRef) longLongValue];
+    <span class="hljs-comment">// 当前帧时间</span>
+    uint64_t timeStamp = [((__bridge_transfer <span class="hljs-built_in">NSNumber</span> *)frameRef) longLongValue];
     
-    CMBlockBufferRef dataBuffer = CMSampleBufferGetDataBuffer(sampleBuffer);
+    <span class="hljs-built_in">CMBlockBufferRef</span> dataBuffer = <span class="hljs-built_in">CMSampleBufferGetDataBuffer</span>(sampleBuffer);
     
     size_t length, totalLength;
-    char *dataPointer;
-    OSStatus statusCodeRet = CMBlockBufferGetDataPointer(dataBuffer, 0, &amp;length, &amp;totalLength, &amp;dataPointer);
+    <span class="hljs-type">char</span> *dataPointer;
+    OSStatus statusCodeRet = <span class="hljs-built_in">CMBlockBufferGetDataPointer</span>(dataBuffer, <span class="hljs-number">0</span>, &amp;length, &amp;totalLength, &amp;dataPointer);
     
-    if (statusCodeRet == noErr) {
+    <span class="hljs-keyword">if</span> (statusCodeRet == noErr) {
         
-        size_t bufferOffset = 0;
-        static const int AVCCHeaderLength = 4;
-        // 循环获取nalu数据 VAVC
-        while (bufferOffset &lt; totalLength - AVCCHeaderLength) {
-            uint32_t NALUnitLength = 0;
-            /// 读取前 4 个字节, 表示 nalu 数据的长度.
-            memcpy(&amp;NALUnitLength, dataPointer + bufferOffset, AVCCHeaderLength);
-            NALUnitLength = CFSwapInt32BigToHost(NALUnitLength);
+        size_t bufferOffset = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">static</span> <span class="hljs-keyword">const</span> <span class="hljs-type">int</span> <span class="hljs-built_in">AVCCHeaderLength</span> = <span class="hljs-number">4</span>;
+        <span class="hljs-comment">// 循环获取nalu数据 VAVC</span>
+        <span class="hljs-keyword">while</span> (bufferOffset &lt; totalLength - <span class="hljs-built_in">AVCCHeaderLength</span>) {
+            uint32_t NALUnitLength = <span class="hljs-number">0</span>;
+            <span class="hljs-comment">/// 读取前 4 个字节, 表示 nalu 数据的长度.</span>
+            memcpy(&amp;NALUnitLength, dataPointer + bufferOffset, <span class="hljs-built_in">AVCCHeaderLength</span>);
+            NALUnitLength = <span class="hljs-built_in">CFSwapInt32BigToHost</span>(NALUnitLength);
             
             VideoDataFrame *videoFrame = [VideoDataFrame new];
             videoFrame.timestamp = timeStamp;
-            videoFrame.data = [[NSData alloc] initWithBytes:(dataPointer + bufferOffset + AVCCHeaderLength) length:NALUnitLength];
+            videoFrame.data = [[<span class="hljs-built_in">NSData</span> alloc] initWithBytes:(dataPointer + bufferOffset + <span class="hljs-built_in">AVCCHeaderLength</span>) length:NALUnitLength];
             videoFrame.isKeyFrame = keyframe;
             videoFrame.sps = videoEncoder-&gt;sps;
             videoFrame.pps = videoEncoder-&gt;pps;
             
-            if (videoEncoder.delegate &amp;&amp; [videoEncoder.delegate respondsToSelector:@selector(videoEncoder:videoFrame:)]) {
+            <span class="hljs-keyword">if</span> (videoEncoder.delegate &amp;&amp; [videoEncoder.delegate respondsToSelector:<span class="hljs-keyword">@selector</span>(videoEncoder:videoFrame:)]) {
                 [videoEncoder.delegate videoEncoder:videoEncoder videoFrame:videoFrame];
             }
             
-            bufferOffset += AVCCHeaderLength + NALUnitLength;
+            bufferOffset += <span class="hljs-built_in">AVCCHeaderLength</span> + NALUnitLength;
         }
     }
 }
@@ -359,241 +359,241 @@ static void readBlockBuffer(CMSampleBufferRef sampleBuffer, void *frameRef, BOOL
 </code></pre>
 <h4 id="h264-解码" tabindex="-1">H.264 解码</h4>
 <h5 id="1根据-start-code-解析出-nalu-块" tabindex="-1">1、根据 Start Code 解析出 NALU 块</h5>
-<pre><code class="language-Objective-C">typedef NS_ENUM(NSUInteger, LH264AnnexBFormatParserStartCodeState) {
-    LH264AnnexBFormatParserStartCodeStateInit = 0, /// 默认匹配状态
-    LH264AnnexBFormatParserStartCodeStateFind1Zero = 1, /// 匹配到一个 0
-    LH264AnnexBFormatParserStartCodeStateFind2Zero = 2, /// 匹配到两个 0
-    LH264AnnexBFormatParserStartCodeStateFindMoreThan2Zero = 3, /// 匹配到超过两个 0
-    LH264AnnexBFormatParserStartCodeStateFind2ZeroAnd1One = 4, /// 匹配到 0x00 00 01
-    LH264AnnexBFormatParserStartCodeStateFindMoreThan2ZeroAnd1One = 5 /// 匹配到 0x00 00 00 01
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-keyword">typedef</span> <span class="hljs-built_in">NS_ENUM</span>(<span class="hljs-built_in">NSUInteger</span>, LH264AnnexBFormatParserStartCodeState) {
+    LH264AnnexBFormatParserStartCodeStateInit = <span class="hljs-number">0</span>, <span class="hljs-comment">/// 默认匹配状态</span>
+    LH264AnnexBFormatParserStartCodeStateFind1Zero = <span class="hljs-number">1</span>, <span class="hljs-comment">/// 匹配到一个 0</span>
+    LH264AnnexBFormatParserStartCodeStateFind2Zero = <span class="hljs-number">2</span>, <span class="hljs-comment">/// 匹配到两个 0</span>
+    LH264AnnexBFormatParserStartCodeStateFindMoreThan2Zero = <span class="hljs-number">3</span>, <span class="hljs-comment">/// 匹配到超过两个 0</span>
+    LH264AnnexBFormatParserStartCodeStateFind2ZeroAnd1One = <span class="hljs-number">4</span>, <span class="hljs-comment">/// 匹配到 0x00 00 01</span>
+    LH264AnnexBFormatParserStartCodeStateFindMoreThan2ZeroAnd1One = <span class="hljs-number">5</span> <span class="hljs-comment">/// 匹配到 0x00 00 00 01</span>
 };
 
 - (LHH264NALU *)nextRead
 {
-    if (self.parsingBuffer.length == 0) return nil;
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">self</span>.parsingBuffer.length == <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span>;
     
-    BOOL findStartCode = NO;
+    <span class="hljs-type">BOOL</span> findStartCode = <span class="hljs-literal">NO</span>;
     LH264AnnexBFormatParserStartCodeState startCodeState = LH264AnnexBFormatParserStartCodeStateInit;
     
-    uint8_t *ptr = (uint8_t *)[self.parsingBuffer bytes];
+    uint8_t *ptr = (uint8_t *)[<span class="hljs-keyword">self</span>.parsingBuffer bytes];
     
-    for (; _position &lt; self.parsingBuffer.length; ++_position) {
+    <span class="hljs-keyword">for</span> (; _position &lt; <span class="hljs-keyword">self</span>.parsingBuffer.length; ++_position) {
         uint8_t byte = *(ptr + _position);
         
-        if (startCodeState == LH264AnnexBFormatParserStartCodeStateInit) {
-            if (byte == 0) {
+        <span class="hljs-keyword">if</span> (startCodeState == LH264AnnexBFormatParserStartCodeStateInit) {
+            <span class="hljs-keyword">if</span> (byte == <span class="hljs-number">0</span>) {
                 startCodeState = LH264AnnexBFormatParserStartCodeStateFind1Zero;
             }
-        } else if (startCodeState == LH264AnnexBFormatParserStartCodeStateFind1Zero) {
-            if (byte == 0) {
+        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (startCodeState == LH264AnnexBFormatParserStartCodeStateFind1Zero) {
+            <span class="hljs-keyword">if</span> (byte == <span class="hljs-number">0</span>) {
                 startCodeState = LH264AnnexBFormatParserStartCodeStateFind2Zero;
-            } else {
+            } <span class="hljs-keyword">else</span> {
                 startCodeState = LH264AnnexBFormatParserStartCodeStateInit;
             }
-        } else if (startCodeState == LH264AnnexBFormatParserStartCodeStateFind2Zero) {
-            if (byte == 0) {
+        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (startCodeState == LH264AnnexBFormatParserStartCodeStateFind2Zero) {
+            <span class="hljs-keyword">if</span> (byte == <span class="hljs-number">0</span>) {
                 startCodeState = LH264AnnexBFormatParserStartCodeStateFindMoreThan2Zero;
-            } else if (byte == 1) {
+            } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (byte == <span class="hljs-number">1</span>) {
                 startCodeState = LH264AnnexBFormatParserStartCodeStateFind2ZeroAnd1One;
-            } else {
+            } <span class="hljs-keyword">else</span> {
                 startCodeState = LH264AnnexBFormatParserStartCodeStateInit;
             }
-        } else if (startCodeState == LH264AnnexBFormatParserStartCodeStateFindMoreThan2Zero) {
-            if (byte == 0) {
-                // 太多0了处理不了啊
-            } else if (byte == 1) {
+        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (startCodeState == LH264AnnexBFormatParserStartCodeStateFindMoreThan2Zero) {
+            <span class="hljs-keyword">if</span> (byte == <span class="hljs-number">0</span>) {
+                <span class="hljs-comment">// 太多0了处理不了啊</span>
+            } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (byte == <span class="hljs-number">1</span>) {
                 startCodeState = LH264AnnexBFormatParserStartCodeStateFindMoreThan2ZeroAnd1One;
-            } else {
+            } <span class="hljs-keyword">else</span> {
                 startCodeState = LH264AnnexBFormatParserStartCodeStateInit;
             }
-        } else if (startCodeState == LH264AnnexBFormatParserStartCodeStateFindMoreThan2ZeroAnd1One || startCodeState == LH264AnnexBFormatParserStartCodeStateFind2ZeroAnd1One) {
-            if (_isFirstStartCode) {
-                _isFirstStartCode = NO;
+        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (startCodeState == LH264AnnexBFormatParserStartCodeStateFindMoreThan2ZeroAnd1One || startCodeState == LH264AnnexBFormatParserStartCodeStateFind2ZeroAnd1One) {
+            <span class="hljs-keyword">if</span> (_isFirstStartCode) {
+                _isFirstStartCode = <span class="hljs-literal">NO</span>;
                 startCodeState = LH264AnnexBFormatParserStartCodeStateInit;
                 _nextFramePosition = _position;
-                continue;
+                <span class="hljs-keyword">continue</span>;
             }
-            findStartCode = YES;
-            break;
-        } else {
-            /// 天涯海角
+            findStartCode = <span class="hljs-literal">YES</span>;
+            <span class="hljs-keyword">break</span>;
+        } <span class="hljs-keyword">else</span> {
+            <span class="hljs-comment">/// 天涯海角</span>
         }
     }
     
-    /// 分割出数据块
-    if (findStartCode) {
-        if (startCodeState == LH264AnnexBFormatParserStartCodeStateFindMoreThan2ZeroAnd1One &amp;&amp; _position - _nextFramePosition &gt; 4) {
-            /// 00 00 00 01
-            NSData *payloadData = [self.parsingBuffer subdataWithRange:NSMakeRange(_nextFramePosition, _position - _nextFramePosition)];
-            NSData *outputData = [payloadData subdataWithRange:NSMakeRange(0, payloadData.length - 4)];
-            NSLog(@&quot;outputData: %@&quot;, outputData);
+    <span class="hljs-comment">/// 分割出数据块</span>
+    <span class="hljs-keyword">if</span> (findStartCode) {
+        <span class="hljs-keyword">if</span> (startCodeState == LH264AnnexBFormatParserStartCodeStateFindMoreThan2ZeroAnd1One &amp;&amp; _position - _nextFramePosition &gt; <span class="hljs-number">4</span>) {
+            <span class="hljs-comment">/// 00 00 00 01</span>
+            <span class="hljs-built_in">NSData</span> *payloadData = [<span class="hljs-keyword">self</span>.parsingBuffer subdataWithRange:<span class="hljs-built_in">NSMakeRange</span>(_nextFramePosition, _position - _nextFramePosition)];
+            <span class="hljs-built_in">NSData</span> *outputData = [payloadData subdataWithRange:<span class="hljs-built_in">NSMakeRange</span>(<span class="hljs-number">0</span>, payloadData.length - <span class="hljs-number">4</span>)];
+            <span class="hljs-built_in">NSLog</span>(<span class="hljs-string">@&quot;outputData: %@&quot;</span>, outputData);
             
             LHH264NALU *nalu = [[LHH264NALU alloc] initWithData:outputData formatType:LHH264NALUFormatTypeAnnexB];
-            findStartCode = NO;
+            findStartCode = <span class="hljs-literal">NO</span>;
             startCodeState = LH264AnnexBFormatParserStartCodeStateInit;
             _nextFramePosition = _position;
-            [self dropOldData];
-            return nalu;
-        } else if (startCodeState == LH264AnnexBFormatParserStartCodeStateFind2ZeroAnd1One &amp;&amp; _position - _nextFramePosition &gt; 3) {
-            // 00 00 01
-            if (_position - _nextFramePosition &gt; 3) {
-                NSData *payloadData = [self.parsingBuffer subdataWithRange:NSMakeRange(_nextFramePosition, _position - _nextFramePosition)];
-                NSData *outputData = [payloadData subdataWithRange:NSMakeRange(0, payloadData.length - 3)];
-                NSLog(@&quot;outputData: %@&quot;, outputData);
+            [<span class="hljs-keyword">self</span> dropOldData];
+            <span class="hljs-keyword">return</span> nalu;
+        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (startCodeState == LH264AnnexBFormatParserStartCodeStateFind2ZeroAnd1One &amp;&amp; _position - _nextFramePosition &gt; <span class="hljs-number">3</span>) {
+            <span class="hljs-comment">// 00 00 01</span>
+            <span class="hljs-keyword">if</span> (_position - _nextFramePosition &gt; <span class="hljs-number">3</span>) {
+                <span class="hljs-built_in">NSData</span> *payloadData = [<span class="hljs-keyword">self</span>.parsingBuffer subdataWithRange:<span class="hljs-built_in">NSMakeRange</span>(_nextFramePosition, _position - _nextFramePosition)];
+                <span class="hljs-built_in">NSData</span> *outputData = [payloadData subdataWithRange:<span class="hljs-built_in">NSMakeRange</span>(<span class="hljs-number">0</span>, payloadData.length - <span class="hljs-number">3</span>)];
+                <span class="hljs-built_in">NSLog</span>(<span class="hljs-string">@&quot;outputData: %@&quot;</span>, outputData);
                 
                 LHH264NALU *nalu = [[LHH264NALU alloc] initWithData:outputData formatType:LHH264NALUFormatTypeAnnexB];
-                findStartCode = NO;
+                findStartCode = <span class="hljs-literal">NO</span>;
                 startCodeState = LH264AnnexBFormatParserStartCodeStateInit;
                 _nextFramePosition = _position;
-                [self dropOldData];
-                return nalu;
+                [<span class="hljs-keyword">self</span> dropOldData];
+                <span class="hljs-keyword">return</span> nalu;
             }
-        } else {
-            /// 那能怎么办呢
-            NSLog(@&quot;那能怎么办呢&quot;);
+        } <span class="hljs-keyword">else</span> {
+            <span class="hljs-comment">/// 那能怎么办呢</span>
+            <span class="hljs-built_in">NSLog</span>(<span class="hljs-string">@&quot;那能怎么办呢&quot;</span>);
         }
-    } else {
-        /// 那能怎么办呢
-        NSLog(@&quot;那能怎么办呢&quot;);
+    } <span class="hljs-keyword">else</span> {
+        <span class="hljs-comment">/// 那能怎么办呢</span>
+        <span class="hljs-built_in">NSLog</span>(<span class="hljs-string">@&quot;那能怎么办呢&quot;</span>);
     }
-    return nil;
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span>;
 }
 </code></pre>
 <h5 id="2根据解析出来的-sps-和-pps-数据创建-cmformatdescriptionref" tabindex="-1">2、根据解析出来的 sps 和 pps 数据创建 CMFormatDescriptionRef</h5>
-<pre><code class="language-Objective-C">const uint8_t *parameterSets[] = {
-    (const uint8_t *)[self.spsData bytes],
-    (const uint8_t *)[self.ppsData bytes],
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-keyword">const</span> uint8_t *parameterSets[] = {
+    (<span class="hljs-keyword">const</span> uint8_t *)[<span class="hljs-keyword">self</span>.spsData bytes],
+    (<span class="hljs-keyword">const</span> uint8_t *)[<span class="hljs-keyword">self</span>.ppsData bytes],
 };
     
 size_t parameterSetSizes[] = {
-    self.spsData.length,
-    self.ppsData.length
+    <span class="hljs-keyword">self</span>.spsData.length,
+    <span class="hljs-keyword">self</span>.ppsData.length
 };
     
-CMFormatDescriptionRef format;
-OSStatus ret = CMVideoFormatDescriptionCreateFromH264ParameterSets(kCFAllocatorDefault,
-                                                                       2,
+<span class="hljs-built_in">CMFormatDescriptionRef</span> format;
+OSStatus ret = <span class="hljs-built_in">CMVideoFormatDescriptionCreateFromH264ParameterSets</span>(kCFAllocatorDefault,
+                                                                       <span class="hljs-number">2</span>,
                                                                        parameterSets,
                                                                        parameterSetSizes,
-                                                                       4,
+                                                                       <span class="hljs-number">4</span>,
                                                                        &amp;format);
-if (ret == noErr) {
-    if (_videoFormatDescription) {
-        CFRelease(_videoFormatDescription);
-        videoFormatDescription = NULL;
+<span class="hljs-keyword">if</span> (ret == noErr) {
+    <span class="hljs-keyword">if</span> (_videoFormatDescription) {
+        <span class="hljs-built_in">CFRelease</span>(_videoFormatDescription);
+        videoFormatDescription = <span class="hljs-literal">NULL</span>;
     }
     _videoFormatDescription = format;
 }
 </code></pre>
 <h5 id="3将编码数据封装成-cmsamplebuffer" tabindex="-1">3、将编码数据封装成 CMSampleBuffer</h5>
-<pre><code class="language-Objective-C">CMBlockBufferRef blockBuffer = nil;
-OSStatus ret = CMBlockBufferCreateWithMemoryBlock(kCFAllocatorDefault,
-                                                      (void *)data.bytes,
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-built_in">CMBlockBufferRef</span> blockBuffer = <span class="hljs-literal">nil</span>;
+OSStatus ret = <span class="hljs-built_in">CMBlockBufferCreateWithMemoryBlock</span>(kCFAllocatorDefault,
+                                                      (<span class="hljs-type">void</span> *)data.bytes,
                                                       data.length,
                                                       kCFAllocatorNull,
-                                                      NULL,
-                                                      0,
+                                                      <span class="hljs-literal">NULL</span>,
+                                                      <span class="hljs-number">0</span>,
                                                       data.length,
-                                                      0,
+                                                      <span class="hljs-number">0</span>,
                                                       &amp;blockBuffer);
-if (ret != noErr) {
-    // skip this tag
-    return nil;
+<span class="hljs-keyword">if</span> (ret != noErr) {
+    <span class="hljs-comment">// skip this tag</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span>;
 }
 
-CMSampleBufferRef sampleBuffer = nil;
-size_t blockDataSizeArray[1] = {CMBlockBufferGetDataLength(blockBuffer)};
-OSStatus ret = CMSampleBufferCreateReady(kCFAllocatorDefault,
+<span class="hljs-built_in">CMSampleBufferRef</span> sampleBuffer = <span class="hljs-literal">nil</span>;
+size_t blockDataSizeArray[<span class="hljs-number">1</span>] = {<span class="hljs-built_in">CMBlockBufferGetDataLength</span>(blockBuffer)};
+OSStatus ret = <span class="hljs-built_in">CMSampleBufferCreateReady</span>(kCFAllocatorDefault,
                                     blockBuffer,
                                     description,
-                                    1,
-                                    0,
-                                    nil,
-                                    1,
+                                    <span class="hljs-number">1</span>,
+                                    <span class="hljs-number">0</span>,
+                                    <span class="hljs-literal">nil</span>,
+                                    <span class="hljs-number">1</span>,
                                     blockDataSizeArray,
                                     &amp;sampleBuffer);
 </code></pre>
 <h5 id="4创建解码器" tabindex="-1">4、创建解码器</h5>
-<pre><code class="language-Objective-C">VTDecompressionOutputCallbackRecord callbackRecord;
-callbackRecord.decompressionOutputRefCon = (__bridge void * _Nullable)(self);
+<pre class="hljs codehilite language-Objective-C"><code>VTDecompressionOutputCallbackRecord callbackRecord;
+callbackRecord.decompressionOutputRefCon = (__bridge <span class="hljs-type">void</span> * _Nullable)(<span class="hljs-keyword">self</span>);
 callbackRecord.decompressionOutputCallback = decompressionOutputCallback;
     
-/// 视频帧序列解压的会话
+<span class="hljs-comment">/// 视频帧序列解压的会话</span>
 VTDecompressionSessionRef _decompressionSession;
-CFDictionaryRef attributes = (__bridge CFDictionaryRef)@{
-        (NSString *)kCVPixelBufferPixelFormatTypeKey: @(kCVPixelFormatType_32BGRA)};
+<span class="hljs-built_in">CFDictionaryRef</span> attributes = (__bridge <span class="hljs-built_in">CFDictionaryRef</span>)@{
+        (<span class="hljs-built_in">NSString</span> *)kCVPixelBufferPixelFormatTypeKey: @(kCVPixelFormatType_32BGRA)};
 OSStatus ret = VTDecompressionSessionCreate(kCFAllocatorDefault,
                                                 _formatDescription,
-                                                nil,
+                                                <span class="hljs-literal">nil</span>,
                                                 attributes,
                                                 &amp;callbackRecord,
                                                 &amp;_decompressionSession);
 </code></pre>
 <h5 id="5解码" tabindex="-1">5、解码</h5>
-<pre><code class="language-Objective-C">VTDecodeFrameFlags flags = 0;
-VTDecodeInfoFlags flagOut = 0;
-VTDecompressionSessionDecodeFrame(_decompressionSession, sampleBuffer, flags, nil, &amp;flagOut);
+<pre class="hljs codehilite language-Objective-C"><code>VTDecodeFrameFlags flags = <span class="hljs-number">0</span><span class="hljs-comment">;</span>
+VTDecodeInfoFlags flagOut = <span class="hljs-number">0</span><span class="hljs-comment">;</span>
+VTDecompressionSessionDecodeFrame(<span class="hljs-name">_decompressionSession</span>, sampleBuffer, flags, <span class="hljs-literal">nil</span>, <span class="hljs-symbol">&amp;flagOut</span>)<span class="hljs-comment">;</span>
 </code></pre>
 <h5 id="6解码输出" tabindex="-1">6、解码输出</h5>
-<pre><code class="language-Objective-C">static void decompressionOutputCallback(void *decompressionOutputRefCon,
-                                        void *sourceFrameRefCon,
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-keyword">static</span> <span class="hljs-type">void</span> decompressionOutputCallback(<span class="hljs-type">void</span> *decompressionOutputRefCon,
+                                        <span class="hljs-type">void</span> *sourceFrameRefCon,
                                         OSStatus status,
                                         VTDecodeInfoFlags infoFlags,
                                         CVImageBufferRef imageBuffer,
-                                        CMTime presentationTimeStamp,
-                                        CMTime presentationDuration)
+                                        <span class="hljs-built_in">CMTime</span> presentationTimeStamp,
+                                        <span class="hljs-built_in">CMTime</span> presentationDuration)
 {
     HardwareVideoDecodeWorker *decoder = (__bridge HardwareVideoDecodeWorker *)decompressionOutputRefCon;
-    if (decoder == nil) return;
+    <span class="hljs-keyword">if</span> (decoder == <span class="hljs-literal">nil</span>) <span class="hljs-keyword">return</span>;
     [decoder decodeSessionDidOuputWithStatus:status infoFlags:infoFlags imageBuffer:imageBuffer presentationTimeStamp:presentationTimeStamp duration:presentationDuration];
 }
 
-- (void)decodeSessionDidOuputWithStatus:(OSStatus)status
+- (<span class="hljs-type">void</span>)decodeSessionDidOuputWithStatus:(OSStatus)status
                               infoFlags:(VTDecodeInfoFlags)infoFlags
-                            imageBuffer:(nullable CVImageBufferRef)imageBuffer
-                  presentationTimeStamp:(CMTime)presentationTimeStamp
-                               duration:(CMTime)duration
+                            imageBuffer:(<span class="hljs-keyword">nullable</span> CVImageBufferRef)imageBuffer
+                  presentationTimeStamp:(<span class="hljs-built_in">CMTime</span>)presentationTimeStamp
+                               duration:(<span class="hljs-built_in">CMTime</span>)duration
 {
-    if (status != noErr || imageBuffer == nil) {
-        return;
+    <span class="hljs-keyword">if</span> (status != noErr || imageBuffer == <span class="hljs-literal">nil</span>) {
+        <span class="hljs-keyword">return</span>;
     }
     
     OSStatus ret;
     
-    CMSampleTimingInfo timingInfo;
+    <span class="hljs-built_in">CMSampleTimingInfo</span> timingInfo;
     timingInfo.duration = duration;
     timingInfo.presentationTimeStamp = presentationTimeStamp;
     timingInfo.decodeTimeStamp = kCMTimeInvalid;
     
-    CMVideoFormatDescriptionRef videoFormatDescription = NULL;
-    ret = CMVideoFormatDescriptionCreateForImageBuffer(kCFAllocatorDefault,
+    <span class="hljs-built_in">CMVideoFormatDescriptionRef</span> videoFormatDescription = <span class="hljs-literal">NULL</span>;
+    ret = <span class="hljs-built_in">CMVideoFormatDescriptionCreateForImageBuffer</span>(kCFAllocatorDefault,
                                                        imageBuffer,
                                                        &amp;videoFormatDescription);
-    if (ret != noErr) {
-        return;
+    <span class="hljs-keyword">if</span> (ret != noErr) {
+        <span class="hljs-keyword">return</span>;
     }
     
-    CMSampleBufferRef sampleBuffer;
-    ret = CMSampleBufferCreateForImageBuffer(kCFAllocatorDefault,
+    <span class="hljs-built_in">CMSampleBufferRef</span> sampleBuffer;
+    ret = <span class="hljs-built_in">CMSampleBufferCreateForImageBuffer</span>(kCFAllocatorDefault,
                                              imageBuffer,
-                                             true,
-                                             nil,
-                                             nil,
+                                             <span class="hljs-literal">true</span>,
+                                             <span class="hljs-literal">nil</span>,
+                                             <span class="hljs-literal">nil</span>,
                                              videoFormatDescription,
                                              &amp;timingInfo,
                                              &amp;sampleBuffer);
-    CFRelease(videoFormatDescription);
+    <span class="hljs-built_in">CFRelease</span>(videoFormatDescription);
     
-    if (ret != noErr) {
-        return;
+    <span class="hljs-keyword">if</span> (ret != noErr) {
+        <span class="hljs-keyword">return</span>;
     }
     
-    if (sampleBuffer == nil) {
-        return;
+    <span class="hljs-keyword">if</span> (sampleBuffer == <span class="hljs-literal">nil</span>) {
+        <span class="hljs-keyword">return</span>;
     }
     
-    if (self.delegate &amp;&amp; [self.delegate respondsToSelector:@selector(videoDecoder:decodeSampleBuffer:)]) {
-        [self.delegate videoDecoder:self decodeSampleBuffer:sampleBuffer];
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">self</span>.delegate &amp;&amp; [<span class="hljs-keyword">self</span>.delegate respondsToSelector:<span class="hljs-keyword">@selector</span>(videoDecoder:decodeSampleBuffer:)]) {
+        [<span class="hljs-keyword">self</span>.delegate videoDecoder:<span class="hljs-keyword">self</span> decodeSampleBuffer:sampleBuffer];
     }
 }
 </code></pre>

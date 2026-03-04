@@ -2,81 +2,81 @@
 <!-- more -->
 <h3 id="augraph-构建" tabindex="-1">AUGraph 构建</h3>
 <h4 id="1创建-augraph-实例" tabindex="-1">1.创建 AUGraph 实例</h4>
-<pre><code class="language-Objective-C">AUGraph audioGraph;
-NewAUGraph(&amp;audioGraph);
+<pre class="hljs codehilite language-Objective-C"><code>AUGraph audioGraph;
+<span class="hljs-built_in">NewAUGraph</span>(&amp;audioGraph);
 </code></pre>
 <h4 id="2创建并添加-aunode-节点" tabindex="-1">2.创建并添加 AUNode 节点</h4>
-<pre><code class="language-Objective-C">/// IO 播放单元
-- (AudioComponentDescription)audioUnitDescription
-{
-    AudioComponentDescription outputUnitDescription;
-    bzero(&amp;outputUnitDescription, sizeof(AudioComponentDescription));
-    outputUnitDescription.componentType = kAudioUnitType_Output;
-    outputUnitDescription.componentSubType = kAudioUnitSubType_RemoteIO;
-    outputUnitDescription.componentManufacturer = kAudioUnitManufacturer_Apple;
-    outputUnitDescription.componentFlags = 0;
-    outputUnitDescription.componentFlagsMask = 0;
-    return outputUnitDescription;
-}
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-comment">/// IO 播放单元</span>
+- (AudioComponentDescription)<span class="hljs-title class_">audioUnitDescription</span>
+<span class="hljs-punctuation">{</span>
+    AudioComponentDescription outputUnitD<span class="hljs-attr">escription</span><span class="hljs-punctuation">;</span>
+    bzero(<span class="hljs-variable">&amp;</span>outputUnitDescription, sizeof(AudioComponentDescription))<span class="hljs-punctuation">;</span>
+    outputUnitDescription.componentT<span class="hljs-attr">ype</span> <span class="hljs-operator">=</span> kAudioUnitType_O<span class="hljs-attr">utput</span><span class="hljs-punctuation">;</span>
+    outputUnitDescription.componentSubT<span class="hljs-attr">ype</span> <span class="hljs-operator">=</span> kAudioUnitSubType_RemoteIO<span class="hljs-punctuation">;</span>
+    outputUnitDescription.componentM<span class="hljs-attr">anufacturer</span> <span class="hljs-operator">=</span> kAudioUnitManufacturer_A<span class="hljs-attr">pple</span><span class="hljs-punctuation">;</span>
+    outputUnitDescription.componentF<span class="hljs-attr">lags</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span><span class="hljs-punctuation">;</span>
+    outputUnitDescription.componentFlagsM<span class="hljs-attr">ask</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span><span class="hljs-punctuation">;</span>
+    return outputUnitD<span class="hljs-attr">escription</span><span class="hljs-punctuation">;</span>
+<span class="hljs-punctuation">}</span>
 
-/// 混合 播放单元
-- (AudioComponentDescription)mixUnitDescription
-{
-    AudioComponentDescription mixerUnitDescription;
-    bzero(&amp;mixerUnitDescription, sizeof(AudioComponentDescription));
-    mixerUnitDescription.componentType = kAudioUnitType_Mixer;
-    mixerUnitDescription.componentSubType = kAudioUnitSubType_MultiChannelMixer;
-    mixerUnitDescription.componentManufacturer = kAudioUnitManufacturer_Apple;
-    mixerUnitDescription.componentFlags = 0;
-    mixerUnitDescription.componentFlagsMask = 0;
-    return mixerUnitDescription;
-}
+<span class="hljs-comment">/// 混合 播放单元</span>
+- (AudioComponentDescription)<span class="hljs-title class_">mixUnitDescription</span>
+<span class="hljs-punctuation">{</span>
+    AudioComponentDescription mixerUnitD<span class="hljs-attr">escription</span><span class="hljs-punctuation">;</span>
+    bzero(<span class="hljs-variable">&amp;</span>mixerUnitDescription, sizeof(AudioComponentDescription))<span class="hljs-punctuation">;</span>
+    mixerUnitDescription.componentT<span class="hljs-attr">ype</span> <span class="hljs-operator">=</span> kAudioUnitType_M<span class="hljs-attr">ixer</span><span class="hljs-punctuation">;</span>
+    mixerUnitDescription.componentSubT<span class="hljs-attr">ype</span> <span class="hljs-operator">=</span> kAudioUnitSubType_MultiChannelM<span class="hljs-attr">ixer</span><span class="hljs-punctuation">;</span>
+    mixerUnitDescription.componentM<span class="hljs-attr">anufacturer</span> <span class="hljs-operator">=</span> kAudioUnitManufacturer_A<span class="hljs-attr">pple</span><span class="hljs-punctuation">;</span>
+    mixerUnitDescription.componentF<span class="hljs-attr">lags</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span><span class="hljs-punctuation">;</span>
+    mixerUnitDescription.componentFlagsM<span class="hljs-attr">ask</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span><span class="hljs-punctuation">;</span>
+    return mixerUnitD<span class="hljs-attr">escription</span><span class="hljs-punctuation">;</span>
+<span class="hljs-punctuation">}</span>
 
-AUNode audioNode;
-AudioComponentDescription audioUnitDescription = [self audioUnitDescription];
-AUGraphAddNode(audioGraph, &amp;audioUnitDescription, &amp;audioNode);
+AUNode audioN<span class="hljs-attr">ode</span><span class="hljs-punctuation">;</span>
+AudioComponentDescription audioUnitD<span class="hljs-attr">escription</span> <span class="hljs-operator">=</span> [self audioUnitDescription]<span class="hljs-punctuation">;</span>
+AUGraphAddNode(audioGraph, <span class="hljs-variable">&amp;</span>audioUnitDescription, <span class="hljs-variable">&amp;</span>audioNode)<span class="hljs-punctuation">;</span>
 
-AUNode mixNode;
-AudioComponentDescription mixUnitDescription = [self mixUnitDescription];
-AUGraphAddNode(audioGraph, &amp;mixUnitDescription, &amp;mixNode);
+AUNode mixN<span class="hljs-attr">ode</span><span class="hljs-punctuation">;</span>
+AudioComponentDescription mixUnitD<span class="hljs-attr">escription</span> <span class="hljs-operator">=</span> [self mixUnitDescription]<span class="hljs-punctuation">;</span>
+AUGraphAddNode(audioGraph, <span class="hljs-variable">&amp;</span>mixUnitDescription, <span class="hljs-variable">&amp;</span>mixNode)<span class="hljs-punctuation">;</span>
 </code></pre>
 <h4 id="3打开-augraph" tabindex="-1">3.打开 AUGraph</h4>
-<pre><code class="language-Objective-C">AUGraphOpen(audioGraph)
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-function"><span class="hljs-title">AUGraphOpen</span><span class="hljs-params">(audioGraph)</span></span>
 </code></pre>
 <h4 id="4初始化控制单元" tabindex="-1">4.初始化控制单元</h4>
-<pre><code class="language-Objective-C">AudioUnit audioUnit;
+<pre class="hljs codehilite language-Objective-C"><code>AudioUnit audioUnit;
 AudioUnit mixUnit;
-AUGraphNodeInfo(audioGraph, audioNode, audioUnitDescription, audioUnit);
-AUGraphNodeInfo(audioGraph, mixNode, mixUnitDescription, mixUnit);
+<span class="hljs-built_in">AUGraphNodeInfo</span>(audioGraph, audioNode, audioUnitDescription, audioUnit);
+<span class="hljs-built_in">AUGraphNodeInfo</span>(audioGraph, mixNode, mixUnitDescription, mixUnit);
 </code></pre>
 <h4 id="5aunode-节点连接" tabindex="-1">5.AUNode 节点连接</h4>
-<pre><code>AUGraphConnectNodeInput(audioGraph, mixNode, 0, audioNode, 0);
+<pre class="hljs codehilite"><code><span class="hljs-attribute">AUGraphConnectNodeInput</span>(audioGraph, mixNode, <span class="hljs-number">0</span>, audioNode, <span class="hljs-number">0</span>);
 </code></pre>
 <h4 id="6设定输入源" tabindex="-1">6.设定输入源</h4>
-<pre><code class="language-Objective-C">OSStatus status = noErr;
-/// 设置音频输出格式描述
+<pre class="hljs codehilite language-Objective-C"><code>OSStatus status = noErr;
+<span class="hljs-comment">/// 设置音频输出格式描述</span>
 AudioStreamBasicDescription destFormat = basicDescription;
-status = AudioUnitSetProperty(mixUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, 0, &amp;destFormat, sizeof(destFormat));
-status = AudioUnitSetProperty(mixUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, &amp;destFormat, sizeof(destFormat));
+status = AudioUnitSetProperty(mixUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, <span class="hljs-number">0</span>, &amp;destFormat, <span class="hljs-keyword">sizeof</span>(destFormat));
+status = AudioUnitSetProperty(mixUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, <span class="hljs-number">0</span>, &amp;destFormat, <span class="hljs-keyword">sizeof</span>(destFormat));
 
-/// 单元输出设置
-UInt32 maxFPS = 4096;
-status = AudioUnitSetProperty(mixUnit, kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global, 0,&amp;maxFPS, sizeof(maxFPS));
-status = AudioUnitAddPropertyListener(mixUnit, kAudioOutputUnitProperty_IsRunning, AudioUnitPropertyListenerProc, (__bridge void *)(self));
+<span class="hljs-comment">/// 单元输出设置</span>
+<span class="hljs-built_in">UInt32</span> maxFPS = <span class="hljs-number">4096</span>;
+status = AudioUnitSetProperty(mixUnit, kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global, <span class="hljs-number">0</span>,&amp;maxFPS, <span class="hljs-keyword">sizeof</span>(maxFPS));
+status = AudioUnitAddPropertyListener(mixUnit, kAudioOutputUnitProperty_IsRunning, AudioUnitPropertyListenerProc, (__bridge <span class="hljs-type">void</span> *)(<span class="hljs-keyword">self</span>));
 
-/// 渲染音频
+<span class="hljs-comment">/// 渲染音频</span>
 AURenderCallbackStruct callbackStruct;
-callbackStruct.inputProcRefCon = (__bridge void *)(self);
+callbackStruct.inputProcRefCon = (__bridge <span class="hljs-type">void</span> *)(<span class="hljs-keyword">self</span>);
 callbackStruct.inputProc = AURenderCallback;
-status = AUGraphSetNodeInputCallback(audioGraph, mixNode, 0, &amp;callbackStruct);
+status = AUGraphSetNodeInputCallback(audioGraph, mixNode, <span class="hljs-number">0</span>, &amp;callbackStruct);
 </code></pre>
 <h4 id="7初始化-augraph" tabindex="-1">7.初始化 AUGraph</h4>
-<pre><code class="language-Objective-C">AUGraphInitialize(audioGraph);
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-built_in">AUGraphInitialize</span>(audioGraph);
 </code></pre>
 <h3 id="augraph-播放" tabindex="-1">AUGraph 播放</h3>
 <h4 id="1audiounitpropertylistenerproc" tabindex="-1">1.AudioUnitPropertyListenerProc</h4>
-<pre><code class="language-Objective-C">void AudioUnitPropertyListenerProc(void *inRefCon, AudioUnit inUnit, AudioUnitPropertyID inID, AudioUnitScope inScope, AudioUnitElement inElement)
-{
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">AudioUnitPropertyListenerProc</span><span class="hljs-params">(<span class="hljs-type">void</span> *inRefCon, AudioUnit inUnit, AudioUnitPropertyID inID, AudioUnitScope inScope, AudioUnitElement inElement)</span>
+</span>{
     ...
 }
 </code></pre>
@@ -89,7 +89,7 @@ status = AUGraphSetNodeInputCallback(audioGraph, mixNode, 0, &amp;callbackStruct
 </ul>
 <p><strong>AudioUnitPropertyListenerProc</strong>是一个回调函数，用于在 Audio Unit 属性发生变化时接收通知。当注册了该回调函数后，当指定的音频单元属性发生更改时，系统会调用这个回调函数来通知应用程序。</p>
 <h4 id="2aurendercallback" tabindex="-1">2.AURenderCallback</h4>
-<pre><code class="language-Objective-C">static OSStatus AURenderCallback(void *userData, AudioUnitRenderActionFlags *ioActionFlags, const AudioTimeStamp *inTimeStamp, UInt32 inBusNumber, UInt32 inNumberFrames, AudioBufferList *ioData)
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-keyword">static</span> OSStatus AURenderCallback(<span class="hljs-type">void</span> *userData, AudioUnitRenderActionFlags *ioActionFlags, <span class="hljs-keyword">const</span> AudioTimeStamp *inTimeStamp, <span class="hljs-built_in">UInt32</span> inBusNumber, <span class="hljs-built_in">UInt32</span> inNumberFrames, AudioBufferList *ioData)
 {
     ...
 }
@@ -105,51 +105,51 @@ status = AUGraphSetNodeInputCallback(audioGraph, mixNode, 0, &amp;callbackStruct
 <p><strong>AURenderCallback</strong> 是音频渲染回调函数, 在此我们需要提供音频数据给 ioData 才能进行播放.</p>
 <h4 id="3提供音频数据给-iodata" tabindex="-1">3.提供音频数据给 ioData</h4>
 <p>首先我们需要使用 <strong>AudioFileStream</strong> 对音频数据流进行分离音频帧.</p>
-<pre><code class="language-Objective-C">AudioFileStreamParseBytes(_audioFileStreamID,(UInt32)[data length],[data bytes], 0);
-/// 输出分离的音频帧数据
-static void audio_file_stream_packets_proc(void *inClientData,
-                                           UInt32 inNumberBytes,
-                                           UInt32 inNumberPackets,
-                                           const void *inInputData,
+<pre class="hljs codehilite language-Objective-C"><code>AudioFileStreamParseBytes(_audioFileStreamID,(<span class="hljs-built_in">UInt32</span>)[data length],[data bytes], <span class="hljs-number">0</span>);
+<span class="hljs-comment">/// 输出分离的音频帧数据</span>
+<span class="hljs-keyword">static</span> <span class="hljs-type">void</span> audio_file_stream_packets_proc(<span class="hljs-type">void</span> *inClientData,
+                                           <span class="hljs-built_in">UInt32</span> inNumberBytes,
+                                           <span class="hljs-built_in">UInt32</span> inNumberPackets,
+                                           <span class="hljs-keyword">const</span> <span class="hljs-type">void</span> *inInputData,
                                            AudioStreamPacketDescription    *inPacketDescriptions)
 {
-    /// inInputData 音频帧数据
-    // inNumberPackets 音频帧数量
-    // inPacketDescriptions 音频帧信息,包含数据字节起始位置和长度.
+    <span class="hljs-comment">/// inInputData 音频帧数据</span>
+    <span class="hljs-comment">// inNumberPackets 音频帧数量</span>
+    <span class="hljs-comment">// inPacketDescriptions 音频帧信息,包含数据字节起始位置和长度.</span>
     ...
 }
 </code></pre>
 <p>在得到音频帧后, 使用 <strong>AudioConverter</strong> 将音频帧从压缩格式转为 PCM 格式数据.</p>
-<pre><code class="language-Objective-C">AudioConverterFillComplexBuffer(_audioConverter, input_data_proc, (__bridge void *)(self), &amp;inNumberFrames, ioData, NULL);
+<pre class="hljs codehilite language-Objective-C"><code>AudioConverterFillComplexBuffer(_audioConverter, input_data_proc, (__bridge <span class="hljs-type">void</span> *)(<span class="hljs-keyword">self</span>), &amp;inNumberFrames, ioData, <span class="hljs-literal">NULL</span>);
 
-static OSStatus input_data_proc(AudioConverterRef inAudioConverter, UInt32 *ioNumberDataPackets, AudioBufferList *ioData, AudioStreamPacketDescription **outDataPacketDescription, void *inUserData)
+<span class="hljs-keyword">static</span> OSStatus input_data_proc(AudioConverterRef inAudioConverter, <span class="hljs-built_in">UInt32</span> *ioNumberDataPackets, AudioBufferList *ioData, AudioStreamPacketDescription **outDataPacketDescription, <span class="hljs-type">void</span> *inUserData)
 {
-    /// 伪代码
-    /// inInputData &lt;- audio_file_stream_packets_proc
-    /// inPacketDescriptions &lt;- audio_file_stream_packets_proc
-    ioData-&gt;mBuffers[0].mData = [inInputData bytes];
-    ioData-&gt;mBuffers[0].mDataByteSize = [inInputData length];
-    ioData-&gt;mBuffers[0].mNumberChannels = 1;
-    if (outDataPacketDescription != NULL) {
+    <span class="hljs-comment">/// 伪代码</span>
+    <span class="hljs-comment">/// inInputData &lt;- audio_file_stream_packets_proc</span>
+    <span class="hljs-comment">/// inPacketDescriptions &lt;- audio_file_stream_packets_proc</span>
+    ioData-&gt;mBuffers[<span class="hljs-number">0</span>].mData = [inInputData bytes];
+    ioData-&gt;mBuffers[<span class="hljs-number">0</span>].mDataByteSize = [inInputData length];
+    ioData-&gt;mBuffers[<span class="hljs-number">0</span>].mNumberChannels = <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">if</span> (outDataPacketDescription != <span class="hljs-literal">NULL</span>) {
         *outDataPacketDescription = inPacketDescriptions;
     }
-    return noErr;
+    <span class="hljs-keyword">return</span> noErr;
 }
 </code></pre>
 <h4 id="4开始播放" tabindex="-1">4.开始播放</h4>
-<pre><code class="language-Objective-C">AUGraphStart(audioGraph);
-AudioOutputUnitStart(audioUnit);
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-built_in">AUGraphStart</span>(audioGraph);
+<span class="hljs-built_in">AudioOutputUnitStart</span>(audioUnit);
 </code></pre>
 <h4 id="5停止播放" tabindex="-1">5.停止播放</h4>
-<pre><code class="language-Objective-C">OSStatus status = AUGraphIsRunning(audioGraph, &amp;isRunning);
-if (status != noErr) {
-    return;
+<pre class="hljs codehilite language-Objective-C"><code>OSStatus <span class="hljs-keyword">status</span> = AUGraphIsRunning(audioGraph, &amp;isRunning);
+<span class="hljs-keyword">if</span> (<span class="hljs-keyword">status</span> <span class="hljs-comment">!= noErr) {</span>
+    <span class="hljs-keyword">return</span>;
 }
     
-if (isRunning) {
-    status = AUGraphStop(audioGraph);
-    if (status != noErr) {
-        return;
+<span class="hljs-keyword">if</span> (isRunning) {
+    <span class="hljs-keyword">status</span> = AUGraphStop(audioGraph);
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">status</span> <span class="hljs-comment">!= noErr) {</span>
+        <span class="hljs-keyword">return</span>;
     }
 }
 </code></pre>

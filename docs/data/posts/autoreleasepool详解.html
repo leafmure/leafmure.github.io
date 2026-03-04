@@ -4,126 +4,126 @@
 <h3 id="二autoreleasepool-是什么" tabindex="-1">二、AutoreleasePool 是什么？</h3>
 <h4 id="21-创建自动释放池" tabindex="-1">2.1  创建自动释放池</h4>
 <p>在 MRC 下，我们可以用 NSAutoreleasePool 或者@autoreleasepool 去手动创建一个 AutoreleasePool</p>
-<pre><code class="language-Objective-C">NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-Class *obj = [[Class alloc] init];
+<pre class="hljs codehilite language-Objective-C"><code>NSAutoreleasePool *pool = <span class="hljs-comment">[<span class="hljs-comment">[NSAutoreleasePool alloc]</span> init]</span>;
+Class *obj = <span class="hljs-comment">[<span class="hljs-comment">[Class alloc]</span> init]</span>;
 /// 加入 pool
-[obj autorelease];
-[pool release]
+<span class="hljs-comment">[obj autorelease]</span>;
+<span class="hljs-comment">[pool release]</span>
 </code></pre>
 <p>在 ARC 下，已经禁止使用 NSAutoreleasePool 类以及 retain、release、autorelease 等调用方法，只能通过 @autoreleasepool 创建自动释放池。</p>
-<pre><code class="language-Objective-C">@autoreleasepool {
-    /// 括号中，存在 autorelease 对象时，自动加入 pool 中。
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-variable">@autoreleasepool</span> {
+    <span class="hljs-comment">/// 括号中，存在 autorelease 对象时，自动加入 pool 中。</span>
 }
 </code></pre>
 <h4 id="22-autoreleasepool-源码分析" tabindex="-1">2.2  @autoreleasepool 源码分析</h4>
 <p>我们估计平时很少使用 @autoreleasepool 显式创建 AutoreleasePool，在工程的 Main 文件，倒是能看到 @autoreleasepool 使用，mian 函数如下：</p>
-<pre><code class="language-Objective-C">int main(int argc, const char * argv[]) {
-    @autoreleasepool {}
-    return 0;
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> * argv[])</span> </span>{
+    <span class="hljs-meta">@autoreleasepool</span> {}
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
 }
 </code></pre>
 <p>通过 Clang 命令将上述代码转换成 C++ 源码：</p>
-<pre><code class="language-Objective-C">/// -&gt; clang -rewrite-objc main.m
-/// -&gt; main.cpp
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-comment">/// -&gt; clang -rewrite-objc main.m</span>
+<span class="hljs-comment">/// -&gt; main.cpp</span>
 ......
 struct __AtAutoreleasePool {
-  __AtAutoreleasePool() {atautoreleasepoolobj = objc_autoreleasePoolPush();}
-  ~__AtAutoreleasePool() {objc_autoreleasePoolPop(atautoreleasepoolobj);}
-  void * atautoreleasepoolobj;
+  <span class="hljs-title function_">__AtAutoreleasePool</span>(<span class="hljs-params"></span>) {atautoreleasepoolobj = <span class="hljs-title function_">objc_autoreleasePoolPush</span>();}
+  ~<span class="hljs-title function_">__AtAutoreleasePool</span>(<span class="hljs-params"></span>) {<span class="hljs-title function_">objc_autoreleasePoolPop</span>(atautoreleasepoolobj);}
+  <span class="hljs-keyword">void</span> * atautoreleasepoolobj;
 };
 ......
-int main(int argc, const char * argv[]) {
-    /* @autoreleasepool */ 
+int <span class="hljs-title function_">main</span>(<span class="hljs-params">int argc, <span class="hljs-keyword">const</span> char * argv[]</span>) {
+    <span class="hljs-comment">/* @autoreleasepool */</span> 
     { __AtAutoreleasePool __autoreleasepool;  }
-    return 0;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
 }
 ......
 </code></pre>
 <p>我们可以看，@autoreleasepool 实际上是创建了一个  __AtAutoreleasePool 结构体对象，在创建__AtAutoreleasePool结构体时会在构造函数中调用objc_autoreleasePoolPush()函数，并返回一个atautoreleasepoolobj (POOL_BOUNDARY存放的内存地址，下面会讲到)。在释放__AtAutoreleasePool结构体时会在析构函数中调用objc_autoreleasePoolPop()函数，并将atautoreleasepoolobj传入。</p>
 <h4 id="23-autoreleasepoolpage" tabindex="-1">2.3  AutoreleasePoolPage</h4>
 <p>objc_autoreleasePoolPush() 和 objc_autoreleasePoolPop() 这两个函数做了什么呢，让我们去 objc4 源码 查看：</p>
-<pre><code class="language-Objective-C">/// -&gt; NSObject.mm
-void * objc_autoreleasePoolPush(void)
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-comment">/// -&gt; NSObject.mm</span>
+<span class="hljs-keyword">void</span> * <span class="hljs-title function_">objc_autoreleasePoolPush</span>(<span class="hljs-params"><span class="hljs-keyword">void</span></span>)
 {
-    return AutoreleasePoolPage::push();
+    <span class="hljs-keyword">return</span> <span class="hljs-title class_">AutoreleasePoolPage</span>::<span class="hljs-title function_">push</span>();
 }
 
-void objc_autoreleasePoolPop(void *ctxt)
+<span class="hljs-keyword">void</span> <span class="hljs-title function_">objc_autoreleasePoolPop</span>(<span class="hljs-params"><span class="hljs-keyword">void</span> *ctxt</span>)
 {
-    AutoreleasePoolPage::pop(ctxt);
+    <span class="hljs-title class_">AutoreleasePoolPage</span>::<span class="hljs-title function_">pop</span>(ctxt);
 }
 </code></pre>
 <p>从上述代码可以看出，objc_autoreleasePoolPush() 和 objc_autoreleasePoolPop() 内部是通过 AutoreleasePoolPage 去调用 push() 和 pop() 函数，AutoreleasePoolPage 明显是 @autoreleasepool 基础实现类。AutoreleasePoolPage 是如何管理 autorelease 对象的呢？让我们来看一下 AutoreleasePoolPage 的实现结构：</p>
-<pre><code class="language-Objective-C">/// -&gt; NSObject.mm
-class AutoreleasePoolPage : private AutoreleasePoolPageData
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-comment">/// -&gt; NSObject.mm</span>
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">AutoreleasePoolPage</span> : <span class="hljs-keyword">private</span> AutoreleasePoolPageData
 {
-	friend struct thread_data_t;
+	<span class="hljs-keyword">friend</span> <span class="hljs-keyword">struct</span> <span class="hljs-title class_">thread_data_t</span>;
 
-public:
-	static size_t const SIZE =
-#if PROTECT_AUTORELEASEPOOL
-		PAGE_MAX_SIZE;  // must be multiple of vm page size
-#else
-		PAGE_MIN_SIZE;  // size and alignment, power of 2
-#endif
+<span class="hljs-keyword">public</span>:
+	<span class="hljs-type">static</span> <span class="hljs-type">size_t</span> <span class="hljs-type">const</span> SIZE =
+<span class="hljs-meta">#<span class="hljs-keyword">if</span> PROTECT_AUTORELEASEPOOL</span>
+		PAGE_MAX_SIZE;  <span class="hljs-comment">// must be multiple of vm page size</span>
+<span class="hljs-meta">#<span class="hljs-keyword">else</span></span>
+		PAGE_MIN_SIZE;  <span class="hljs-comment">// size and alignment, power of 2</span>
+<span class="hljs-meta">#<span class="hljs-keyword">endif</span></span>
     
-private:
-	static pthread_key_t const key = AUTORELEASE_POOL_KEY;
-	static uint8_t const SCRIBBLE = 0xA3;  // 0xA3A3A3A3 after releasing
-	static size_t const COUNT = SIZE / sizeof(id);
-    static size_t const MAX_FAULTS = 2;
+<span class="hljs-keyword">private</span>:
+	<span class="hljs-type">static</span> <span class="hljs-type">pthread_key_t</span> <span class="hljs-type">const</span> key = AUTORELEASE_POOL_KEY;
+	<span class="hljs-type">static</span> <span class="hljs-type">uint8_t</span> <span class="hljs-type">const</span> SCRIBBLE = <span class="hljs-number">0xA3</span>;  <span class="hljs-comment">// 0xA3A3A3A3 after releasing</span>
+	<span class="hljs-type">static</span> <span class="hljs-type">size_t</span> <span class="hljs-type">const</span> COUNT = SIZE / <span class="hljs-built_in">sizeof</span>(id);
+    <span class="hljs-type">static</span> <span class="hljs-type">size_t</span> <span class="hljs-type">const</span> MAX_FAULTS = <span class="hljs-number">2</span>;
 
-    // EMPTY_POOL_PLACEHOLDER is stored in TLS when exactly one pool is 
-    // pushed and it has never contained any objects. This saves memory 
-    // when the top level (i.e. libdispatch) pushes and pops pools but 
-    // never uses them.
-#   define EMPTY_POOL_PLACEHOLDER ((id*)1)
-#   define POOL_BOUNDARY nil
+    <span class="hljs-comment">// EMPTY_POOL_PLACEHOLDER is stored in TLS when exactly one pool is </span>
+    <span class="hljs-comment">// pushed and it has never contained any objects. This saves memory </span>
+    <span class="hljs-comment">// when the top level (i.e. libdispatch) pushes and pops pools but </span>
+    <span class="hljs-comment">// never uses them.</span>
+<span class="hljs-meta">#   <span class="hljs-keyword">define</span> EMPTY_POOL_PLACEHOLDER ((id*)1)</span>
+<span class="hljs-meta">#   <span class="hljs-keyword">define</span> POOL_BOUNDARY nil</span>
 ......
-    AutoreleasePoolPage(AutoreleasePoolPage *newParent) :
-		AutoreleasePoolPageData(begin(),
-								objc_thread_self(),
+    <span class="hljs-built_in">AutoreleasePoolPage</span>(AutoreleasePoolPage *newParent) :
+		<span class="hljs-built_in">AutoreleasePoolPageData</span>(<span class="hljs-built_in">begin</span>(),
+								<span class="hljs-built_in">objc_thread_self</span>(),
 						      newParent,
-								newParent ? 1+newParent-&gt;depth : 0,
-								newParent ? newParent-&gt;hiwat : 0)
+								newParent ? <span class="hljs-number">1</span>+newParent-&gt;depth : <span class="hljs-number">0</span>,
+								newParent ? newParent-&gt;hiwat : <span class="hljs-number">0</span>)
 {
-        if (objc::PageCountWarning != -1) {
-            checkTooMuchAutorelease();
+        <span class="hljs-keyword">if</span> (objc::PageCountWarning != <span class="hljs-number">-1</span>) {
+            <span class="hljs-built_in">checkTooMuchAutorelease</span>();
         }
 
 
-        if (parent) {
-            parent-&gt;check();
-            ASSERT(!parent-&gt;child);
-            parent-&gt;unprotect();
-            parent-&gt;child = this;
-            parent-&gt;protect();
+        <span class="hljs-keyword">if</span> (parent) {
+            parent-&gt;<span class="hljs-built_in">check</span>();
+            <span class="hljs-built_in">ASSERT</span>(!parent-&gt;child);
+            parent-&gt;<span class="hljs-built_in">unprotect</span>();
+            parent-&gt;child = <span class="hljs-keyword">this</span>;
+            parent-&gt;<span class="hljs-built_in">protect</span>();
         }
-        protect();
+        <span class="hljs-built_in">protect</span>();
     }
 ......
 }
 
 
-/// -&gt; NSObject-internal.h
-struct AutoreleasePoolPageData
+<span class="hljs-comment">/// -&gt; NSObject-internal.h</span>
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">AutoreleasePoolPageData</span>
 {
-#if SUPPORT_AUTORELEASEPOOL_DEDUP_PTRS
-    struct AutoreleasePoolEntry {
-        uintptr_t ptr: 48;
-        uintptr_t count: 16;
-        static const uintptr_t maxCount = 65535; // 2^16 - 1
+<span class="hljs-meta">#<span class="hljs-keyword">if</span> SUPPORT_AUTORELEASEPOOL_DEDUP_PTRS</span>
+    <span class="hljs-keyword">struct</span> <span class="hljs-title class_">AutoreleasePoolEntry</span> {
+        <span class="hljs-type">uintptr_t</span> ptr: <span class="hljs-number">48</span>;
+        <span class="hljs-type">uintptr_t</span> count: <span class="hljs-number">16</span>;
+        <span class="hljs-type">static</span> <span class="hljs-type">const</span> <span class="hljs-type">uintptr_t</span> maxCount = <span class="hljs-number">65535</span>; <span class="hljs-comment">// 2^16 - 1</span>
     };
-    static_assert((AutoreleasePoolEntry){ .ptr = MACH_VM_MAX_ADDRESS }.ptr == MACH_VM_MAX_ADDRESS, &quot;MACH_VM_MAX_ADDRESS doesn't fit into AutoreleasePoolEntry::ptr!&quot;);
-#endif
+    <span class="hljs-built_in">static_assert</span>((AutoreleasePoolEntry){ .ptr = MACH_VM_MAX_ADDRESS }.ptr == MACH_VM_MAX_ADDRESS, <span class="hljs-string">&quot;MACH_VM_MAX_ADDRESS doesn&#x27;t fit into AutoreleasePoolEntry::ptr!&quot;</span>);
+<span class="hljs-meta">#<span class="hljs-keyword">endif</span></span>
 
-	magic_t const magic;  // 用来校验 Page 的结构是否完整
-	__unsafe_unretained id *next;  // 指向下一个可存放 autorelease 对象地址的位置，初始化指向 begin()
-	pthread_t const thread;  // 指向当前线程
-	AutoreleasePoolPage * const parent;  // 指向父结点，首结点的 parent 为 nil
-	AutoreleasePoolPage *child;  // 指向子结点，尾结点的 child  为 nil
-	uint32_t const depth;  // Page 的深度，从 0 开始递增
-	uint32_t hiwat;
+	<span class="hljs-type">magic_t</span> <span class="hljs-type">const</span> magic;  <span class="hljs-comment">// 用来校验 Page 的结构是否完整</span>
+	__unsafe_unretained id *next;  <span class="hljs-comment">// 指向下一个可存放 autorelease 对象地址的位置，初始化指向 begin()</span>
+	<span class="hljs-type">pthread_t</span> <span class="hljs-type">const</span> thread;  <span class="hljs-comment">// 指向当前线程</span>
+	AutoreleasePoolPage * <span class="hljs-type">const</span> parent;  <span class="hljs-comment">// 指向父结点，首结点的 parent 为 nil</span>
+	AutoreleasePoolPage *child;  <span class="hljs-comment">// 指向子结点，尾结点的 child  为 nil</span>
+	<span class="hljs-type">uint32_t</span> <span class="hljs-type">const</span> depth;  <span class="hljs-comment">// Page 的深度，从 0 开始递增</span>
+	<span class="hljs-type">uint32_t</span> hiwat;
 ......
 };
 </code></pre>
@@ -135,114 +135,114 @@ struct AutoreleasePoolPageData
 <img src="https://destinmure.github.io/pic/postImage/AutoreleasePool%E8%AF%A6%E8%A7%A3/psb-01.png" alt="image"></li>
 </ul>
 <p>AutoreleasePoolPage 拥有 begin、end、empty、full 这些方法来描述 Page 的容量情况，实现代码如下：</p>
-<pre><code class="language-Objective-C">id * begin() {
-   /// Page自己的地址+Page对象的大小56个字节；
-   return (id *) ((uint8_t *)this+sizeof(*this));
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-function">id * <span class="hljs-title">begin</span><span class="hljs-params">()</span> </span>{
+   <span class="hljs-comment">/// Page自己的地址+Page对象的大小56个字节；</span>
+   <span class="hljs-keyword">return</span> (id *) ((<span class="hljs-type">uint8_t</span> *)<span class="hljs-keyword">this</span>+<span class="hljs-built_in">sizeof</span>(*<span class="hljs-keyword">this</span>));
 }
 
-id * end() {
-   /// Page自己的地址+4096个字节；
-   return (id *) ((uint8_t *)this+SIZE);
+<span class="hljs-function">id * <span class="hljs-title">end</span><span class="hljs-params">()</span> </span>{
+   <span class="hljs-comment">/// Page自己的地址+4096个字节；</span>
+   <span class="hljs-keyword">return</span> (id *) ((<span class="hljs-type">uint8_t</span> *)<span class="hljs-keyword">this</span>+SIZE);
 }
 
-bool empty() {
-   /// 判断Page是否为空的条件
-   return next == begin();
+<span class="hljs-function"><span class="hljs-type">bool</span> <span class="hljs-title">empty</span><span class="hljs-params">()</span> </span>{
+   <span class="hljs-comment">/// 判断Page是否为空的条件</span>
+   <span class="hljs-keyword">return</span> next == <span class="hljs-built_in">begin</span>();
 }
 
-bool full() { 
-   /// 判断Page是否已满的条件
-   return next == end();
+<span class="hljs-function"><span class="hljs-type">bool</span> <span class="hljs-title">full</span><span class="hljs-params">()</span> </span>{ 
+   <span class="hljs-comment">/// 判断Page是否已满的条件</span>
+   <span class="hljs-keyword">return</span> next == <span class="hljs-built_in">end</span>();
 }
 </code></pre>
 <h4 id="24-autoreleasepoolpage-的-push-和-pop" tabindex="-1">2.4  AutoreleasePoolPage 的 push() 和 pop()</h4>
 <h5 id="241-push" tabindex="-1">2.4.1  push()</h5>
 <p>AutoreleasePoolPage 是如何操纵 autorelease 对象的添加呢，让我们先看一下 push() 的源码实现：</p>
-<pre><code class="language-Objective-C">/// NSObject.mm
-static inline void *push() {
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-comment">/// NSObject.mm</span>
+<span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-keyword">inline</span> <span class="hljs-type">void</span> *<span class="hljs-title">push</span><span class="hljs-params">()</span> </span>{
    id *dest;
-   if (slowpath(DebugPoolAllocation)) {
-      // Each autorelease pool starts on a new pool page.
-      dest = autoreleaseNewPage(POOL_BOUNDARY);
-   } else {
-      dest = autoreleaseFast(POOL_BOUNDARY);
+   <span class="hljs-keyword">if</span> (<span class="hljs-built_in">slowpath</span>(DebugPoolAllocation)) {
+      <span class="hljs-comment">// Each autorelease pool starts on a new pool page.</span>
+      dest = <span class="hljs-built_in">autoreleaseNewPage</span>(POOL_BOUNDARY);
+   } <span class="hljs-keyword">else</span> {
+      dest = <span class="hljs-built_in">autoreleaseFast</span>(POOL_BOUNDARY);
    }
-   ASSERT(dest == EMPTY_POOL_PLACEHOLDER || *dest == POOL_BOUNDARY);
-   return dest;
+   <span class="hljs-built_in">ASSERT</span>(dest == EMPTY_POOL_PLACEHOLDER || *dest == POOL_BOUNDARY);
+   <span class="hljs-keyword">return</span> dest;
 }
 </code></pre>
 <p>当 AutoreleasePool 创建后，AutoreleasePoolPage 会调用 push() 方法加入 POOL_BOUNDARY 哨兵对象。push() 内部加入对象时，会判断是否 AutoreleasePoolPage 对象存在，没有的话，调用  autoreleaseNewPage() ，让我们看一下 autoreleaseNewPage 的实现：</p>
-<pre><code class="language-Objective-C">static __attribute__((noinline))
+<pre class="hljs codehilite language-Objective-C"><code>static __attribute__((noinline))
 id *autoreleaseNewPage(id obj)
 {
-   AutoreleasePoolPage *page = hotPage();
-   if (page) return autoreleaseFullPage(obj, page);
-   else return autoreleaseNoPage(obj);
+   AutoreleasePoolPage *<span class="hljs-built_in">page</span> = hotPage();
+   <span class="hljs-keyword">if</span> (<span class="hljs-built_in">page</span>) return autoreleaseFullPage(obj, <span class="hljs-built_in">page</span>);
+   <span class="hljs-keyword">else</span> return autoreleaseNoPage(obj);
 }
 
 static __attribute__((noinline))
-id *autoreleaseFullPage(id obj, AutoreleasePoolPage *page)
+id *autoreleaseFullPage(id obj, AutoreleasePoolPage *<span class="hljs-built_in">page</span>)
 {
-     // The hot page is full. 
-     // Step to the next non-full page, adding a new page if necessary.
-     // Then add the object to that page.
-     ASSERT(page == hotPage());
-     ASSERT(page-&gt;full()  ||  DebugPoolAllocation);
+     <span class="hljs-comment">// The hot page is full. </span>
+     <span class="hljs-comment">// Step to the next non-full page, adding a new page if necessary.</span>
+     <span class="hljs-comment">// Then add the object to that page.</span>
+     ASSERT(<span class="hljs-built_in">page</span> == hotPage());
+     ASSERT(<span class="hljs-function"><span class="hljs-title">page</span>-&gt;</span>full()  ||  DebugPoolAllocation);
 
-     do {
-        if (page-&gt;child) page = page-&gt;child;
-        else page = new AutoreleasePoolPage(page);
-     } while (page-&gt;full());
+     <span class="hljs-keyword">do</span> {
+        <span class="hljs-function"><span class="hljs-title">if</span> (<span class="hljs-built_in">page</span>-&gt;</span><span class="hljs-function"><span class="hljs-title">child</span>) <span class="hljs-built_in">page</span> = <span class="hljs-built_in">page</span>-&gt;</span>child;
+        <span class="hljs-keyword">else</span> <span class="hljs-built_in">page</span> = new AutoreleasePoolPage(<span class="hljs-built_in">page</span>);
+     } <span class="hljs-function"><span class="hljs-title">while</span> (<span class="hljs-built_in">page</span>-&gt;</span>full());
 
-     setHotPage(page);
-     return page-&gt;add(obj);
+     setHotPage(<span class="hljs-built_in">page</span>);
+     <span class="hljs-function"><span class="hljs-title">return</span> <span class="hljs-built_in">page</span>-&gt;</span>add(obj);
 }
 
 static __attribute__((noinline))
 id *autoreleaseNoPage(id obj)
 {
-    // &quot;No page&quot; could mean no pool has been pushed
-    // or an empty placeholder pool has been pushed and has no contents yet
+    <span class="hljs-comment">// &quot;No page&quot; could mean no pool has been pushed</span>
+    <span class="hljs-comment">// or an empty placeholder pool has been pushed and has no contents yet</span>
     ASSERT(!hotPage());
 
-    bool pushExtraBoundary = false;
-    if (haveEmptyPoolPlaceholder()) {
-       // We are pushing a second pool over the empty placeholder pool
-       // or pushing the first object into the empty placeholder pool.
-       // Before doing that, push a pool boundary on behalf of the pool 
-       // that is currently represented by the empty placeholder.
-       pushExtraBoundary = true;
+    bool pushExtraBoundary = <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">if</span> (haveEmptyPoolPlaceholder()) {
+       <span class="hljs-comment">// We are pushing a second pool over the empty placeholder pool</span>
+       <span class="hljs-comment">// or pushing the first object into the empty placeholder pool.</span>
+       <span class="hljs-comment">// Before doing that, push a pool boundary on behalf of the pool </span>
+       <span class="hljs-comment">// that is currently represented by the empty placeholder.</span>
+       pushExtraBoundary = <span class="hljs-literal">true</span>;
     }
-    else if (obj != POOL_BOUNDARY  &amp;&amp;  DebugMissingPools) {
-       // We are pushing an object with no pool in place, 
-       // and no-pool debugging was requested by environment.
-       _objc_inform(&quot;MISSING POOLS: (%p) Object %p of class %s &quot;
-                         &quot;autoreleased with no pool in place - &quot;
-                         &quot;just leaking - break on &quot;
-                         &quot;objc_autoreleaseNoPool() to debug&quot;, 
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (obj != POOL_BOUNDARY  &amp;&amp;  DebugMissingPools) {
+       <span class="hljs-comment">// We are pushing an object with no pool in place, </span>
+       <span class="hljs-comment">// and no-pool debugging was requested by environment.</span>
+       _objc_inform(<span class="hljs-string">&quot;MISSING POOLS: (%p) Object %p of class %s &quot;</span>
+                         <span class="hljs-string">&quot;autoreleased with no pool in place - &quot;</span>
+                         <span class="hljs-string">&quot;just leaking - break on &quot;</span>
+                         <span class="hljs-string">&quot;objc_autoreleaseNoPool() to debug&quot;</span>, 
                          objc_thread_self(), (void*)obj, object_getClassName(obj));
        objc_autoreleaseNoPool(obj);
-       return nil;
+       return <span class="hljs-literal">nil</span>;
     }
-    else if (obj == POOL_BOUNDARY  &amp;&amp;  !DebugPoolAllocation) {
-       // We are pushing a pool with no pool in place,
-       // and alloc-per-pool debugging was not requested.
-       // Install and return the empty pool placeholder.
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (obj == POOL_BOUNDARY  &amp;&amp;  !DebugPoolAllocation) {
+       <span class="hljs-comment">// We are pushing a pool with no pool in place,</span>
+       <span class="hljs-comment">// and alloc-per-pool debugging was not requested.</span>
+       <span class="hljs-comment">// Install and return the empty pool placeholder.</span>
        return setEmptyPoolPlaceholder();
     }
 
-    // We are pushing an object or a non-placeholder'd pool.
-    // Install the first page.
-    AutoreleasePoolPage *page = new AutoreleasePoolPage(nil);
-    setHotPage(page);
+    <span class="hljs-comment">// We are pushing an object or a non-placeholder&#x27;d pool.</span>
+    <span class="hljs-comment">// Install the first page.</span>
+    AutoreleasePoolPage *<span class="hljs-built_in">page</span> = new AutoreleasePoolPage(<span class="hljs-literal">nil</span>);
+    setHotPage(<span class="hljs-built_in">page</span>);
         
-    // Push a boundary on behalf of the previously-placeholder'd pool.
-    if (pushExtraBoundary) {
-        page-&gt;add(POOL_BOUNDARY);
+    <span class="hljs-comment">// Push a boundary on behalf of the previously-placeholder&#x27;d pool.</span>
+    <span class="hljs-keyword">if</span> (pushExtraBoundary) {
+        <span class="hljs-function"><span class="hljs-title">page</span>-&gt;</span>add(POOL_BOUNDARY);
     }
         
-    // Push the requested object or pool.
-    return page-&gt;add(obj);
+    <span class="hljs-comment">// Push the requested object or pool.</span>
+    <span class="hljs-function"><span class="hljs-title">return</span> <span class="hljs-built_in">page</span>-&gt;</span>add(obj);
  }
 </code></pre>
 <p>autoreleaseNewPage() 内部逻辑如下：</p>
@@ -257,71 +257,71 @@ id *autoreleaseNoPage(id obj)
 <li>如果 Page 不存在，调用 autoreleaseNoPage() 创建第一个 AutoreleasePoolPage，并将 autorelease 对象添加进去。</li>
 </ul>
 <p>再让我们看一下 push() 方法中，当存在 AutoreleasePoolPage 时 autoreleaseFast()  函数实现：</p>
-<pre><code class="language-Objective-C">static inline id *autoreleaseFast(id obj)
+<pre class="hljs codehilite language-Objective-C"><code>static inline id <span class="hljs-comment">*autoreleaseFast(id obj)
 {
-    AutoreleasePoolPage *page = hotPage();
-    if (page &amp;&amp; !page-&gt;full()) {
-        return page-&gt;add(obj);
-    } else if (page) {
-        return autoreleaseFullPage(obj, page);
-    } else {
-        return autoreleaseNoPage(obj);
+    AutoreleasePoolPage *page = hotPage();</span>
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">page</span> <span class="hljs-variable">&amp;&amp;</span> !<span class="hljs-keyword">page</span>-&gt;full()) {
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">page</span>-&gt;<span class="hljs-keyword">add</span>(obj);
+    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">page</span>) {
+        <span class="hljs-keyword">return</span> autoreleaseFullPage(obj, <span class="hljs-keyword">page</span>);
+    } <span class="hljs-keyword">else</span> {
+        <span class="hljs-keyword">return</span> autoreleaseNoPage(obj);
     }
 }
 </code></pre>
 <p>autoreleaseFast() 里处理的事情跟 autoreleaseNewPage() 差不多，都是判断 hotPage()的存在以及是否满容量做相对应的处理。</p>
 <p>对象要添加到 AutoreleasePool 中，就要调用 autorelease()，其内部也是通过 autoreleaseFast() 方法添加的，代码实现如下：</p>
-<pre><code class="language-Objective-C">static inline id autorelease(id obj)
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-keyword">static</span> <span class="hljs-keyword">inline</span> <span class="hljs-built_in">id</span> autorelease(<span class="hljs-built_in">id</span> obj)
 {
-    ASSERT(!obj-&gt;isTaggedPointerOrNil());
-    id *dest __unused = autoreleaseFast(obj);
-#if SUPPORT_AUTORELEASEPOOL_DEDUP_PTRS
-    ASSERT(!dest  ||  dest == EMPTY_POOL_PLACEHOLDER  ||  (id)((AutoreleasePoolEntry *)dest)-&gt;ptr == obj);
-#else
-    ASSERT(!dest  ||  dest == EMPTY_POOL_PLACEHOLDER  ||  *dest == obj);
-#endif
-    return obj;
+    ASSERT(<span class="hljs-operator">!</span>obj<span class="hljs-operator">-&gt;</span>isTaggedPointerOrNil());
+    <span class="hljs-built_in">id</span> <span class="hljs-operator">*</span>dest __unused <span class="hljs-operator">=</span> autoreleaseFast(obj);
+<span class="hljs-meta">#if</span> SUPPORT_AUTORELEASEPOOL_DEDUP_PTRS
+    ASSERT(<span class="hljs-operator">!</span>dest  <span class="hljs-operator">||</span>  dest <span class="hljs-operator">==</span> EMPTY_POOL_PLACEHOLDER  <span class="hljs-operator">||</span>  (<span class="hljs-built_in">id</span>)((AutoreleasePoolEntry <span class="hljs-operator">*</span>)dest)<span class="hljs-operator">-&gt;</span>ptr <span class="hljs-operator">==</span> obj);
+<span class="hljs-meta">#else</span>
+    ASSERT(<span class="hljs-operator">!</span>dest  <span class="hljs-operator">||</span>  dest <span class="hljs-operator">==</span> EMPTY_POOL_PLACEHOLDER  <span class="hljs-operator">||</span>  <span class="hljs-operator">*</span>dest <span class="hljs-operator">==</span> obj);
+<span class="hljs-meta">#endif</span>
+    <span class="hljs-keyword">return</span> obj;
 }
 </code></pre>
 <h5 id="242-pop" tabindex="-1">2.4.2  pop()</h5>
 <p>前面我们已经了解了 autorelease 对象的添加，接下来让我们了解 autorelease 对象的释放：</p>
-<pre><code class="language-Objective-C">static inline void
-pop(void *token)
-{
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-keyword">inline</span> <span class="hljs-type">void</span>
+<span class="hljs-title">pop</span><span class="hljs-params">(<span class="hljs-type">void</span> *token)</span>
+</span>{
     AutoreleasePoolPage *page;
     id *stop;
-    if (token == (void*)EMPTY_POOL_PLACEHOLDER) {
-    // Popping the top-level placeholder pool.
-    page = hotPage();
-    if (!page) {
-       // Pool was never used. Clear the placeholder.
-       return setHotPage(nil);
+    <span class="hljs-keyword">if</span> (token == (<span class="hljs-type">void</span>*)EMPTY_POOL_PLACEHOLDER) {
+    <span class="hljs-comment">// Popping the top-level placeholder pool.</span>
+    page = <span class="hljs-built_in">hotPage</span>();
+    <span class="hljs-keyword">if</span> (!page) {
+       <span class="hljs-comment">// Pool was never used. Clear the placeholder.</span>
+       <span class="hljs-keyword">return</span> <span class="hljs-built_in">setHotPage</span>(nil);
     }
-       // Pool was used. Pop its contents normally.
-       // Pool pages remain allocated for re-use as usual.
-       page = coldPage();
-       token = page-&gt;begin();
-    } else {
-       page = pageForPointer(token);
+       <span class="hljs-comment">// Pool was used. Pop its contents normally.</span>
+       <span class="hljs-comment">// Pool pages remain allocated for re-use as usual.</span>
+       page = <span class="hljs-built_in">coldPage</span>();
+       token = page-&gt;<span class="hljs-built_in">begin</span>();
+    } <span class="hljs-keyword">else</span> {
+       page = <span class="hljs-built_in">pageForPointer</span>(token);
     }
 
     stop = (id *)token;
-    if (*stop != POOL_BOUNDARY) {
-       if (stop == page-&gt;begin()  &amp;&amp;  !page-&gt;parent) {
-          // Start of coldest page may correctly not be POOL_BOUNDARY:
-          // 1. top-level pool is popped, leaving the cold page in place
-          // 2. an object is autoreleased with no pool
-       } else {
-          // Error. For bincompat purposes this is not 
-          // fatal in executables built with old SDKs.
-          return badPop(token);
+    <span class="hljs-keyword">if</span> (*stop != POOL_BOUNDARY) {
+       <span class="hljs-keyword">if</span> (stop == page-&gt;<span class="hljs-built_in">begin</span>()  &amp;&amp;  !page-&gt;parent) {
+          <span class="hljs-comment">// Start of coldest page may correctly not be POOL_BOUNDARY:</span>
+          <span class="hljs-comment">// 1. top-level pool is popped, leaving the cold page in place</span>
+          <span class="hljs-comment">// 2. an object is autoreleased with no pool</span>
+       } <span class="hljs-keyword">else</span> {
+          <span class="hljs-comment">// Error. For bincompat purposes this is not </span>
+          <span class="hljs-comment">// fatal in executables built with old SDKs.</span>
+          <span class="hljs-keyword">return</span> <span class="hljs-built_in">badPop</span>(token);
        }
     }
 
-    if (slowpath(PrintPoolHiwat || DebugPoolAllocation || DebugMissingPools)) {
-       return popPageDebug(token, page, stop);
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">slowpath</span>(PrintPoolHiwat || DebugPoolAllocation || DebugMissingPools)) {
+       <span class="hljs-keyword">return</span> <span class="hljs-built_in">popPageDebug</span>(token, page, stop);
     }
-    return popPage&lt;false&gt;(token, page, stop);
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">popPage</span>&lt;<span class="hljs-literal">false</span>&gt;(token, page, stop);
 }
 </code></pre>
 <p>pop() 方法有个入参数 token，该 token 其实就是 AutoreleasePool 创建时 push 的 POOL_BOUNDARY 哨兵对象。当 AutoreleasePool 销毁时，pop() 方法会依次向 AutoreleasePool 中的对象发送 release 消息，直到遇到 POOL_BOUNDARY 哨兵对象时，说明 AutoreleasePool 内的对象已全部释放。</p>
@@ -338,43 +338,43 @@ pop(void *token)
 <li>调用 popPage() 函数，内部会调用 releaseUntil() 释放 autorelease 对象。</li>
 </ul>
 <p>让我们来看一下 releaseUntil() 是如何释放对象的：</p>
-<pre><code class="language-Objective-C">void releaseUntil(id *stop) 
+<pre class="hljs codehilite language-Objective-C"><code>void releaseUntil(id *stop) 
 {
-    // Not recursive: we don't want to blow out the stack 
-    // if a thread accumulates a stupendous amount of garbage
+    <span class="hljs-comment">// Not recursive: we don&#x27;t want to blow out the stack </span>
+    <span class="hljs-comment">// if a thread accumulates a stupendous amount of garbage</span>
         
-    while (this-&gt;next != stop) {
-       // Restart from hotPage() every time, in case -release 
-       // autoreleased more objects
-       AutoreleasePoolPage *page = hotPage();
+    <span class="hljs-function"><span class="hljs-title">while</span> (this-&gt;</span>next != stop) {
+       <span class="hljs-comment">// Restart from hotPage() every time, in case -release </span>
+       <span class="hljs-comment">// autoreleased more objects</span>
+       AutoreleasePoolPage *<span class="hljs-built_in">page</span> = hotPage();
 
-       // fixme I think this `while` can be `if`, but I can't prove it
-       while (page-&gt;empty()) {
-          page = page-&gt;parent;
-          setHotPage(page);
+       <span class="hljs-comment">// fixme I think this `while` can be `if`, but I can&#x27;t prove it</span>
+       <span class="hljs-function"><span class="hljs-title">while</span> (<span class="hljs-built_in">page</span>-&gt;</span>empty()) {
+          <span class="hljs-function"><span class="hljs-title">page</span> = <span class="hljs-built_in">page</span>-&gt;</span>parent;
+          setHotPage(<span class="hljs-built_in">page</span>);
        }
 
-       page-&gt;unprotect();
-#if SUPPORT_AUTORELEASEPOOL_DEDUP_PTRS
-       AutoreleasePoolEntry* entry = (AutoreleasePoolEntry*) --page-&gt;next;
+       <span class="hljs-function"><span class="hljs-title">page</span>-&gt;</span>unprotect();
+#<span class="hljs-keyword">if</span> SUPPORT_AUTORELEASEPOOL_DEDUP_PTRS
+       A<span class="hljs-function"><span class="hljs-title">utoreleasePoolEntry</span>* entry = (AutoreleasePoolEntry*) --<span class="hljs-built_in">page</span>-&gt;</span>next;
 
-       // create an obj with the zeroed out top byte and release that
-       id obj = (id)entry-&gt;ptr;
-       int count = (int)entry-&gt;count;  // grab these before memset
-#else
-       id obj = *--page-&gt;next;
+       <span class="hljs-comment">// create an obj with the zeroed out top byte and release that</span>
+       <span class="hljs-function"><span class="hljs-title">id</span> obj = (id)entry-&gt;</span>ptr;
+       <span class="hljs-function"><span class="hljs-title">int</span> count = (int)entry-&gt;</span>count;  <span class="hljs-comment">// grab these before memset</span>
+#<span class="hljs-keyword">else</span>
+       <span class="hljs-function"><span class="hljs-title">id</span> obj = *--<span class="hljs-built_in">page</span>-&gt;</span>next;
 #endif
-       memset((void*)page-&gt;next, SCRIBBLE, sizeof(*page-&gt;next));
-       page-&gt;protect();
+       <span class="hljs-function"><span class="hljs-title">memset</span>((void*)<span class="hljs-built_in">page</span>-&gt;</span><span class="hljs-function"><span class="hljs-title">next</span>, SCRIBBLE, sizeof(*<span class="hljs-built_in">page</span>-&gt;</span>next));
+       <span class="hljs-function"><span class="hljs-title">page</span>-&gt;</span>protect();
 
-       if (obj != POOL_BOUNDARY) {
-#if SUPPORT_AUTORELEASEPOOL_DEDUP_PTRS
-         // release count+1 times since it is count of the additional
-         // autoreleases beyond the first one
-         for (int i = 0; i &lt; count + 1; i++) {
+       <span class="hljs-keyword">if</span> (obj != POOL_BOUNDARY) {
+#<span class="hljs-keyword">if</span> SUPPORT_AUTORELEASEPOOL_DEDUP_PTRS
+         <span class="hljs-comment">// release count+1 times since it is count of the additional</span>
+         <span class="hljs-comment">// autoreleases beyond the first one</span>
+         <span class="hljs-keyword">for</span> (int i = <span class="hljs-number">0</span>; i &lt; count + <span class="hljs-number">1</span>; i++) {
              objc_release(obj);
          }
-#else
+#<span class="hljs-keyword">else</span>
          objc_release(obj);
 #endif
        }
@@ -382,10 +382,10 @@ pop(void *token)
 
     setHotPage(this);
 
-#if DEBUG
-    // we expect any children to be completely empty
-    for (AutoreleasePoolPage *page = child; page; page = page-&gt;child) {
-       ASSERT(page-&gt;empty());
+#<span class="hljs-keyword">if</span> DEBUG
+    <span class="hljs-comment">// we expect any children to be completely empty</span>
+    <span class="hljs-function"><span class="hljs-title">for</span> (AutoreleasePoolPage *<span class="hljs-built_in">page</span> = child; <span class="hljs-built_in">page</span>; <span class="hljs-built_in">page</span> = <span class="hljs-built_in">page</span>-&gt;</span>child) {
+       ASSERT(<span class="hljs-function"><span class="hljs-title">page</span>-&gt;</span>empty());
     }
 #endif
 }
@@ -393,67 +393,67 @@ pop(void *token)
 <p>releaseUntil() 内通过 while 循环，从最后一个 autorelease 对象开始往前依次调用 release() 释放对象，直到 POOL_BOUNDARY 哨兵对象退出循环。</p>
 <h3 id="三-pool_boundary-的作用" tabindex="-1">三、  POOL_BOUNDARY 的作用</h3>
 <p>从  AutoreleasePoolPage pop() 的过程，我们可以知道 POOL_BOUNDARY 明显的一点就是作为一个边界对象，这样 AutoreleasePoolPage 可以保证将该释放的对象释放，这一作用在 @autoreleasepool 嵌套使用中更能体现，先让我们来看一下单个 @autoreleasepool 管理 autorelease 对象的内存分布。</p>
-<pre><code class="language-Objective-C">extern void _objc_autoreleasePoolPrint(void);
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-keyword">extern</span> <span class="hljs-type">void</span> _objc_autoreleasePoolPrint(<span class="hljs-type">void</span>);
 
 _objc_autoreleasePoolPrint();
-@autoreleasepool {
+<span class="hljs-keyword">@autoreleasepool</span> {
     _objc_autoreleasePoolPrint();
-    NSObject *obj = [[[NSObject alloc] init] autorelease];
+    <span class="hljs-built_in">NSObject</span> *obj = [[[<span class="hljs-built_in">NSObject</span> alloc] init] autorelease];
     _objc_autoreleasePoolPrint();
-    NSObject *obj2 = [[[NSObject alloc] init] autorelease];
+    <span class="hljs-built_in">NSObject</span> *obj2 = [[[<span class="hljs-built_in">NSObject</span> alloc] init] autorelease];
     _objc_autoreleasePoolPrint();
 }
 </code></pre>
 <p>_objc_autoreleasePoolPrint() 可以在控制台输出当前 AutoreleasePool 中的对象信息，_objc_autoreleasePoolPrint() Runtime 中的隐匿函数，所以得
 extern void _objc_autoreleasePoolPrint(void)，以下是输出信息：</p>
-<pre><code class="language-Objective-C">objc[1529]: ##############
-objc[1529]: AUTORELEASE POOLS for thread 0x10008c580
-objc[1529]: 0 releases pending.
-objc[1529]: [0x100810000]  ................  PAGE  (hot) (cold)
-objc[1529]: ##############
-objc[1529]: ##############
-objc[1529]: AUTORELEASE POOLS for thread 0x10008c580
-objc[1529]: 1 releases pending.
-objc[1529]: [0x100810000]  ................  PAGE  (hot) (cold)
-objc[1529]: [0x100810038]  ################  POOL 0x100810038 // POOL_BOUNDARY
-objc[1529]: ##############
-objc[1529]: ##############
-objc[1529]: AUTORELEASE POOLS for thread 0x10008c580
-objc[1529]: 2 releases pending.
-objc[1529]: [0x100810000]  ................  PAGE  (hot) (cold)
-objc[1529]: [0x100810038]  ################  POOL 0x100810038
-objc[1529]: [0x100810040]       0x1007b6db0  NSObject
-objc[1529]: ##############
-objc[1529]: ##############
-objc[1529]: AUTORELEASE POOLS for thread 0x10008c580
-objc[1529]: 3 releases pending.
-objc[1529]: [0x100810000]  ................  PAGE  (hot) (cold)
-objc[1529]: [0x100810038]  ################  POOL 0x100810038
-objc[1529]: [0x100810040]       0x1007b6db0  NSObject
-objc[1529]: [0x100810048]       0x1007b5760  NSObject
-objc[1529]: ##############
-Program ended with exit code: 0
+<pre class="hljs codehilite language-Objective-C"><code>objc[<span class="hljs-number">1529</span>]: ##############
+objc[<span class="hljs-number">1529</span>]: AUTORELEASE POOLS for thread <span class="hljs-number">0x10008c580</span>
+objc[<span class="hljs-number">1529</span>]: <span class="hljs-number">0</span> releases pending.
+objc[<span class="hljs-number">1529</span>]: [<span class="hljs-number">0x100810000</span>]  ................  PAGE  (hot) (cold)
+objc[<span class="hljs-number">1529</span>]: ##############
+objc[<span class="hljs-number">1529</span>]: ##############
+objc[<span class="hljs-number">1529</span>]: AUTORELEASE POOLS for thread <span class="hljs-number">0x10008c580</span>
+objc[<span class="hljs-number">1529</span>]: <span class="hljs-number">1</span> releases pending.
+objc[<span class="hljs-number">1529</span>]: [<span class="hljs-number">0x100810000</span>]  ................  PAGE  (hot) (cold)
+objc[<span class="hljs-number">1529</span>]: [<span class="hljs-number">0x100810038</span>]  ################  POOL <span class="hljs-number">0x100810038</span> <span class="hljs-comment">// POOL_BOUNDARY</span>
+objc[<span class="hljs-number">1529</span>]: ##############
+objc[<span class="hljs-number">1529</span>]: ##############
+objc[<span class="hljs-number">1529</span>]: AUTORELEASE POOLS for thread <span class="hljs-number">0x10008c580</span>
+objc[<span class="hljs-number">1529</span>]: <span class="hljs-number">2</span> releases pending.
+objc[<span class="hljs-number">1529</span>]: [<span class="hljs-number">0x100810000</span>]  ................  PAGE  (hot) (cold)
+objc[<span class="hljs-number">1529</span>]: [<span class="hljs-number">0x100810038</span>]  ################  POOL <span class="hljs-number">0x100810038</span>
+objc[<span class="hljs-number">1529</span>]: [<span class="hljs-number">0x100810040</span>]       <span class="hljs-number">0x1007b6db0</span>  NSObject
+objc[<span class="hljs-number">1529</span>]: ##############
+objc[<span class="hljs-number">1529</span>]: ##############
+objc[<span class="hljs-number">1529</span>]: AUTORELEASE POOLS for thread <span class="hljs-number">0x10008c580</span>
+objc[<span class="hljs-number">1529</span>]: <span class="hljs-number">3</span> releases pending.
+objc[<span class="hljs-number">1529</span>]: [<span class="hljs-number">0x100810000</span>]  ................  PAGE  (hot) (cold)
+objc[<span class="hljs-number">1529</span>]: [<span class="hljs-number">0x100810038</span>]  ################  POOL <span class="hljs-number">0x100810038</span>
+objc[<span class="hljs-number">1529</span>]: [<span class="hljs-number">0x100810040</span>]       <span class="hljs-number">0x1007b6db0</span>  NSObject
+objc[<span class="hljs-number">1529</span>]: [<span class="hljs-number">0x100810048</span>]       <span class="hljs-number">0x1007b5760</span>  NSObject
+objc[<span class="hljs-number">1529</span>]: ##############
+Program ended <span class="hljs-keyword">with</span> exit <span class="hljs-keyword">code</span>: <span class="hljs-number">0</span>
 </code></pre>
 <p>从输出信息来看，它的内存分布图如下：
 <img src="https://destinmure.github.io/pic/postImage/AutoreleasePool%E8%AF%A6%E8%A7%A3/psb-02.png" alt="image"></p>
 <p>再来看看多层 @autoreleasepool 嵌套情况：</p>
-<pre><code class="language-Objective-C">int main(int argc, const char * argv[]) {
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-type">int</span> main(<span class="hljs-type">int</span> argc, <span class="hljs-keyword">const</span> <span class="hljs-type">char</span> * argv[]) {
     _objc_autoreleasePoolPrint();
-    @autoreleasepool {
+    <span class="hljs-keyword">@autoreleasepool</span> {
         _objc_autoreleasePoolPrint();
-        NSObject *obj = [[[NSObject alloc] init] autorelease];
+        <span class="hljs-built_in">NSObject</span> *obj = [[[<span class="hljs-built_in">NSObject</span> alloc] init] autorelease];
         _objc_autoreleasePoolPrint();
-        NSObject *obj2 = [[[NSObject alloc] init] autorelease];
+        <span class="hljs-built_in">NSObject</span> *obj2 = [[[<span class="hljs-built_in">NSObject</span> alloc] init] autorelease];
         _objc_autoreleasePoolPrint();
-        @autoreleasepool {
+        <span class="hljs-keyword">@autoreleasepool</span> {
             _objc_autoreleasePoolPrint();
-            NSObject *obj3 = [[[NSObject alloc] init] autorelease];
+            <span class="hljs-built_in">NSObject</span> *obj3 = [[[<span class="hljs-built_in">NSObject</span> alloc] init] autorelease];
             _objc_autoreleasePoolPrint();
-            NSObject *obj4 = [[[NSObject alloc] init] autorelease];
+            <span class="hljs-built_in">NSObject</span> *obj4 = [[[<span class="hljs-built_in">NSObject</span> alloc] init] autorelease];
             _objc_autoreleasePoolPrint();
         }
     }
-    return 0;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
 }
 </code></pre>
 <p>每个 AutoreleasePool 创建后都会 push 一个 POOL_BOUNDARY 对象，区别其他 AutoreleasePool 管理的对象，嵌套后分布图如下
@@ -468,8 +468,8 @@ Program ended with exit code: 0
 <p>通过 @autoreleasepool 手动创建，在离开 @autoreleasepool 所处的作用域时， AutoreleasePool 释放
 主线程因为会自动开 RunLoop，因此 AutoreleasePool 会自动创建，但其他线程的 RunLoop 是默认未创建的，那它们的  autorelease 对象如何管理呢？子线程中如果没有开启 RunLoop，当存在 autorelease 对象时，就会创建 AutoreleasePool 并添加到 AutoreleasePool 中，等线程销毁时，AutoreleasePool 就会释放。</p>
 <p>@autoreleasepool 的手动创建，一般用于避免内存峰值，比如在 for 循环中创建了大量的临时对象，我们需要在循环体内创建 AutoreleasePool ，当一次循环结束后，释放临时对象，数组系统遍历方法内部为避免这种情况，内部会自动创建 AutoreleasePool，但请注意只有 Autorelease类型的对象才会交给AutoreleasePool去管理。</p>
-<pre><code class="language-Objective-C">[array enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-    // 这里被一个局部@autoreleasepool包围着
+<pre class="hljs codehilite language-Objective-C"><code>[<span class="hljs-variable">array</span> <span class="hljs-variable">enumerateObjectsUsingBlock</span>:<span class="hljs-title function_">^</span>(<span class="hljs-params">id</span> <span class="hljs-params">obj</span>, <span class="hljs-params">NSUInteger</span> <span class="hljs-params">idx</span>, <span class="hljs-params">BOOL</span> *<span class="hljs-params">stop</span>) {
+    <span class="hljs-comment">// 这里被一个局部@autoreleasepool包围着</span>
 }];
 </code></pre>
 <h3 id="五什么对象会通过-autorelease-管理" tabindex="-1">五、什么对象会通过 autorelease 管理</h3>

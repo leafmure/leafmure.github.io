@@ -11,88 +11,88 @@
 <!-- more -->
 <h3 id="avaudioengine-构建" tabindex="-1">AVAudioEngine 构建</h3>
 <h4 id="1初始化-avaudioengine" tabindex="-1">1.初始化 AVAudioEngine</h4>
-<pre><code class="language-Objective-C">_audioEngine = [[AVAudioEngine alloc] init];
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-attr">_audioEngine</span> = [[AVAudioEngine alloc] init]<span class="hljs-comment">;</span>
 </code></pre>
 <h4 id="2创建并添加-avaudioplayernode" tabindex="-1">2.创建并添加 AVAudioPlayerNode</h4>
-<pre><code class="language-Objective-C">_playerNode = [[AVAudioPlayerNode alloc] init];
-[_audioEngine attachNode:_playerNode];
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-attr">_playerNode</span> = [[AVAudioPlayerNode alloc] init]<span class="hljs-comment">;</span>
+<span class="hljs-section">[_audioEngine attachNode:_playerNode]</span><span class="hljs-comment">;</span>
 </code></pre>
 <h4 id="3连接-avaudioplayernode-到输出节点" tabindex="-1">3.连接 AVAudioPlayerNode 到输出节点</h4>
-<pre><code class="language-Objective-C">[_audioEngine connect:_playerNode to:_audioEngine.mainMixerNode format:nil];
+<pre class="hljs codehilite language-Objective-C"><code>[<span class="hljs-variable">_audioEngine</span> connect:<span class="hljs-variable">_playerNode</span> <span class="hljs-keyword">to</span>:<span class="hljs-variable">_audioEngine</span>.mainMixerNode <span class="hljs-built_in">format</span>:<span class="hljs-literal">nil</span>];
 </code></pre>
 <h4 id="4avaudioengine-准备" tabindex="-1">4.AVAudioEngine 准备</h4>
-<pre><code class="language-Objective-C">[_audioEngine prepare];
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-section">[_audioEngine prepare]</span><span class="hljs-comment">;</span>
 </code></pre>
 <h3 id="avaudioengine-播放" tabindex="-1">AVAudioEngine 播放</h3>
 <h4 id="1创建-avaudiopcmbuffer" tabindex="-1">1.创建 AVAudioPCMBuffer</h4>
-<pre><code class="language-Objective-C">AudioStreamBasicDescription *fileFormat = ...;
-AVAudioFormat *format = [[AVAudioFormat alloc] initWithStreamDescription:&amp;fileFormat];
-AVAudioPCMBuffer *pcmBuffer = [[AVAudioPCMBuffer alloc] initWithPCMFormat:format frameCapacity:512];
+<pre class="hljs codehilite language-Objective-C"><code>AudioStreamBasicDescription *fileFormat = ...;
+AVAudioFormat *format = <span class="hljs-comment">[<span class="hljs-comment">[AVAudioFormat alloc]</span> initWithStreamDescription:&amp;fileFormat]</span>;
+AVAudioPCMBuffer *pcmBuffer = <span class="hljs-comment">[<span class="hljs-comment">[AVAudioPCMBuffer alloc]</span> initWithPCMFormat:format frameCapacity:512]</span>;
 pcmBuffer.frameLength = pcmBuffer.frameCapacity;
 </code></pre>
 <h4 id="2填充音频数据到-pcmbuffermutableaudiobufferlist" tabindex="-1">2.填充音频数据到 pcmBuffer.mutableAudioBufferList</h4>
 <p>首先我们需要使用 <strong>AudioFileStream</strong> 对音频数据流进行分离音频帧.</p>
-<pre><code class="language-Objective-C">AudioFileStreamParseBytes(_audioFileStreamID,(UInt32)[data length],[data bytes], 0);
-/// 输出分离的音频帧数据
-static void audio_file_stream_packets_proc(void *inClientData,
-                                           UInt32 inNumberBytes,
-                                           UInt32 inNumberPackets,
-                                           const void *inInputData,
+<pre class="hljs codehilite language-Objective-C"><code>AudioFileStreamParseBytes(_audioFileStreamID,(<span class="hljs-built_in">UInt32</span>)[data length],[data bytes], <span class="hljs-number">0</span>);
+<span class="hljs-comment">/// 输出分离的音频帧数据</span>
+<span class="hljs-keyword">static</span> <span class="hljs-type">void</span> audio_file_stream_packets_proc(<span class="hljs-type">void</span> *inClientData,
+                                           <span class="hljs-built_in">UInt32</span> inNumberBytes,
+                                           <span class="hljs-built_in">UInt32</span> inNumberPackets,
+                                           <span class="hljs-keyword">const</span> <span class="hljs-type">void</span> *inInputData,
                                            AudioStreamPacketDescription    *inPacketDescriptions)
 {
-    /// inInputData 音频帧数据
-    // inNumberPackets 音频帧数量
-    // inPacketDescriptions 音频帧信息,包含数据字节起始位置和长度.
+    <span class="hljs-comment">/// inInputData 音频帧数据</span>
+    <span class="hljs-comment">// inNumberPackets 音频帧数量</span>
+    <span class="hljs-comment">// inPacketDescriptions 音频帧信息,包含数据字节起始位置和长度.</span>
     ...
 }
 </code></pre>
 <p>在得到音频帧后, 使用 <strong>AudioConverter</strong> 将音频帧从压缩格式转为 PCM 格式数据.</p>
-<pre><code class="language-Objective-C">AudioConverterFillComplexBuffer(_audioConverter, input_data_proc, (__bridge void *)(self), &amp;inNumberFrames, pcmBuffer.mutableAudioBufferList, NULL);
+<pre class="hljs codehilite language-Objective-C"><code>AudioConverterFillComplexBuffer(_audioConverter, input_data_proc, (__bridge <span class="hljs-type">void</span> *)(<span class="hljs-keyword">self</span>), &amp;inNumberFrames, pcmBuffer.mutableAudioBufferList, <span class="hljs-literal">NULL</span>);
 
-static OSStatus input_data_proc(AudioConverterRef inAudioConverter, UInt32 *ioNumberDataPackets, AudioBufferList *ioData, AudioStreamPacketDescription **outDataPacketDescription, void *inUserData)
+<span class="hljs-keyword">static</span> OSStatus input_data_proc(AudioConverterRef inAudioConverter, <span class="hljs-built_in">UInt32</span> *ioNumberDataPackets, AudioBufferList *ioData, AudioStreamPacketDescription **outDataPacketDescription, <span class="hljs-type">void</span> *inUserData)
 {
-    /// 伪代码
-    /// inInputData &lt;- audio_file_stream_packets_proc
-    /// inPacketDescriptions &lt;- audio_file_stream_packets_proc
-    ioData-&gt;mBuffers[0].mData = [inInputData bytes];
-    ioData-&gt;mBuffers[0].mDataByteSize = [inInputData length];
-    ioData-&gt;mBuffers[0].mNumberChannels = 1;
-    if (outDataPacketDescription != NULL) {
+    <span class="hljs-comment">/// 伪代码</span>
+    <span class="hljs-comment">/// inInputData &lt;- audio_file_stream_packets_proc</span>
+    <span class="hljs-comment">/// inPacketDescriptions &lt;- audio_file_stream_packets_proc</span>
+    ioData-&gt;mBuffers[<span class="hljs-number">0</span>].mData = [inInputData bytes];
+    ioData-&gt;mBuffers[<span class="hljs-number">0</span>].mDataByteSize = [inInputData length];
+    ioData-&gt;mBuffers[<span class="hljs-number">0</span>].mNumberChannels = <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">if</span> (outDataPacketDescription != <span class="hljs-literal">NULL</span>) {
         *outDataPacketDescription = inPacketDescriptions;
     }
-    return noErr;
+    <span class="hljs-keyword">return</span> noErr;
 }
 </code></pre>
 <h4 id="4开始播放" tabindex="-1">4.开始播放</h4>
 <p>创建定时器控制播放速率</p>
-<pre><code class="language-Objective-C">NSTimeInterval packetDuration = (fileFormat.mFramesPerPacket / fileFormat.mSampleRate) * 1000.0;
-/// 正常速率
-_timmer = [NSTimer timerWithTimeInterval:packetDuration * 0.5 repeats:YES block:^(NSTimer * _Nonnull timer) {
-    /// 播放 pcmBuffer
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-built_in">NSTimeInterval</span> packetDuration = (fileFormat.mFramesPerPacket / fileFormat.mSampleRate) * <span class="hljs-number">1000.0</span>;
+<span class="hljs-comment">/// 正常速率</span>
+_timmer = [<span class="hljs-built_in">NSTimer</span> timerWithTimeInterval:packetDuration * <span class="hljs-number">0.5</span> repeats:<span class="hljs-literal">YES</span> block:^(<span class="hljs-built_in">NSTimer</span> * _Nonnull timer) {
+    <span class="hljs-comment">/// 播放 pcmBuffer</span>
     [_playerNode scheduleBuffer:pcmBuffer completionHandler:^{}];
 }];
-[[NSRunLoop currentRunLoop] addTimer:_timmer forMode:NSRunLoopCommonModes];
+[[<span class="hljs-built_in">NSRunLoop</span> currentRunLoop] addTimer:_timmer forMode:<span class="hljs-built_in">NSRunLoopCommonModes</span>];
 </code></pre>
 <p>启动 AVAudioEngine 和 AVAudioPlayerNode</p>
-<pre><code class="language-Objective-C">if (_playerNode.isPlaying) {
-    return;
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-keyword">if</span> (_playerNode.isPlaying) {
+    <span class="hljs-keyword">return</span>;
 }
     
-if (!_audioEngine.isRunning) {
-    NSError *error;
-    [_audioEngine startAndReturnError:&amp;error];
-    if (error) {
-        return;
+<span class="hljs-keyword">if</span> (!_audioEngine.isRunning) {
+    NSError *<span class="hljs-keyword">error</span>;
+    [_audioEngine startAndReturnError:&amp;<span class="hljs-keyword">error</span>];
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">error</span>) {
+        <span class="hljs-keyword">return</span>;
     }
 }
     
-[_playerNode play];
-[_timmer setFireDate:[NSDate date]];
+[_playerNode <span class="hljs-keyword">play</span>];
+[_timmer setFireDate:[NSDate <span class="hljs-keyword">date</span>]];
 </code></pre>
 <h4 id="5停止播放" tabindex="-1">5.停止播放</h4>
-<pre><code class="language-Objective-C">[_timmer invalidate];
-_timmer = nil;
-[_playerNode stop];
-[_audioEngine stop];
-[_audioEngine disconnectNodeInput:_playerNode];
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-section">[_timmer invalidate]</span><span class="hljs-comment">;</span>
+<span class="hljs-attr">_timmer</span> = nil<span class="hljs-comment">;</span>
+<span class="hljs-section">[_playerNode stop]</span><span class="hljs-comment">;</span>
+<span class="hljs-section">[_audioEngine stop]</span><span class="hljs-comment">;</span>
+<span class="hljs-section">[_audioEngine disconnectNodeInput:_playerNode]</span><span class="hljs-comment">;</span>
 </code></pre>

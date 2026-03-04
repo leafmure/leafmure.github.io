@@ -12,60 +12,60 @@ gitHub于2008年4月10日正式上线，除了git代码仓库托管及基本的 
 <h3 id="配置ssh-key" tabindex="-1">配置ssh key</h3>
 <p>复制下方“显示隐藏文件”命令至终端，，前往Users/lianghui/.ssh查看是否有.ssh文件，如果有建议删除。</p>
 <p>显示隐藏文件</p>
-<pre><code>$ defaults write com.apple.finder AppleShowAllFiles Yes &amp;&amp; killall Finder 
+<pre class="hljs codehilite"><code><span class="hljs-symbol">$</span> defaults write com.apple.finder AppleShowAllFiles <span class="hljs-keyword">Yes</span> &amp;&amp; killall Finder 
 </code></pre>
 <p>不显示隐藏文件</p>
-<pre><code>$ defaults write com.apple.finder AppleShowAllFiles No &amp;&amp; killall Finder 
+<pre class="hljs codehilite"><code><span class="hljs-symbol">$</span> defaults write com.apple.finder AppleShowAllFiles <span class="hljs-keyword">No</span> &amp;&amp; killall Finder 
 </code></pre>
 <p>终端里输入指令,创建一个 .ssh 文件夹</p>
-<pre><code>$ mkdir .ssh
+<pre class="hljs codehilite"><code><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">mkdir</span> .ssh</span>
 </code></pre>
 <p>配置ssh</p>
-<pre><code>$ ssh-keygen -t rsa -C &quot;your_email@youremail.com&quot;
+<pre class="hljs codehilite"><code><span class="hljs-variable">$ </span>ssh-keygen -t rsa -C <span class="hljs-string">&quot;your_email@youremail.com&quot;</span>
 </code></pre>
 <p>双引号中填写你github注册用的邮箱地址，之后会提示你要输入密码，不用管一直按回车直至出现</p>
-<pre><code>The key‘s randomart image is:
-+--[ xxx xxxx]----+
+<pre class="hljs codehilite"><code>The key‘s randomart image is:
+<span class="hljs-code">+--[ xxx xxxx]----+</span>
 |                 |
 |  x              |
 | xx   x          |
-|  x     x        |
-+-----------------+
+<span class="hljs-section">|  x     x        |
++-----------------+</span>
 </code></pre>
 <p>输入指令，复制ssh key</p>
-<pre><code>$ pbcopy &lt; ~/.ssh/id_rsa.pub 
+<pre class="hljs codehilite"><code><span class="hljs-variable">$ </span>pbcopy &lt; ~<span class="hljs-regexp">/.ssh/id</span>_rsa.pub 
 </code></pre>
 <p>登陆github，点击头像 -&gt; Settings -&gt; SSH and GPG keys
 点击New SSH Key，输入title(自己命名)，将复制到的ssh key复制到key栏中，然后add，界面钥匙显示灰色。</p>
 <p>为了验证是否成功，在终端中下输入</p>
-<pre><code>$ ssh -T git@github.com
+<pre class="hljs codehilite"><code><span class="hljs-variable">$ </span>ssh -T git<span class="hljs-variable">@github</span>.com
 </code></pre>
 <p>如果是第一次会出现Are you sure you want to continue connecting (yes/no)?
 输入yes回车，出现You’ve successfully authenticated, but GitHub does not provide shell access，返回github界面钥匙显示绿色 ，这就表示已成功连上github。</p>
 <h3 id="上传文件至github" tabindex="-1">上传文件至github</h3>
 <p>如果是第一次提交没有git仓库，cd到本地项目根目录创建</p>
-<pre><code>$ git init
+<pre class="hljs codehilite"><code><span class="hljs-variable">$ </span>git init
 </code></pre>
 <p>如果有git仓库，检出仓库</p>
-<pre><code>$ git clone  仓库地址
-</code></pre>
+<pre class="hljs codehilite"><code>$ git <span class="hljs-keyword">clone</span>  <span class="hljs-title">仓库地址
+</span></code></pre>
 <p>将要上传的文件移至检出的仓库文件夹</p>
 <p>查看仓库文件状态</p>
-<pre><code>$ git status
+<pre class="hljs codehilite"><code><span class="hljs-variable">$ </span>git status
 </code></pre>
 <p>将状态为未添加的文件添加至git
 单个添加</p>
-<pre><code>$ git add 文件名
+<pre class="hljs codehilite"><code>$ git <span class="hljs-built_in">add</span> 文件名
 </code></pre>
 <p>全部添加</p>
-<pre><code>$ git add . //监控工作区的状态树,提交文件内容修改(modified)、新文件(untracked file),但不包括被删除的文件(delete)
-$ git add -u //仅监控已经被add的文件(tracked file),不会提交新文件(untracked file)(git add --update的缩写）
-$ git add -A //是上面两个功能的合集(git add --all的缩写)
+<pre class="hljs codehilite"><code>$ git <span class="hljs-built_in">add</span> . //监控工作区的状态树,提交文件内容修改(modified)、新文件(untracked <span class="hljs-keyword">file</span>),但不包括被删除的文件(<span class="hljs-keyword">delete</span>)
+$ git <span class="hljs-built_in">add</span> -<span class="hljs-keyword">u</span> //仅监控已经被<span class="hljs-built_in">add</span>的文件(tracked <span class="hljs-keyword">file</span>),不会提交新文件(untracked <span class="hljs-keyword">file</span>)(git <span class="hljs-built_in">add</span> --<span class="hljs-keyword">update</span>的缩写）
+$ git <span class="hljs-built_in">add</span> -A //是上面两个功能的合集(git <span class="hljs-built_in">add</span> --<span class="hljs-keyword">all</span>的缩写)
 </code></pre>
 <p>提交文件至本地仓库的HEAD</p>
-<pre><code>$ git commit -m &quot;此次上传的描述&quot;
+<pre class="hljs codehilite"><code><span class="hljs-variable">$ </span>git commit -m <span class="hljs-string">&quot;此次上传的描述&quot;</span>
 </code></pre>
 <p>将改动提交至远端仓库(master为仓库分支)</p>
-<pre><code>$ git push origin master
-</code></pre>
+<pre class="hljs codehilite"><code>$ git push origin <span class="hljs-keyword">master</span>
+<span class="hljs-title"></span></code></pre>
 <p>然后就可以在github上看到自己上传的文件</p>

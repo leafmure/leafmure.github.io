@@ -26,74 +26,74 @@
 <p>在第一步结果之后附加一个以64位二进制表示的填充前数据长度（单位为Bit），如果二进制表示的填充前数据长度超过64位，则取低64位。在此步骤进行完毕后，数据的长度为：N * 512 + 448 + 64 = (N+1）* 512，最终数据长度就是512的整数倍。</p>
 <h5 id="3-数据处理" tabindex="-1">3. 数据处理</h5>
 <p>MD5运算要用到一个128位的MD5缓存器，用来保存中间变量和最终结果。该缓存器又可看成是4个32位的寄存器A、B、C、D，初始化为：</p>
-<pre><code class="language-Objective-C">A = 0x67452301
-B = 0x0EFCDAB89
-C = 0x98BADCFE
-D = 0x10325476
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-attribute">A</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>x67452301
+<span class="hljs-attribute">B</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>x0EFCDAB89
+<span class="hljs-attribute">C</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>x98BADCFE
+<span class="hljs-attribute">D</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>x10325476
 </code></pre>
 <p>以512位分组来处理数据，且每一分组又被划分为16个32位子分组，每组数据进行4轮的逻辑处理，最后的输出由四个32位分组组成，将这四个32位分组级联后将生成一个128位散列值。</p>
 <p>对每个数据段都要进行4轮的逻辑处理，在4轮中分别使用4个不同的函数F、G、H、I:</p>
-<pre><code class="language-Objective-C">F(X,Y,Z) = (X &amp; Y) | ((~X) &amp; Z);
-G(X,Y,Z) = (X &amp; Z) | (Y &amp; (~Z)); 
-H(X,Y,Z) = X ^ Y ^ Z; 
-I(X,Y,Z) = Y ^ (X | (~Z));
+<pre class="hljs codehilite language-Objective-C"><code>F(<span class="hljs-keyword">X</span>,<span class="hljs-keyword">Y</span>,<span class="hljs-keyword">Z</span>) = (<span class="hljs-keyword">X</span> &amp; <span class="hljs-keyword">Y</span>) | ((~<span class="hljs-keyword">X</span>) &amp; <span class="hljs-keyword">Z</span>);
+G(<span class="hljs-keyword">X</span>,<span class="hljs-keyword">Y</span>,<span class="hljs-keyword">Z</span>) = (<span class="hljs-keyword">X</span> &amp; <span class="hljs-keyword">Z</span>) | (<span class="hljs-keyword">Y</span> &amp; (~<span class="hljs-keyword">Z</span>)); 
+H(<span class="hljs-keyword">X</span>,<span class="hljs-keyword">Y</span>,<span class="hljs-keyword">Z</span>) = <span class="hljs-keyword">X</span> ^ <span class="hljs-keyword">Y</span> ^ <span class="hljs-keyword">Z</span>; 
+I(<span class="hljs-keyword">X</span>,<span class="hljs-keyword">Y</span>,<span class="hljs-keyword">Z</span>) = <span class="hljs-keyword">Y</span> ^ (<span class="hljs-keyword">X</span> | (~<span class="hljs-keyword">Z</span>));
 </code></pre>
 <p>MD5 简单实现：</p>
-<pre><code class="language-Objective-C">导入CommonDigest.h：
-#import &lt;CommonCrypto/CommonDigest.h&gt;
+<pre class="hljs codehilite language-Objective-C"><code>导入<span class="hljs-symbol">CommonDigest</span>.h：
+#import &lt;<span class="hljs-symbol">CommonCrypto</span>/<span class="hljs-symbol">CommonDigest</span>.h&gt;
   
-封装MD5签名分类方法
-- (NSString *)md5String{
-   CC_MD5_CTX md5;
-   CC_MD5_Init (&amp;md5);
-    CC_MD5_Update (&amp;md5, [self UTF8String], (CC_LONG)[self length]);
-   unsigned char digest[CC_MD5_DIGEST_LENGTH];
-   CC_MD5_Final (digest, &amp;md5);
-   NSString *mdString = [NSString stringWithFormat:   @&quot;%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x&quot;, 
-   digest[0], digest[1],
-   digest[2],  digest[3],
-   digest[4],  digest[5],
-   digest[6],  digest[7],
-   digest[8],  digest[9],
-   digest[10], digest[11],
-   digest[12], digest[13],
-   digest[14], digest[15]];
+封装<span class="hljs-symbol">MD5</span>签名分类方法
+- (<span class="hljs-symbol">NSString</span> *)md5String{
+   <span class="hljs-symbol">CC_MD5_CTX</span> md5;
+   <span class="hljs-symbol">CC_MD5_Init</span> (&amp;md5);
+    <span class="hljs-symbol">CC_MD5_Update</span> (&amp;md5, [self <span class="hljs-symbol">UTF8String</span>], (<span class="hljs-symbol">CC_LONG</span>)[self length]);
+   unsigned char digest[<span class="hljs-symbol">CC_MD5_DIGEST_LENGTH</span>];
+   <span class="hljs-symbol">CC_MD5_Final</span> (digest, &amp;md5);
+   <span class="hljs-symbol">NSString</span> *mdString = [<span class="hljs-symbol">NSString</span> stringWithFormat:   @<span class="hljs-string">&quot;%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x&quot;</span>, 
+   digest[<span class="hljs-number">0</span>], digest[<span class="hljs-number">1</span>],
+   digest[<span class="hljs-number">2</span>],  digest[<span class="hljs-number">3</span>],
+   digest[<span class="hljs-number">4</span>],  digest[<span class="hljs-number">5</span>],
+   digest[<span class="hljs-number">6</span>],  digest[<span class="hljs-number">7</span>],
+   digest[<span class="hljs-number">8</span>],  digest[<span class="hljs-number">9</span>],
+   digest[<span class="hljs-number">10</span>], digest[<span class="hljs-number">11</span>],
+   digest[<span class="hljs-number">12</span>], digest[<span class="hljs-number">13</span>],
+   digest[<span class="hljs-number">14</span>], digest[<span class="hljs-number">15</span>]];
    
    return mdString;
 }
 
-- (NSData *)MD5Sum  {
-    unsigned char hash[CC_MD5_DIGEST_LENGTH];
-    (void) CC_MD5( [self bytes], (CC_LONG)[self length], hash );
-    return ( [NSData dataWithBytes: hash length: CC_MD5_DIGEST_LENGTH] );
+- (<span class="hljs-symbol">NSData</span> *)<span class="hljs-symbol">MD5Sum</span>  {
+    unsigned char hash[<span class="hljs-symbol">CC_MD5_DIGEST_LENGTH</span>];
+    (void) <span class="hljs-symbol">CC_MD5</span>( [self bytes], (<span class="hljs-symbol">CC_LONG</span>)[self length], hash );
+    return ( [<span class="hljs-symbol">NSData</span> dataWithBytes: hash length: <span class="hljs-symbol">CC_MD5_DIGEST_LENGTH</span>] );
 }
 
 使用：
 
-NSString =&gt; MD5String
-NSSting *md5String = [@&quot;字符串&quot; md5String];
-# 16 位md5
-NSSting *md5String2 = [md5String substringWithRange:NSMakeRange(8, 16)];
+<span class="hljs-symbol">NSString</span> =&gt; <span class="hljs-symbol">MD5String</span>
+<span class="hljs-symbol">NSSting</span> *md5String = [@<span class="hljs-string">&quot;字符串&quot;</span> md5String];
+# <span class="hljs-number">16</span> 位md5
+<span class="hljs-symbol">NSSting</span> *md5String2 = [md5String substringWithRange:<span class="hljs-symbol">NSMakeRange</span>(<span class="hljs-number">8</span>, <span class="hljs-number">16</span>)];
 
-NSData =&gt; MD5Data 
-NSData *data = [data  MD5Sum];
+<span class="hljs-symbol">NSData</span> =&gt; <span class="hljs-symbol">MD5Data</span> 
+<span class="hljs-symbol">NSData</span> *data = [data  <span class="hljs-symbol">MD5Sum</span>];
 </code></pre>
 <h4 id="sha-secure-hash-algorithm-安全散列算法" tabindex="-1">SHA (Secure Hash Algorithm 安全散列算法)</h4>
 <p>SHA（Secure Hash Algorithm）是由美国专门制定密码算法的标准机构——美国国家标准技术研究院（NIST）制定的，SHA系列算法的摘要长度分别为：SHA-1为20字节（160位）、SHA-224为32字节（224位）、SHA-256为32字节（256位）、SHA-384为48字节（384位）、SHA-512为64字节（512位），由于它产生的数据摘要的长度更长，因此更难以发生碰撞，因此较之MD5更为安全，它是未来数据摘要算法的发展方向。由于SHA系列算法的数据摘要长度较长，因此其运算速度与MD5相比，也相对较慢。</p>
 <p>目前SHA1的应用较为广泛，主要应用于CA和数字证书中，另外在目前互联网中流行的BT软件中，也是使用SHA1来进行文件校验的。</p>
 <p>SHA 简单实现：</p>
-<pre><code class="language-Objective-C">NSString *text = @&quot;sdadasda&quot;;
-const char *cstr = [text cStringUsingEncoding:NSUTF8StringEncoding];
-NSData *data = [NSData dataWithBytes:cstr length:text.length];
-//使用对应的CC_SHA1,CC_SHA256,CC_SHA384,CC_SHA512的长度分别是20,32,48,64
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-built_in">NSString</span> *text = <span class="hljs-string">@&quot;sdadasda&quot;</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-type">char</span> *cstr = [text cStringUsingEncoding:<span class="hljs-built_in">NSUTF8StringEncoding</span>];
+<span class="hljs-built_in">NSData</span> *data = [<span class="hljs-built_in">NSData</span> dataWithBytes:cstr length:text.length];
+<span class="hljs-comment">//使用对应的CC_SHA1,CC_SHA256,CC_SHA384,CC_SHA512的长度分别是20,32,48,64</span>
 uint8_t digest[CC_SHA1_DIGEST_LENGTH];
-//使用对应的CC_SHA256,CC_SHA384,CC_SHA512
-unsigned int length = (int)data.length;
+<span class="hljs-comment">//使用对应的CC_SHA256,CC_SHA384,CC_SHA512</span>
+<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> length = (<span class="hljs-type">int</span>)data.length;
 CC_SHA1(data.bytes, length, digest);
 
-NSMutableString* output = [NSMutableString stringWithCapacity:CC_SHA1_DIGEST_LENGTH * 2];
-for(int i = 0; i &lt; CC_SHA1_DIGEST_LENGTH; i++)
-    [output appendFormat:@&quot;%02x&quot;, digest[i]];
+<span class="hljs-built_in">NSMutableString</span>* output = [<span class="hljs-built_in">NSMutableString</span> stringWithCapacity:CC_SHA1_DIGEST_LENGTH * <span class="hljs-number">2</span>];
+<span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; CC_SHA1_DIGEST_LENGTH; i++)
+    [output appendFormat:<span class="hljs-string">@&quot;%02x&quot;</span>, digest[i]];
 </code></pre>
 <h3 id="对称加密" tabindex="-1">对称加密</h3>
 <p>对称加密指的是加密和解密都使用用同一密钥</p>
@@ -110,8 +110,8 @@ for(int i = 0; i &lt; CC_SHA1_DIGEST_LENGTH; i++)
 <h4 id="3des" tabindex="-1">3DES</h4>
 <p>3DES（即Triple DES）是DES向AES过渡的加密算法，它使用3条56位的密钥对数据进行三次加密。是DES的一个更安全的变形。它以DES为基本模块，通过组合分组方法设计出分组加密算法。比起最初的DES更为安全。</p>
 <p>该方法使用两个密钥，执行三次DES算法，加密的过程是加密-解密-加密，解密的过程是解密-加密-解密。</p>
-<pre><code>3DES加密过程为：C=Ek3(Dk2(Ek1(P)))
-3DES解密过程为：P=Dk1(EK2(Dk3(C)
+<pre class="hljs codehilite"><code><span class="hljs-number">3</span><span class="hljs-variable">DES</span>加密过程为：<span class="hljs-variable">C</span>=<span class="hljs-function"><span class="hljs-title">Ek3</span>(<span class="hljs-title">Dk2</span>(<span class="hljs-title">Ek1</span>(<span class="hljs-variable">P</span>)))</span>
+<span class="hljs-number">3</span><span class="hljs-variable">DES</span>解密过程为：<span class="hljs-variable">P</span>=<span class="hljs-function"><span class="hljs-title">Dk1</span>(<span class="hljs-title">EK2</span>(<span class="hljs-title">Dk3</span>(<span class="hljs-variable">C</span>)</span>
 </code></pre>
 <h4 id="aes" tabindex="-1">AES</h4>
 <blockquote>
@@ -158,53 +158,53 @@ for(int i = 0; i &lt; CC_SHA1_DIGEST_LENGTH; i++)
 <li>PKCS7</li>
 <li>Zero</li>
 </ul>
-<pre><code>需要填充的字节长度 = (块长度 - (数据长度 % 块长度))
+<pre class="hljs codehilite"><code>需要填充的字节长度 = (块长度 - (数据长度 % 块长度))
 
 ANSIX923:
 在填充字节序列中最后一个字节填充为需要填充的字节长度值, 填充字节中其余字节均填充数字零.
 
 例：假定块长度为8 ，数据长度为 10,则填充字节数等于 6
 数据： FF FF FF FF FF FF FF FF | FF DD
-填充后： FF FF FF FF FF FF FF FF | FF DD 00 00 00 00 00 06
+填充后： FF FF FF FF FF FF FF FF | FF DD<span class="hljs-number"> 00 </span>00<span class="hljs-number"> 00 </span>00<span class="hljs-number"> 00 </span>06
 
 ISO10126:
 在填充字节序列中最后一个字节填充为需要填充的字节长度值, 填充字节中其余字节均填充随机数值.
 
 例：假定块长度为 16，数据长度为 9,则填充字节数等于 7
 数据：FF FF FF FF FF FF FF FF FF
-填充后：FF FF FF FF FF FF FF FF FF 75 64 C3 82 A5 26 07 
+填充后：FF FF FF FF FF FF FF FF FF<span class="hljs-number"> 75 </span>64 C3<span class="hljs-number"> 82 </span>A5<span class="hljs-number"> 26 </span>07 
 
 PKCS7:
 在填充字节序列中所有字节填充为需要填充的字节长度值
 例：假定块长度为 8，数据长度为 3,则填充字节数等于 5
 数据：FF FF FF
-填充后：FF FF FF 05 05 05 05 05
+填充后：FF FF FF<span class="hljs-number"> 05 </span>05<span class="hljs-number"> 05 </span>05 05
 
 Zero:
 在填充字节序列中所有字节填充为0x00
 例：假定块长度为 8，数据长度为 3, 则填充字节数等于 5。
 数据：FF FF FF
-填充后：FF FF FF 00 00 00 00 00
+填充后：FF FF FF<span class="hljs-number"> 00 </span>00<span class="hljs-number"> 00 </span>00 00
 </code></pre>
 <p>在 iOS 官方提供一个加密框架 CommonCrypto，通过它可以方便的实现 DES、AES、3DES 等算法</p>
-<pre><code class="language-Objective-C">// 注意：各算法对于密钥的长度要求不一致，这里以 DES-CBC 加密 为例
-NSString *key = @&quot;1234567812345678&quot;;
-NSString *iv = @&quot;123&quot;;
-NSString *plainText = @&quot;sdadasda&quot;;
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-comment">// 注意：各算法对于密钥的长度要求不一致，这里以 DES-CBC 加密 为例</span>
+<span class="hljs-built_in">NSString</span> *key = <span class="hljs-string">@&quot;1234567812345678&quot;</span>;
+<span class="hljs-built_in">NSString</span> *iv = <span class="hljs-string">@&quot;123&quot;</span>;
+<span class="hljs-built_in">NSString</span> *plainText = <span class="hljs-string">@&quot;sdadasda&quot;</span>;
 
-// 密钥、iv 变量
-NSMutableData * keyData, * ivData;
-keyData = [[key dataUsingEncoding: NSUTF8StringEncoding] mutableCopy];
-ivData = [[iv dataUsingEncoding: NSUTF8StringEncoding] mutableCopy];
+<span class="hljs-comment">// 密钥、iv 变量</span>
+<span class="hljs-built_in">NSMutableData</span> * keyData, * ivData;
+keyData = [[key dataUsingEncoding: <span class="hljs-built_in">NSUTF8StringEncoding</span>] mutableCopy];
+ivData = [[iv dataUsingEncoding: <span class="hljs-built_in">NSUTF8StringEncoding</span>] mutableCopy];
 
-// 密钥、iv 变量要为8字节/64位，不足就补充至8字节/64位
-[keyData setLength: 8];
-[ivData setLength: 8];
+<span class="hljs-comment">// 密钥、iv 变量要为8字节/64位，不足就补充至8字节/64位</span>
+[keyData setLength: <span class="hljs-number">8</span>];
+[ivData setLength: <span class="hljs-number">8</span>];
 
-NSData* plainTextData = [plainText dataUsingEncoding: NSUTF8StringEncoding];
+<span class="hljs-built_in">NSData</span>* plainTextData = [plainText dataUsingEncoding: <span class="hljs-built_in">NSUTF8StringEncoding</span>];
 
-// 创建加/解密器 CCCryptorRef
-/**
+<span class="hljs-comment">// 创建加/解密器 CCCryptorRef</span>
+<span class="hljs-comment">/**
  *  CCAlgorithm -&gt; kCCAlgorithmDES 加密算法
  *  CCOperation -&gt; kCCEncrypt(加密)、kCCDecrypt(解密)
  *  CCMode -&gt; kCCModeCBC 加密模式
@@ -213,38 +213,38 @@ NSData* plainTextData = [plainText dataUsingEncoding: NSUTF8StringEncoding];
  *  key -&gt; keyData.bytes
  *  keyLength -&gt; keyData.bytes.length 转Data字节数据的密钥长度
  *  CCCryptorRef -&gt; cryptorRef 加/解密器
- */
-CCCryptorRef cryptor = NULL;
-CCCryptorStatus status = CCCryptorCreateWithMode(kCCEncrypt, kCCModeCBC, kCCAlgorithmDES, ccPKCS7Padding, ivData.bytes, [keyData bytes], [keyData length], NULL, 0, 0, 0, &amp;cryptor);
+ */</span>
+CCCryptorRef cryptor = <span class="hljs-literal">NULL</span>;
+CCCryptorStatus status = CCCryptorCreateWithMode(kCCEncrypt, kCCModeCBC, kCCAlgorithmDES, ccPKCS7Padding, ivData.bytes, [keyData bytes], [keyData length], <span class="hljs-literal">NULL</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, &amp;cryptor);
 
-// 输出数据时需要的可用空间大小
-size_t bufsize = CCCryptorGetOutputLength(cryptor, (size_t)[plainTextData length], true);
-// 输出已加密串的内存地址/缓冲区
-void * buf = malloc( bufsize );
-// 输出成功之后实际占用的空间大小.
-size_t bufused = 0;
-// 输出密文总大小
-size_t bytesTotal = 0;
-// 处理（加密、解密）一些数据，将结果将写入缓冲区 buf。
+<span class="hljs-comment">// 输出数据时需要的可用空间大小</span>
+size_t bufsize = CCCryptorGetOutputLength(cryptor, (size_t)[plainTextData length], <span class="hljs-literal">true</span>);
+<span class="hljs-comment">// 输出已加密串的内存地址/缓冲区</span>
+<span class="hljs-type">void</span> * buf = malloc( bufsize );
+<span class="hljs-comment">// 输出成功之后实际占用的空间大小.</span>
+size_t bufused = <span class="hljs-number">0</span>;
+<span class="hljs-comment">// 输出密文总大小</span>
+size_t bytesTotal = <span class="hljs-number">0</span>;
+<span class="hljs-comment">// 处理（加密、解密）一些数据，将结果将写入缓冲区 buf。</span>
 status = CCCryptorUpdate(cryptor, [plainTextData bytes], (size_t)[plainTextData length], buf, bufsize, &amp;bufused);
-if ( status != kCCSuccess ) {
+<span class="hljs-keyword">if</span> ( status != kCCSuccess ) {
     free( buf );
-    return;
+    <span class="hljs-keyword">return</span>;
 }
 
 bytesTotal += bufused;
 
-// 完成加密或解密操作，并获得最终数据输出。
+<span class="hljs-comment">// 完成加密或解密操作，并获得最终数据输出。</span>
 status = CCCryptorFinal(cryptor, buf + bufused, bufsize - bufused, &amp;bufused );
-if ( status != kCCSuccess ) {
+<span class="hljs-keyword">if</span> ( status != kCCSuccess ) {
     free( buf );
-    return;
+    <span class="hljs-keyword">return</span>;
 }
    
 bytesTotal += bufused;
 
-NSData *resulltData = [NSData dataWithBytesNoCopy: buf length: bytesTotal];
-NSString *resullt = [resulltData base64EncodedStringWithOptions:0];
+<span class="hljs-built_in">NSData</span> *resulltData = [<span class="hljs-built_in">NSData</span> dataWithBytesNoCopy: buf length: bytesTotal];
+<span class="hljs-built_in">NSString</span> *resullt = [resulltData base64EncodedStringWithOptions:<span class="hljs-number">0</span>];
 CCCryptorRelease(cryptor);
 </code></pre>
 <h3 id="非对称加密" tabindex="-1">非对称加密</h3>
@@ -261,7 +261,7 @@ CCCryptorRelease(cryptor);
 <p>互质关系：对于N个自然数，他们的公因数只有1，则成N个数互质。例如：7 和 8，3 和 4，3 和 5 等。</p>
 <h5 id="欧拉定理" tabindex="-1">欧拉定理</h5>
 <p>对于正整数N，将小于或等于N并与N互质的数的个数记作φ(N)。</p>
-<pre><code>例如：正整数 5，小于或等于5并与5互质的数有：1，2，3，4，所以 φ(5) = 4
+<pre class="hljs codehilite"><code>例如：正整数 <span class="hljs-number">5</span>，小于或等于<span class="hljs-number">5</span>并与<span class="hljs-number">5</span>互质的数有：<span class="hljs-number">1</span>，<span class="hljs-number">2</span>，<span class="hljs-number">3</span>，<span class="hljs-number">4</span>，所以 φ(<span class="hljs-number">5</span>) <span class="hljs-operator">=</span> <span class="hljs-number">4</span>
 </code></pre>
 <p>欧拉定理的引理:</p>
 <ul>
@@ -276,7 +276,7 @@ CCCryptorRelease(cryptor);
 <li>公开整数n和e作为公钥，秘密保存d作为私钥</li>
 </ol>
 <h5 id="加解密算法" tabindex="-1">加/解密算法</h5>
-<pre><code>// c:密文  m:原文 (e,n):公钥  d:私钥
+<pre class="hljs codehilite"><code>// c:密文  m:原文 (e,n):公钥  d:私钥
 c = E(m) = m^e mod n
 
 m = D(c) = c^d mod n
@@ -287,18 +287,18 @@ p = 3
 q = 5
 
 公共数 n
-n = p * q = 3 * 5 = 15
-φ(n) = (p - 1) * (q - 1) = 2 * 4 = 8
+n = p * q =<span class="hljs-number"> 3 </span>*<span class="hljs-number"> 5 </span>= 15
+φ(n) = (p - 1) * (q - 1) =<span class="hljs-number"> 2 </span>*<span class="hljs-number"> 4 </span>= 8
 φ(15): { 1,2,4,7,8,11,13,14} = 8
 
 已知 φ(n) = 8，e =&gt; { 3，5，7，9，11...}，只要 e 和 φ(n) 互质就行，这里取 e = 11
 
-私钥 (d * e) % φ(n) = (d * 11) % 8 = 1
+私钥 (d * e) % φ(n) = (d * 11) %<span class="hljs-number"> 8 </span>= 1
 d = 3
 
 假设 m = 3
-c = 3^11 % 15 = 177147 % 15 = 12
-m = 12^3 % 15 = 1728 % 15 = 3
+c = 3^11 %<span class="hljs-number"> 15 </span>=<span class="hljs-number"> 177147 </span>%<span class="hljs-number"> 15 </span>= 12
+m = 12^3 %<span class="hljs-number"> 15 </span>=<span class="hljs-number"> 1728 </span>%<span class="hljs-number"> 15 </span>= 3
 </code></pre>
 <p>RSA的安全性依赖于大数分解，但是否等同于大数分解一直未能得到理论上的证明，也并没有从理论上证明破译。RSA的难度与大数分解难度等价。因为没有证明破解RSA就一定需要做大数分解。假设存在一种无须分解大数的算法，那它肯定可以修改成为大数分解算法，即RSA的重大缺陷是无法从理论上把握它的保密性能如何，而且密码学界多数人士倾向于因子分解不是<a href="https://baike.baidu.com/item/P%E7%B1%BB%E9%97%AE%E9%A2%98/22400499?fromtitle=NPC%E9%97%AE%E9%A2%98&amp;fromid=8698778">P类问题</a>。</p>
 <p>目前，RSA的一些变种算法已被证明等价于大数分解。不管怎样，分解 n 是最显然的攻击方法。现在，人们已能分解140多个十进制位的大素数。因此，模数 n 必须选大些，视具体适用情况而定。</p>

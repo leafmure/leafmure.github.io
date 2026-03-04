@@ -1,21 +1,21 @@
-<pre><code class="language-swift">控制台错误日志：
-Invalid update: invalid number of rows in section 0. The number of
-rows contained in an existing section after the update (3) must be
-equal to the number of rows contained in that section before the
-update (2), plus or minus the number of rows inserted or deleted from
-that section (0 inserted, 0 deleted) and plus or minus the number of
-rows moved into or out of that section (0 moved in, 0 moved out).
+<pre class="hljs codehilite language-swift"><code>控制台错误日志：
+<span class="hljs-type">Invalid</span> update: invalid number of rows <span class="hljs-keyword">in</span> section <span class="hljs-number">0</span>. <span class="hljs-type">The</span> number of
+rows contained <span class="hljs-keyword">in</span> an existing section after the update (<span class="hljs-number">3</span>) must be
+equal to the number of rows contained <span class="hljs-keyword">in</span> that section before the
+update (<span class="hljs-number">2</span>), plus or minus the number of rows inserted or deleted from
+that section (<span class="hljs-number">0</span> inserted, <span class="hljs-number">0</span> deleted) and plus or minus the number of
+rows moved into or out of that section (<span class="hljs-number">0</span> moved <span class="hljs-keyword">in</span>, <span class="hljs-number">0</span> moved out).
 
-无效更新：节0中的行数无效。行数
-更新（3）后现有节中包含的行必须是
+无效更新：节<span class="hljs-number">0</span>中的行数无效<span class="hljs-operator">。</span>行数
+更新（<span class="hljs-number">3</span>）后现有节中包含的行必须是
 等于该节中包含的行数，在
-更新（2），加上或减去从中插入或删除的行数
-该部分（插入0，删除0）加上或减去
-移入或移出该节的行（0移入，0移出）。
+更新（<span class="hljs-number">2</span>），加上或减去从中插入或删除的行数
+该部分（插入<span class="hljs-number">0</span>，删除<span class="hljs-number">0</span>）加上或减去
+移入或移出该节的行（<span class="hljs-number">0</span>移入，<span class="hljs-number">0</span>移出）<span class="hljs-operator">。</span>
 </code></pre>
 <!-- more -->
 <h3 id="出现情况" tabindex="-1">出现情况</h3>
-<pre><code class="language-swift">&lt;!--UITableView 处于 reload 中--&gt;
+<pre class="hljs codehilite language-swift"><code><span class="hljs-operator">&lt;!--</span><span class="hljs-type">UITableView</span> 处于 reload 中<span class="hljs-operator">--&gt;</span>
 tableView.beginUpdates()
 tableView.endUpdates()
 </code></pre>
@@ -25,14 +25,14 @@ tableView.endUpdates()
 <ol>
 <li>在beginUpdates和endUpdates插入对cell数量有改变的section的刷新</li>
 </ol>
-<pre><code class="language-swift">tableView.beginUpdates()
-tableView.reloadSections(IndexSet([0]), with: .automatic)
+<pre class="hljs codehilite language-swift"><code>tableView.beginUpdates()
+tableView.reloadSections(<span class="hljs-type">IndexSet</span>([<span class="hljs-number">0</span>]), with: .automatic)
 tableView.endUpdates()
 </code></pre>
 <ol start="2">
 <li>在 UITableView reloadData 完后操作</li>
 </ol>
-<pre><code class="language-swift">DispatchQueue.main.async {
+<pre class="hljs codehilite language-swift"><code><span class="hljs-type">DispatchQueue</span>.main.async {
    tableView.beginUpdates()
    tableView.endUpdates()
 }

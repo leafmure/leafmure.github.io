@@ -1,50 +1,50 @@
 <h3 id="sidetables" tabindex="-1">SideTables</h3>
 <p>SideTables 是全局表，管理着对象的引用计数和weak引用指针，每个对象在此表中都有对应的一个 SideTable，让我们来看看 SideTables 源码定义</p>
 <!-- more -->
-<pre><code class="language-Objective-C">static StripedMap&lt;SideTable&gt;&amp; SideTables() {
-return *reinterpret_cast&lt;StripedMap&lt;SideTable&gt;*&gt;(SideTableBuf);
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-function"><span class="hljs-type">static</span> StripedMap&lt;SideTable&gt;&amp; <span class="hljs-title">SideTables</span><span class="hljs-params">()</span> </span>{
+<span class="hljs-keyword">return</span> *<span class="hljs-keyword">reinterpret_cast</span>&lt;StripedMap&lt;SideTable&gt;*&gt;(SideTableBuf);
 }
 </code></pre>
 <p>虽然看不懂，但从源码的定义可以看出 SideTables 是通过 StripedMap 来实现的，我们来看一下它的实现</p>
-<pre><code class="language-Objective-C">template&lt;typename T&gt;
-class StripedMap {
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T&gt;
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">StripedMap</span> {
 
-enum { CacheLineSize = 64 };
+<span class="hljs-keyword">enum</span> { CacheLineSize = <span class="hljs-number">64</span> };
 
-#if TARGET_OS_EMBEDDED // 嵌入式
-enum { StripeCount = 8 };
-#else
-enum { StripeCount = 64 };
-#endif
+<span class="hljs-meta">#<span class="hljs-keyword">if</span> TARGET_OS_EMBEDDED <span class="hljs-comment">// 嵌入式</span></span>
+<span class="hljs-keyword">enum</span> { StripeCount = <span class="hljs-number">8</span> };
+<span class="hljs-meta">#<span class="hljs-keyword">else</span></span>
+<span class="hljs-keyword">enum</span> { StripeCount = <span class="hljs-number">64</span> };
+<span class="hljs-meta">#<span class="hljs-keyword">endif</span></span>
 
-struct PaddedT {
-T value alignas(CacheLineSize);
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">PaddedT</span> {
+<span class="hljs-function">T value <span class="hljs-title">alignas</span><span class="hljs-params">(CacheLineSize)</span></span>;
 };
 
 PaddedT array[StripeCount];
 
-static unsigned int indexForPointer(const void *p) {
-uintptr_t addr = reinterpret_cast&lt;uintptr_t&gt;(p);
-return ((addr &gt;&gt; 4) ^ (addr &gt;&gt; 9)) % StripeCount;
+<span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> <span class="hljs-title">indexForPointer</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">void</span> *p)</span> </span>{
+<span class="hljs-type">uintptr_t</span> addr = <span class="hljs-built_in">reinterpret_cast</span>&lt;<span class="hljs-type">uintptr_t</span>&gt;(p);
+<span class="hljs-keyword">return</span> ((addr &gt;&gt; <span class="hljs-number">4</span>) ^ (addr &gt;&gt; <span class="hljs-number">9</span>)) % StripeCount;
 }
 
-public:
-T&amp; operator[] (const void *p) { 
-return array[indexForPointer(p)].value; 
+<span class="hljs-keyword">public</span>:
+T&amp; <span class="hljs-keyword">operator</span>[] (<span class="hljs-type">const</span> <span class="hljs-type">void</span> *p) { 
+<span class="hljs-keyword">return</span> array[<span class="hljs-built_in">indexForPointer</span>(p)].value; 
 }
-const T&amp; operator[] (const void *p) const { 
-return const_cast&lt;StripedMap&lt;T&gt;&gt;(this)[p]; 
+<span class="hljs-type">const</span> T&amp; <span class="hljs-keyword">operator</span>[] (<span class="hljs-type">const</span> <span class="hljs-type">void</span> *p) <span class="hljs-type">const</span> { 
+<span class="hljs-keyword">return</span> <span class="hljs-keyword">const_cast</span>&lt;StripedMap&lt;T&gt;&gt;(<span class="hljs-keyword">this</span>)[p]; 
 }
 };
 </code></pre>
 <p>从上可以看出，StripedMap 的容量大小为：StripeCount = 64，通过 indexForPointer 函数分配在 StripedMap的下标。public 中的应该是读存方法吧（猜测，哈哈。。），可以看到其和 Map 集合一样。</p>
 <h4 id="sidetable" tabindex="-1">SideTable</h4>
 <p>SideTable 的定义如下</p>
-<pre><code class="language-Objective-C">typedef objc::DenseMap&lt;DisguisedPtr&lt;objc_object&gt;,size_t,true&gt; RefcountMap;
+<pre class="hljs codehilite language-Objective-C"><code>type<span class="hljs-keyword">def</span> <span class="hljs-title function_">objc</span><span class="hljs-symbol">:</span><span class="hljs-symbol">:DenseMap&lt;DisguisedPtr&lt;objc_object&gt;</span>,size_t,<span class="hljs-literal">true</span>&gt; <span class="hljs-title class_">RefcountMap</span>;
 
-struct SideTable {
+struct <span class="hljs-title class_">SideTable</span> {
 spinlock_t slock;
-RefcountMap refcnts;
+<span class="hljs-title class_">RefcountMap</span> refcnts;
 weak_table_t weak_table;
 ...
 };
@@ -55,28 +55,28 @@ weak_table_t weak_table;
 <li>weak_table_t: 存放弱变量引用</li>
 </ul>
 <h5 id="disguisedptr" tabindex="-1">DisguisedPtr</h5>
-<pre><code class="language-Objective-C">class DisguisedPtr {
-uintptr_t value;
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-keyword">class</span> <span class="hljs-title class_">DisguisedPtr</span> {
+<span class="hljs-type">uintptr_t</span> value;
 
-// 对指针进行伪装
-static uintptr_t disguise(T* ptr) {
-return -(uintptr_t)ptr;
+<span class="hljs-comment">// 对指针进行伪装</span>
+<span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">uintptr_t</span> <span class="hljs-title">disguise</span><span class="hljs-params">(T* ptr)</span> </span>{
+<span class="hljs-keyword">return</span> -(<span class="hljs-type">uintptr_t</span>)ptr;
 }
-// 恢复至原指针
-static T* undisguise(uintptr_t val) {
-return (T*)-val;
+<span class="hljs-comment">// 恢复至原指针</span>
+<span class="hljs-function"><span class="hljs-type">static</span> T* <span class="hljs-title">undisguise</span><span class="hljs-params">(<span class="hljs-type">uintptr_t</span> val)</span> </span>{
+<span class="hljs-keyword">return</span> (T*)-val;
 }
 };
 
 </code></pre>
 <p>DisguisedPtr 对指针进行伪装的类，将指针强转为 uintptr_t （unsigned long）类型的负值，这样类似 leaks 这样的查内存泄漏的工具便无法跟踪到对象。</p>
 <h5 id="weak_table_t" tabindex="-1">weak_table_t</h5>
-<pre><code class="language-Objective-C">struct weak_table_t {
-weak_entry_t *weak_entries;
-size_t    num_entries;
-uintptr_t mask;
-uintptr_t max_hash_displacement;
-};
+<pre class="hljs codehilite language-Objective-C"><code>struct weak_table_t {
+weak_entry_t *weak_entries<span class="hljs-comment">;</span>
+size_t    num_entries<span class="hljs-comment">;</span>
+uintptr_t mask<span class="hljs-comment">;</span>
+uintptr_t max_hash_displacement<span class="hljs-comment">;</span>
+}<span class="hljs-comment">;</span>
 </code></pre>
 <ul>
 <li>weak_entries：存放对象与弱引用对象指针映射的弱引用条目数组</li>
@@ -85,255 +85,255 @@ uintptr_t max_hash_displacement;
 <li>max_hash_displacement：最大哈希偏移值</li>
 </ul>
 <h5 id="weak_entry_t" tabindex="-1">weak_entry_t</h5>
-<pre><code class="language-Objective-C">#define WEAK_INLINE_COUNT 4
-#define REFERRERS_OUT_OF_LINE 2
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-meta">#<span class="hljs-keyword">define</span> WEAK_INLINE_COUNT 4</span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> REFERRERS_OUT_OF_LINE 2</span>
 
-struct weak_entry_t {
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">weak_entry_t</span> {
 DisguisedPtr&lt;objc_object&gt; referent;
-union {
-struct {
-weak_referrer_t *referrers;
-uintptr_t        out_of_line_ness : 2;
-uintptr_t        num_refs : PTR_MINUS_2;
-uintptr_t        mask;
-uintptr_t        max_hash_displacement;
+<span class="hljs-keyword">union</span> {
+<span class="hljs-keyword">struct</span> {
+<span class="hljs-type">weak_referrer_t</span> *referrers;
+<span class="hljs-type">uintptr_t</span>        out_of_line_ness : <span class="hljs-number">2</span>;
+<span class="hljs-type">uintptr_t</span>        num_refs : PTR_MINUS_2;
+<span class="hljs-type">uintptr_t</span>        mask;
+<span class="hljs-type">uintptr_t</span>        max_hash_displacement;
 };
-struct {
+<span class="hljs-keyword">struct</span> {
 
-weak_referrer_t  inline_referrers[WEAK_INLINE_COUNT];
+<span class="hljs-type">weak_referrer_t</span>  inline_referrers[WEAK_INLINE_COUNT];
 };
 };
 };
 </code></pre>
 <p>weak_entry_t 是一个弱引用条目，其映射了引用对象和其被弱引用的指针，referent 便是引用对象，union（联合体） 里存放着弱引用该对象的指针，union 里面的多个成员变量共享同一内存空间。union 中有两个结构体都是存储弱引用对象指针的集合。第一个结构体中 referrers 是一个可进行扩容的集合，而第二个结构体中 inline_referrers 是一个容量为 4 的数组，weak_entry_t 默认使用 inline_referrers 来保存弱引用指针，当此数组容量满后，会使用 referrers 接管保存工作。out_of_line_ness 便是描述存储的弱引用指针是否超出 inline_referrers 的容量。</p>
 <h3 id="__weak-原理" tabindex="-1">__weak 原理</h3>
-<pre><code class="language-Objective-C">NSString *aa = @&quot;aa&quot;;
-__weak NSString *test = aa;
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-built_in">NSString</span> *aa = <span class="hljs-string">@&quot;aa&quot;</span>;
+__<span class="hljs-keyword">weak</span> <span class="hljs-built_in">NSString</span> *test = aa;
 </code></pre>
 <p>上面代码在编译时，模拟的代码如下：</p>
-<pre><code class="language-Objective-C">NSString *aa;
-aa = @&quot;aa&quot;
-NSString *test;
-objc_initWeak(&amp;obj, aa);
-objc_destoryWeak(&amp;obj);
+<pre class="hljs codehilite language-Objective-C"><code>NSString <span class="hljs-comment">*aa;</span>
+aa = @<span class="hljs-string">&quot;aa&quot;</span>
+NSString <span class="hljs-comment">*test;</span>
+objc_initWeak(<span class="hljs-variable">&amp;obj</span>, aa);
+objc_destoryWeak(<span class="hljs-variable">&amp;obj</span>);
 </code></pre>
 <h4 id="__weak-变量创建" tabindex="-1">__weak 变量创建</h4>
 <p>__weak 变量的创建入口是 objc_initWeak 这个函数，其实现是：</p>
-<pre><code class="language-Objective-C">id objc_initWeak(id *location, id newObj)
+<pre class="hljs codehilite language-Objective-C"><code>id objc_initWeak(id *<span class="hljs-keyword">location</span>, id newObj)
 {
-if (!newObj) {
-*location = nil;
-return nil;
+<span class="hljs-keyword">if</span> (!newObj) {
+*<span class="hljs-keyword">location</span> = nil;
+<span class="hljs-keyword">return</span> nil;
 }
 
-return storeWeak&lt;false/*old*/, true/*new*/, true/*crash*/&gt;
-(location, (objc_object*)newObj);
+<span class="hljs-keyword">return</span> storeWeak&lt;<span class="hljs-literal">false</span><span class="hljs-comment">/*old*/</span>, <span class="hljs-literal">true</span><span class="hljs-comment">/*new*/</span>, <span class="hljs-literal">true</span><span class="hljs-comment">/*crash*/</span>&gt;
+(<span class="hljs-keyword">location</span>, (objc_object*)newObj);
 }
 
 </code></pre>
 <p>如果 __weak 变量被赋予的对象是 nil 那么，将 __weak 变量置 nil，进入 objc_destoryWeak 销毁函数。storeWeak 函数是一个更新弱变量的函数，此函数有点长，我们分段讲述：</p>
-<pre><code class="language-Objective-C">// 如果 HaveOld 为 true，则表明变量需要清理，变量可能为nil
-// 如果 HaveNew 为 true，则表明有一个新值将赋予变量，这个新值可能为 nil
-// 如果 CrashIfDeallocating 为 true，则表明新值 newObj 是释放了的对象（并不是说 newObj 为 nil）或者是一个不支持弱引用的对象。
-// 如果 CrashIfDeallocating 为 false，则将新值 newObj 置nil 并 *location 弱变量赋值为 nil。 
-template &lt;bool HaveOld, bool HaveNew, bool CrashIfDeallocating&gt;
-static id 
-storeWeak(id *location, objc_object *newObj)
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-comment">// 如果 HaveOld 为 true，则表明变量需要清理，变量可能为nil</span>
+<span class="hljs-comment">// 如果 HaveNew 为 true，则表明有一个新值将赋予变量，这个新值可能为 nil</span>
+<span class="hljs-comment">// 如果 CrashIfDeallocating 为 true，则表明新值 newObj 是释放了的对象（并不是说 newObj 为 nil）或者是一个不支持弱引用的对象。</span>
+<span class="hljs-comment">// 如果 CrashIfDeallocating 为 false，则将新值 newObj 置nil 并 *location 弱变量赋值为 nil。 </span>
+template &lt;<span class="hljs-type">bool</span> HaveOld, <span class="hljs-type">bool</span> HaveNew, <span class="hljs-type">bool</span> CrashIfDeallocating&gt;
+<span class="hljs-keyword">static</span> <span class="hljs-type">id</span> 
+storeWeak(<span class="hljs-type">id</span> *location, objc_object *newObj)
 {
 assert(HaveOld  ||  HaveNew);
-if (!HaveNew) assert(newObj == nil);
+<span class="hljs-keyword">if</span> (!HaveNew) assert(newObj == <span class="hljs-literal">nil</span>);
 
-Class previouslyInitializedClass = nil;
-id oldObj;
+Class previouslyInitializedClass = <span class="hljs-literal">nil</span>;
+<span class="hljs-type">id</span> oldObj;
 SideTable *oldTable;
 SideTable *newTable;
 
-// Acquire locks for old and new values.
-// 为新旧值获取锁。
-// Order by lock address to prevent lock ordering problems. 
-// 按锁地址排序以防止锁排序问题
-// Retry if the old value changes underneath us.
-// 如果下面的旧值发生更改，请重试。
+<span class="hljs-comment">// Acquire locks for old and new values.</span>
+<span class="hljs-comment">// 为新旧值获取锁。</span>
+<span class="hljs-comment">// Order by lock address to prevent lock ordering problems. </span>
+<span class="hljs-comment">// 按锁地址排序以防止锁排序问题</span>
+<span class="hljs-comment">// Retry if the old value changes underneath us.</span>
+<span class="hljs-comment">// 如果下面的旧值发生更改，请重试。</span>
 retry:
-if (HaveOld) {
+<span class="hljs-keyword">if</span> (HaveOld) {
 oldObj = *location;
 oldTable = &amp;SideTables()[oldObj];
-} else {
-oldTable = nil;
+} <span class="hljs-keyword">else</span> {
+oldTable = <span class="hljs-literal">nil</span>;
 }
-if (HaveNew) {
+<span class="hljs-keyword">if</span> (HaveNew) {
 newTable = &amp;SideTables()[newObj];
-} else {
-newTable = nil;
+} <span class="hljs-keyword">else</span> {
+newTable = <span class="hljs-literal">nil</span>;
 }
 </code></pre>
 <p>声明一个 previouslyInitializedClass 保存先前初始化的类，声明一个旧值对象 oldObj，一新一旧两个 SideTable（散列表）。从 objc_initWeak 传入的 HaveOld 为 false，HaveNew 为 true，因此将 oldTable 赋值为 nil，从 SideTables 获取 newObj 的 SideTable 赋值给 newTable。两个散列表处理好了后，因为当前是 __weak 变量的创建，处理的是新值，所以下面只给出新值有关的处理代码</p>
-<pre><code class="language-Objective-C">// 给新旧散列表加锁
-SideTable::lockTwo&lt;HaveOld, HaveNew&gt;(oldTable, newTable);
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-comment">// 给新旧散列表加锁</span>
+SideTable::lockTwo&lt;HaveOld, HaveNew&gt;(oldTable, newTable)<span class="hljs-comment">;</span>
 
-// 通过确保没有弱引用对象具有未初始化的isa，防止弱引用机制和初始化机制之间的死锁。
-if (HaveNew  &amp;&amp;  newObj) {
-Class cls = newObj-&gt;getIsa();
-if (cls != previouslyInitializedClass  &amp;&amp;  
-!((objc_class *)cls)-&gt;isInitialized()) 
+<span class="hljs-comment">// 通过确保没有弱引用对象具有未初始化的isa，防止弱引用机制和初始化机制之间的死锁。</span>
+<span class="hljs-keyword">if</span> (HaveNew  &amp;&amp;  newObj) {
+Class <span class="hljs-keyword">cls</span> = newObj-&gt;getIsa()<span class="hljs-comment">;</span>
+<span class="hljs-keyword">if</span> (<span class="hljs-keyword">cls</span> != previouslyInitializedClass  &amp;&amp;  
+!((objc_class *)<span class="hljs-keyword">cls</span>)-&gt;isInitialized()) 
 {
-SideTable::unlockTwo&lt;HaveOld, HaveNew&gt;(oldTable, newTable);
-_class_initialize(_class_getNonMetaClass(cls, (id)newObj));
+SideTable::unlockTwo&lt;HaveOld, HaveNew&gt;(oldTable, newTable)<span class="hljs-comment">;</span>
+_class_initialize(_class_getNonMetaClass(<span class="hljs-keyword">cls</span>, (id)newObj))<span class="hljs-comment">;</span>
 
-// 如果这个类完成了+initialize，那最好。如果这个类仍在这个线程上运行+initialize（即+initialize，调用storeWeak，在其自身的实例上），我们可以继续，但是将显示为初始化和尚未初始化作为上述检查，设置 previouslyInitializedClass 以在重试时识别它
-previouslyInitializedClass = cls;
+<span class="hljs-comment">// 如果这个类完成了+initialize，那最好。如果这个类仍在这个线程上运行+initialize（即+initialize，调用storeWeak，在其自身的实例上），我们可以继续，但是将显示为初始化和尚未初始化作为上述检查，设置 previouslyInitializedClass 以在重试时识别它</span>
+previouslyInitializedClass = <span class="hljs-keyword">cls</span><span class="hljs-comment">;</span>
 
-goto retry;
+<span class="hljs-keyword">goto</span> retry<span class="hljs-comment">;</span>
 }
 }
 </code></pre>
 <p>此步骤为确保弱引用对象 newObj 初始化了，首先通过获取 newObj 的 isa 指针获取它的类，然后判断它的类是否初始化了，如果没有，便打开新旧散列表的锁，获取 newObj 的元类发送 +initialize 消息进行初始化。下面是 storeWeak 函数最后一部分：</p>
-<pre><code class="language-Objective-C">
-// Assign new value, if any.
-if (HaveNew) {
-// 弱引用注册失败便返回 nil
-newObj = (objc_object *)weak_register_no_lock(&amp;newTable-&gt;weak_table, (id)newObj, location, CrashIfDeallocating);
+<pre class="hljs codehilite language-Objective-C"><code>
+<span class="hljs-comment">// Assign new value, if any.</span>
+<span class="hljs-keyword">if</span> (HaveNew) {
+<span class="hljs-comment">// 弱引用注册失败便返回 nil</span>
+<span class="hljs-function"><span class="hljs-title">newObj</span> = (objc_object *)weak_register_no_lock(&amp;newTable-&gt;</span>weak_table, (id)newObj, location, CrashIfDeallocating);
 
-// 设置refcount表中的弱引用位
-if (newObj  &amp;&amp;  !newObj-&gt;isTaggedPointer()) {
-newObj-&gt;setWeaklyReferenced_nolock();
+<span class="hljs-comment">// 设置refcount表中的弱引用位</span>
+<span class="hljs-function"><span class="hljs-title">if</span> (newObj  &amp;&amp;  !newObj-&gt;</span>isTaggedPointer()) {
+<span class="hljs-function"><span class="hljs-title">newObj</span>-&gt;</span>setWeaklyReferenced_nolock();
 }
 
-// 不要在其他地方设置 *location，否则会有冲突。
+<span class="hljs-comment">// 不要在其他地方设置 *location，否则会有冲突。</span>
 *location = (id)newObj;
 }
-// 打开新旧散列表的锁
+<span class="hljs-comment">// 打开新旧散列表的锁</span>
 SideTable::unlockTwo&lt;HaveOld, HaveNew&gt;(oldTable, newTable);
 
-// 弱引用处理完毕，返回新值
+<span class="hljs-comment">// 弱引用处理完毕，返回新值</span>
 return (id)newObj;
 </code></pre>
 <p>首先，通过 weak_register_no_lock 函数将 __weak 变量对 newObj 的弱引用注册到 newObj的散列表的弱引用表中，如果注册成功则设置 newObj 的refcount表中的 __weak 变量对其的引用为弱引用，然后将新值赋给 __weak 变量。最后，所有操作完成了，打开新旧散列表的锁，返回新值赋给 __weak 变量。</p>
 <h4 id="弱引用注册" tabindex="-1">弱引用注册</h4>
 <p>__weak 变量引用对象时，需要将 __weak 变量的弱引用注册到被引用对象的弱引用表中，这一操作便由 weak_register_no_lock 函数完成。此函数的实现我们分两部分程呈现：</p>
-<pre><code class="language-Objective-C">id 
-weak_register_no_lock(weak_table_t *weak_table, id referent_id, 
-id *referrer_id, bool crashIfDeallocating)
+<pre class="hljs codehilite language-Objective-C"><code>id 
+weak_register_no_lock(weak_table_t *weak_table, id <span class="hljs-built_in">ref</span>erent_id, 
+id *<span class="hljs-built_in">ref</span>errer_id, <span class="hljs-built_in">bool</span> crashIfDeallocating)
 {
-objc_object *referent = (objc_object *)referent_id;
-objc_object **referrer = (objc_object **)referrer_id;
+objc_object *<span class="hljs-built_in">ref</span>erent = (objc_object *)<span class="hljs-built_in">ref</span>erent_id;
+objc_object **<span class="hljs-built_in">ref</span>errer = (objc_object **)<span class="hljs-built_in">ref</span>errer_id;
 
-if (!referent  ||  referent-&gt;isTaggedPointer()) return referent_id;
+<span class="hljs-keyword">if</span> (!<span class="hljs-built_in">ref</span>erent  ||  <span class="hljs-built_in">ref</span>erent-&gt;isTaggedPointer()) <span class="hljs-keyword">return</span> <span class="hljs-built_in">ref</span>erent_id;
 
-// ensure that the referenced object is viable
-// 确保引用的对象是可用的
-bool deallocating;
-if (!referent-&gt;ISA()-&gt;hasCustomRR()) {
-deallocating = referent-&gt;rootIsDeallocating();
+<span class="hljs-comment">// ensure that the referenced object is viable</span>
+<span class="hljs-comment">// 确保引用的对象是可用的</span>
+<span class="hljs-built_in">bool</span> deallocating;
+<span class="hljs-keyword">if</span> (!<span class="hljs-built_in">ref</span>erent-&gt;ISA()-&gt;hasCustomRR()) {
+deallocating = <span class="hljs-built_in">ref</span>erent-&gt;rootIsDeallocating();
 }
-else {
+<span class="hljs-keyword">else</span> {
 BOOL (*allowsWeakReference)(objc_object *, SEL) = 
 (BOOL(*)(objc_object *, SEL))
-object_getMethodImplementation((id)referent, 
+object_getMethodImplementation((id)<span class="hljs-built_in">ref</span>erent, 
 SEL_allowsWeakReference);
-if ((IMP)allowsWeakReference == _objc_msgForward) {
-return nil;
+<span class="hljs-keyword">if</span> ((IMP)allowsWeakReference == _objc_msgForward) {
+<span class="hljs-keyword">return</span> nil;
 }
 deallocating =
-! (*allowsWeakReference)(referent, SEL_allowsWeakReference);
+! (*allowsWeakReference)(<span class="hljs-built_in">ref</span>erent, SEL_allowsWeakReference);
 }
 
-if (deallocating) {
-if (crashIfDeallocating) {
-_objc_fatal(&quot;Cannot form weak reference to instance (%p) of &quot;
-&quot;class %s. It is possible that this object was &quot;
-&quot;over-released, or is in the process of deallocation.&quot;,
-(void*)referent, object_getClassName((id)referent));
-} else {
-return nil;
+<span class="hljs-keyword">if</span> (deallocating) {
+<span class="hljs-keyword">if</span> (crashIfDeallocating) {
+_objc_fatal(<span class="hljs-string">&quot;Cannot form weak reference to instance (%p) of &quot;</span>
+<span class="hljs-string">&quot;class %s. It is possible that this object was &quot;</span>
+<span class="hljs-string">&quot;over-released, or is in the process of deallocation.&quot;</span>,
+(<span class="hljs-built_in">void</span>*)<span class="hljs-built_in">ref</span>erent, object_getClassName((id)<span class="hljs-built_in">ref</span>erent));
+} <span class="hljs-keyword">else</span> {
+<span class="hljs-keyword">return</span> nil;
 }
 }
 </code></pre>
 <p>上部分是为了确保弱引用的对象 referent（newObj对象）支持被弱引用。首先判断引用对象 referent 的 isa 中是否有自定义 retain 和 release 实现，如果没有，则调用 rootIsDeallocating() 函数检查 referent 是否在析构（即是否被释放）。</p>
 <p>如果referent 的 isa 中有自定义 retain 和 release 实现，首先会获取 referent 中 SEL_allowsWeakReference 方法的实现，如果获取的是 _objc_msgForward 消息转发函数，那么表明该引用对象不支持弱引用。反之，便发送 SEL_allowsWeakReference 消息去判断该对象是否支持弱引用，如果支持则表示 referent 引用对象不在析构。</p>
 <p>如果该引用对象在析构并且 crashIfDeallocating（控制引用对象析构是否需crash）为true，则crash。如果 crashIfDeallocating 为 false，则返回 nil 表示注册弱引用失败。</p>
-<pre><code class="language-Objective-C">// now remember it and where it is being stored
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-comment">// now remember it and where it is being stored</span>
 weak_entry_t *entry;
 if ((entry = weak_entry_for_referent(weak_table, referent))) {
-append_referrer(entry, referrer);
+<span class="hljs-built_in">append_referrer</span>(entry, referrer);
 } 
 else {
-weak_entry_t new_entry(referent, referrer);
-weak_grow_maybe(weak_table);
-weak_entry_insert(weak_table, &amp;new_entry);
+weak_entry_t <span class="hljs-built_in">new_entry</span>(referent, referrer);
+<span class="hljs-built_in">weak_grow_maybe</span>(weak_table);
+<span class="hljs-built_in">weak_entry_insert</span>(weak_table, &amp;new_entry);
 }
 
-// Do not set *referrer. objc_storeWeak() requires that the 
-// value not change.
+<span class="hljs-comment">// Do not set *referrer. objc_storeWeak() requires that the </span>
+<span class="hljs-comment">// value not change.</span>
 
 return referent_id;
 }
 </code></pre>
 <p>这下半部分就是将 __weak 变量的弱引用指针存储到被引用对象 newObj 的弱引用表中，完成注册。首先通过 weak_entry_for_referent 函数去查找 newObj 对应的 SideTable 的 weak_table 表中的对应 newObj 的弱引用条目 entry。如果不存在 entry，则用 newobj 和 __weak变量指针生成一个新的弱引用条目 new_entry。接下来执行 weak_grow_maybe 函数看 weak_table 是否需要扩容。</p>
 <h5 id="weak_grow_maybe-和-weak_resize" tabindex="-1">weak_grow_maybe 和 weak_resize</h5>
-<pre><code class="language-Objective-C">#define TABLE_SIZE(entry) (entry-&gt;mask ? entry-&gt;mask + 1 : 0)
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-meta">#<span class="hljs-keyword">define</span> TABLE_SIZE(entry) (entry-&gt;mask ? entry-&gt;mask + 1 : 0)</span>
 
-static void weak_grow_maybe(weak_table_t *weak_table)
-{
-size_t old_size = TABLE_SIZE(weak_table);
+<span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title">weak_grow_maybe</span><span class="hljs-params">(<span class="hljs-type">weak_table_t</span> *weak_table)</span>
+</span>{
+<span class="hljs-type">size_t</span> old_size = <span class="hljs-built_in">TABLE_SIZE</span>(weak_table);
 
-// Grow if at least 3/4 full.
-// 如果当前条目数已满容量的 3/4 则允许扩容
-// 如果是初次的话扩容 64，之后以 2 倍增加
-if (weak_table-&gt;num_entries &gt;= old_size * 3 / 4) {
-weak_resize(weak_table, old_size ? old_size*2 : 64);
+<span class="hljs-comment">// Grow if at least 3/4 full.</span>
+<span class="hljs-comment">// 如果当前条目数已满容量的 3/4 则允许扩容</span>
+<span class="hljs-comment">// 如果是初次的话扩容 64，之后以 2 倍增加</span>
+<span class="hljs-keyword">if</span> (weak_table-&gt;num_entries &gt;= old_size * <span class="hljs-number">3</span> / <span class="hljs-number">4</span>) {
+<span class="hljs-built_in">weak_resize</span>(weak_table, old_size ? old_size*<span class="hljs-number">2</span> : <span class="hljs-number">64</span>);
 }
 }
 </code></pre>
 <p>如果 newObj 是第一次被引用，那么其对应的 weak_table 的容量 mask 应为 0，则 old_size = 0， weak_table 的弱引用条目总数自然也为 0。满足扩容条件，因此初次扩容为 64，执行 weak_resize(weak_table, 64)。</p>
 <p>weak_resize 是对 weak_table 扩容的函数，其实现如下：</p>
-<pre><code class="language-Objective-C">static void weak_resize(weak_table_t *weak_table, size_t new_size)
-{
-size_t old_size = TABLE_SIZE(weak_table);
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title">weak_resize</span><span class="hljs-params">(<span class="hljs-type">weak_table_t</span> *weak_table, <span class="hljs-type">size_t</span> new_size)</span>
+</span>{
+<span class="hljs-type">size_t</span> old_size = <span class="hljs-built_in">TABLE_SIZE</span>(weak_table);
 
-weak_entry_t *old_entries = weak_table-&gt;weak_entries;
-weak_entry_t *new_entries = (weak_entry_t *)
-calloc(new_size, sizeof(weak_entry_t));
+<span class="hljs-type">weak_entry_t</span> *old_entries = weak_table-&gt;weak_entries;
+<span class="hljs-type">weak_entry_t</span> *new_entries = (<span class="hljs-type">weak_entry_t</span> *)
+<span class="hljs-built_in">calloc</span>(new_size, <span class="hljs-built_in">sizeof</span>(<span class="hljs-type">weak_entry_t</span>));
 
-weak_table-&gt;mask = new_size - 1;
+weak_table-&gt;mask = new_size - <span class="hljs-number">1</span>;
 weak_table-&gt;weak_entries = new_entries;
-weak_table-&gt;max_hash_displacement = 0;
-weak_table-&gt;num_entries = 0;  // restored by weak_entry_insert below
+weak_table-&gt;max_hash_displacement = <span class="hljs-number">0</span>;
+weak_table-&gt;num_entries = <span class="hljs-number">0</span>;  <span class="hljs-comment">// restored by weak_entry_insert below</span>
 
-if (old_entries) {
-weak_entry_t *entry;
-weak_entry_t *end = old_entries + old_size;
-for (entry = old_entries; entry &lt; end; entry++) {
-if (entry-&gt;referent) {
-weak_entry_insert(weak_table, entry);
+<span class="hljs-keyword">if</span> (old_entries) {
+<span class="hljs-type">weak_entry_t</span> *entry;
+<span class="hljs-type">weak_entry_t</span> *end = old_entries + old_size;
+<span class="hljs-keyword">for</span> (entry = old_entries; entry &lt; end; entry++) {
+<span class="hljs-keyword">if</span> (entry-&gt;referent) {
+<span class="hljs-built_in">weak_entry_insert</span>(weak_table, entry);
 }
 }
-free(old_entries);
+<span class="hljs-built_in">free</span>(old_entries);
 }
 }
 </code></pre>
 <p>创建一个 weak_entry_t 实例 old_entries 保存 weak_table 弱引用表中的弱引用条目列表，然后创建一个 64 格的新弱引用条目列表，接着更新设置 weak_table 的容量大小、弱引用条目列表、最大哈希位移数、条目总数。最后，如果旧弱引用条目列表 old_entries 存在数据，则将旧条目列表的数据插入 weak_table 新扩容的条目列表中并释放旧条目列表。</p>
 <p>扩容完后，便开始将新创建的条目插入 weak_table 的条目列表 weak_entries 中。</p>
 <h5 id="weak_entry_insert" tabindex="-1">weak_entry_insert</h5>
-<pre><code class="language-Objective-C">static void weak_entry_insert(weak_table_t *weak_table, weak_entry_t *new_entry)
+<pre class="hljs codehilite language-Objective-C"><code>static void weak_entry_insert(weak_table_t *weak_table, weak_entry_t *new_entry)
 {
-weak_entry_t *weak_entries = weak_table-&gt;weak_entries;
-assert(weak_entries != nil);
+<span class="hljs-function"><span class="hljs-title">weak_entry_t</span> *weak_entries = weak_table-&gt;</span>weak_entries;
+assert(weak_entries != <span class="hljs-literal">nil</span>);
 
-size_t begin = hash_pointer(new_entry-&gt;referent) &amp; (weak_table-&gt;mask);
+<span class="hljs-function"><span class="hljs-title">size_t</span> begin = hash_pointer(new_entry-&gt;</span><span class="hljs-function"><span class="hljs-title">referent</span>) &amp; (weak_table-&gt;</span>mask);
 size_t index = begin;
-size_t hash_displacement = 0;
-while (weak_entries[index].referent != nil) {
-index = (index+1) &amp; weak_table-&gt;mask;
-if (index == begin) bad_weak_table(weak_entries);
+size_t hash_displacement = <span class="hljs-number">0</span>;
+<span class="hljs-keyword">while</span> (weak_entries[index].referent != <span class="hljs-literal">nil</span>) {
+<span class="hljs-function"><span class="hljs-title">index</span> = (index+1) &amp; weak_table-&gt;</span>mask;
+<span class="hljs-keyword">if</span> (index == begin) bad_weak_table(weak_entries);
 hash_displacement++;
 }
 
 weak_entries[index] = *new_entry;
-weak_table-&gt;num_entries++;
+<span class="hljs-function"><span class="hljs-title">weak_table</span>-&gt;</span>num_entries++;
 
-if (hash_displacement &gt; weak_table-&gt;max_hash_displacement) {
-weak_table-&gt;max_hash_displacement = hash_displacement;
+<span class="hljs-function"><span class="hljs-title">if</span> (hash_displacement &gt; weak_table-&gt;</span>max_hash_displacement) {
+<span class="hljs-function"><span class="hljs-title">weak_table</span>-&gt;</span>max_hash_displacement = hash_displacement;
 }
 }
 </code></pre>
@@ -342,104 +342,104 @@ weak_table-&gt;max_hash_displacement = hash_displacement;
 <p>如果找到可用的位置，则 new_entry 将存放到 weak_entries 中。最后，如果哈希位移数大于 weak_table 中存储的最大哈希位移数，则更新 weak_table 中的 max_hash_displacement 值为 hash_displacement。 到此处，弱引用的注册也就完成了。</p>
 <h5 id="append_referrer" tabindex="-1">append_referrer</h5>
 <p>如果 newObj 是一个被其他变量弱引用的对象，那么能通过 weak_entry_for_referent 函数找到 newObj 对应的弱引用条目。将 __weak 变量的指针保存到弱引用条目的引用指针数组中完成注册，我们来看看这个过程是怎么样的</p>
-<pre><code class="language-Objective-C">static void append_referrer(weak_entry_t *entry, objc_object **new_referrer)
+<pre class="hljs codehilite language-Objective-C"><code>static void append_referrer(weak_entry_t *entry, objc_object **new_referrer)
 {
-if (! entry-&gt;out_of_line()) {
-// Try to insert inline.
-for (size_t i = 0; i &lt; WEAK_INLINE_COUNT; i++) {
-if (entry-&gt;inline_referrers[i] == nil) {
-entry-&gt;inline_referrers[i] = new_referrer;
+<span class="hljs-function"><span class="hljs-title">if</span> (! entry-&gt;</span>out_of_line()) {
+<span class="hljs-comment">// Try to insert inline.</span>
+<span class="hljs-keyword">for</span> (size_t i = <span class="hljs-number">0</span>; i &lt; WEAK_INLINE_COUNT; i++) {
+<span class="hljs-function"><span class="hljs-title">if</span> (entry-&gt;</span>inline_referrers[i] == <span class="hljs-literal">nil</span>) {
+<span class="hljs-function"><span class="hljs-title">entry</span>-&gt;</span>inline_referrers[i] = new_referrer;
 return;
 }
 }
 
-// Couldn't insert inline. Allocate out of line.
+<span class="hljs-comment">// Couldn&#x27;t insert inline. Allocate out of line.</span>
 weak_referrer_t *new_referrers = (weak_referrer_t *)
 calloc(WEAK_INLINE_COUNT, sizeof(weak_referrer_t));
-// This constructed table is invalid, but grow_refs_and_insert
-// will fix it and rehash it.
-for (size_t i = 0; i &lt; WEAK_INLINE_COUNT; i++) {
-new_referrers[i] = entry-&gt;inline_referrers[i];
+<span class="hljs-comment">// This constructed table is invalid, but grow_refs_and_insert</span>
+<span class="hljs-comment">// will fix it and rehash it.</span>
+<span class="hljs-keyword">for</span> (size_t i = <span class="hljs-number">0</span>; i &lt; WEAK_INLINE_COUNT; i++) {
+<span class="hljs-function"><span class="hljs-title">new_referrers</span>[i] = entry-&gt;</span>inline_referrers[i];
 }
-entry-&gt;referrers = new_referrers;
-entry-&gt;num_refs = WEAK_INLINE_COUNT;
-entry-&gt;out_of_line_ness = REFERRERS_OUT_OF_LINE;
-entry-&gt;mask = WEAK_INLINE_COUNT-1;
-entry-&gt;max_hash_displacement = 0;
+<span class="hljs-function"><span class="hljs-title">entry</span>-&gt;</span>referrers = new_referrers;
+<span class="hljs-function"><span class="hljs-title">entry</span>-&gt;</span>num_refs = WEAK_INLINE_COUNT;
+<span class="hljs-function"><span class="hljs-title">entry</span>-&gt;</span>out_of_line_ness = REFERRERS_OUT_OF_LINE;
+<span class="hljs-function"><span class="hljs-title">entry</span>-&gt;</span>mask = WEAK_INLINE_COUNT-<span class="hljs-number">1</span>;
+<span class="hljs-function"><span class="hljs-title">entry</span>-&gt;</span>max_hash_displacement = <span class="hljs-number">0</span>;
 }
 </code></pre>
 <p>上部分，判断弱引用条目中存放的引用指针数超过了 inline_referrers 数组的容量。如果没有超过的话（有可能容量已满），则遍历 inline_referrers 找到空位置存放 new_referrer。如果 inline_referrers 容量已满，改用 entry 的 referrers 列表存放引用指针。首先，将 inline_referrers 中存放的引用指针加到 referrers 中，更新设置 num_refs、out_of_line_ness（是否超出了inline_referrers数组的容量）、mask、max_hash_displacement。接下来就进入下部分</p>
-<pre><code class="language-Objective-C">assert(entry-&gt;out_of_line());
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-keyword">assert</span>(<span class="hljs-built_in">entry</span>-&gt;out_of_line());
 
-if (entry-&gt;num_refs &gt;= TABLE_SIZE(entry) * 3/4) {
-return grow_refs_and_insert(entry, new_referrer);
+<span class="hljs-keyword">if</span> (<span class="hljs-built_in">entry</span>-&gt;num_refs &gt;= TABLE_SIZE(<span class="hljs-built_in">entry</span>) * <span class="hljs-number">3</span>/<span class="hljs-number">4</span>) {
+<span class="hljs-keyword">return</span> grow_refs_and_insert(<span class="hljs-built_in">entry</span>, new_referrer);
 }
 </code></pre>
 <p>如果 entry 的引用指针数达到了存放容量的 3/4，那么对 new_referrer 进行扩容并且插入 new_referrer。</p>
 <h4 id="grow_refs_and_insert" tabindex="-1">grow_refs_and_insert</h4>
-<pre><code class="language-Objective-C">#define TABLE_SIZE(entry) (entry-&gt;mask ? entry-&gt;mask + 1 : 0)
+<pre class="hljs codehilite language-Objective-C"><code>#<span class="hljs-function"><span class="hljs-title">define</span> TABLE_SIZE(entry) (entry-&gt;</span><span class="hljs-function"><span class="hljs-title">mask</span> ? entry-&gt;</span>mask + <span class="hljs-number">1</span> : <span class="hljs-number">0</span>)
 static void grow_refs_and_insert(weak_entry_t *entry, 
 objc_object **new_referrer)
 {
-assert(entry-&gt;out_of_line());
+<span class="hljs-function"><span class="hljs-title">assert</span>(entry-&gt;</span>out_of_line());
 
 size_t old_size = TABLE_SIZE(entry);
-size_t new_size = old_size ? old_size * 2 : 8;
+size_t new_size = old_size ? old_size * <span class="hljs-number">2</span> : <span class="hljs-number">8</span>;
 
-size_t num_refs = entry-&gt;num_refs;
-weak_referrer_t *old_refs = entry-&gt;referrers;
-entry-&gt;mask = new_size - 1;
+<span class="hljs-function"><span class="hljs-title">size_t</span> num_refs = entry-&gt;</span>num_refs;
+<span class="hljs-function"><span class="hljs-title">weak_referrer_t</span> *old_refs = entry-&gt;</span>referrers;
+<span class="hljs-function"><span class="hljs-title">entry</span>-&gt;</span>mask = new_size - <span class="hljs-number">1</span>;
 
-entry-&gt;referrers = (weak_referrer_t *)
+<span class="hljs-function"><span class="hljs-title">entry</span>-&gt;</span>referrers = (weak_referrer_t *)
 calloc(TABLE_SIZE(entry), sizeof(weak_referrer_t));
-entry-&gt;num_refs = 0;
-entry-&gt;max_hash_displacement = 0;
+<span class="hljs-function"><span class="hljs-title">entry</span>-&gt;</span>num_refs = <span class="hljs-number">0</span>;
+<span class="hljs-function"><span class="hljs-title">entry</span>-&gt;</span>max_hash_displacement = <span class="hljs-number">0</span>;
 
-for (size_t i = 0; i &lt; old_size &amp;&amp; num_refs &gt; 0; i++) {
-if (old_refs[i] != nil) {
+<span class="hljs-keyword">for</span> (size_t i = <span class="hljs-number">0</span>; i &lt; old_size &amp;&amp; num_refs &gt; <span class="hljs-number">0</span>; i++) {
+<span class="hljs-keyword">if</span> (old_refs[i] != <span class="hljs-literal">nil</span>) {
 append_referrer(entry, old_refs[i]);
 num_refs--;
 }
 }
-// Insert
+<span class="hljs-comment">// Insert</span>
 append_referrer(entry, new_referrer);
-if (old_refs) free(old_refs);
+<span class="hljs-keyword">if</span> (old_refs) free(old_refs);
 }
 </code></pre>
 <p>这个函数和 weakTable 的扩容函数 weak_resize 一样，首先通过 old_size 计算出扩容的大小 new_size，然后创建一个 weak_referrer_t 实例 old_refs 存放 entry 中 referrers 列表的引用指针，然后对 entry 的 referrers 进行初始化扩容。最后，如果 old_refs 有数据（即原 entry 存在的引用指针），将引用指针通过 append_referrer 插入到扩容后的 referrers 中，此步骤为递归调用。插入的主要代码便是 append_referrer 的最后一部分，如下</p>
-<pre><code class="language-Objective-C">size_t begin = w_hash_pointer(new_referrer) &amp; (entry-&gt;mask);
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-function"><span class="hljs-title">size_t</span> begin = w_hash_pointer(new_referrer) &amp; (entry-&gt;</span>mask);
 size_t index = begin;
-size_t hash_displacement = 0;
-while (entry-&gt;referrers[index] != nil) {
+size_t hash_displacement = <span class="hljs-number">0</span>;
+<span class="hljs-function"><span class="hljs-title">while</span> (entry-&gt;</span>referrers[index] != <span class="hljs-literal">nil</span>) {
 hash_displacement++;
-index = (index+1) &amp; entry-&gt;mask;
-if (index == begin) bad_weak_table(entry);
+<span class="hljs-function"><span class="hljs-title">index</span> = (index+1) &amp; entry-&gt;</span>mask;
+<span class="hljs-keyword">if</span> (index == begin) bad_weak_table(entry);
 }
-if (hash_displacement &gt; entry-&gt;max_hash_displacement) {
-entry-&gt;max_hash_displacement = hash_displacement;
+<span class="hljs-function"><span class="hljs-title">if</span> (hash_displacement &gt; entry-&gt;</span>max_hash_displacement) {
+<span class="hljs-function"><span class="hljs-title">entry</span>-&gt;</span>max_hash_displacement = hash_displacement;
 }
-weak_referrer_t &amp;ref = entry-&gt;referrers[index];
+<span class="hljs-function"><span class="hljs-title">weak_referrer_t</span> &amp;ref = entry-&gt;</span>referrers[index];
 ref = new_referrer;
-entry-&gt;num_refs++;
+<span class="hljs-function"><span class="hljs-title">entry</span>-&gt;</span>num_refs++;
 }
 </code></pre>
 <p>上方代码和 weakTable 的 weak_entry_insert 函数实现原理一样，便不再讲述。从上面分析下来，可见 weakTable 的weak_entries 和 entry 的referrers 一样是一个可以自动扩容的数组，而 entry 的inline_referrers 是一个不可扩容的数组。</p>
 <h4 id="__weak-变量销毁" tabindex="-1">__weak 变量销毁</h4>
 <p>__weak 变量销毁会调用 objc_destroyWeak 这个函数</p>
-<pre><code class="language-Objective-C">void
-objc_destroyWeak(id *location)
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-type">void</span>
+objc_destroyWeak(id *<span class="hljs-keyword">location</span>)
 {
-(void)storeWeak&lt;true/*old*/, false/*new*/, false/*crash*/&gt;
-(location, nil);
+(<span class="hljs-type">void</span>)storeWeak&lt;<span class="hljs-literal">true</span><span class="hljs-comment">/*old*/</span>, <span class="hljs-literal">false</span><span class="hljs-comment">/*new*/</span>, <span class="hljs-literal">false</span><span class="hljs-comment">/*crash*/</span>&gt;
+(<span class="hljs-keyword">location</span>, nil);
 }
 </code></pre>
 <p>其中实现也是通过 storeWeak 函数将 __weak 变量置为nil，下面只显示相关代码</p>
-<pre><code class="language-Objective-C">template &lt;bool HaveOld, bool HaveNew, bool CrashIfDeallocating&gt;
-static id 
-storeWeak(id *location, objc_object *newObj)
-{
-assert(HaveOld  ||  HaveNew);
-if (!HaveNew) assert(newObj == nil);
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-keyword">template</span> &lt;<span class="hljs-type">bool</span> HaveOld, <span class="hljs-type">bool</span> HaveNew, <span class="hljs-type">bool</span> CrashIfDeallocating&gt;
+<span class="hljs-function"><span class="hljs-type">static</span> id 
+<span class="hljs-title">storeWeak</span><span class="hljs-params">(id *location, objc_object *newObj)</span>
+</span>{
+<span class="hljs-built_in">assert</span>(HaveOld  ||  HaveNew);
+<span class="hljs-keyword">if</span> (!HaveNew) <span class="hljs-built_in">assert</span>(newObj == nil);
 
 Class previouslyInitializedClass = nil;
 id oldObj;
@@ -447,140 +447,140 @@ SideTable *oldTable;
 SideTable *newTable;
 
 retry:
-if (HaveOld) {
+<span class="hljs-keyword">if</span> (HaveOld) {
 oldObj = *location;
-oldTable = &amp;SideTables()[oldObj];
-} else {
+oldTable = &amp;<span class="hljs-built_in">SideTables</span>()[oldObj];
+} <span class="hljs-keyword">else</span> {
 oldTable = nil;
 }
-if (HaveNew) {
-newTable = &amp;SideTables()[newObj];
-} else {
+<span class="hljs-keyword">if</span> (HaveNew) {
+newTable = &amp;<span class="hljs-built_in">SideTables</span>()[newObj];
+} <span class="hljs-keyword">else</span> {
 newTable = nil;
 }
 
-SideTable::lockTwo&lt;HaveOld, HaveNew&gt;(oldTable, newTable);
+SideTable::<span class="hljs-built_in">lockTwo</span>&lt;HaveOld, HaveNew&gt;(oldTable, newTable);
 
-if (HaveOld  &amp;&amp;  *location != oldObj) {
-SideTable::unlockTwo&lt;HaveOld, HaveNew&gt;(oldTable, newTable);
-goto retry;
+<span class="hljs-keyword">if</span> (HaveOld  &amp;&amp;  *location != oldObj) {
+SideTable::<span class="hljs-built_in">unlockTwo</span>&lt;HaveOld, HaveNew&gt;(oldTable, newTable);
+<span class="hljs-keyword">goto</span> retry;
 }
 
-// Clean up old value, if any.
-if (HaveOld) {
-weak_unregister_no_lock(&amp;oldTable-&gt;weak_table, oldObj, location);
+<span class="hljs-comment">// Clean up old value, if any.</span>
+<span class="hljs-keyword">if</span> (HaveOld) {
+<span class="hljs-built_in">weak_unregister_no_lock</span>(&amp;oldTable-&gt;weak_table, oldObj, location);
 }
 
-SideTable::unlockTwo&lt;HaveOld, HaveNew&gt;(oldTable, newTable);
+SideTable::<span class="hljs-built_in">unlockTwo</span>&lt;HaveOld, HaveNew&gt;(oldTable, newTable);
 
-return (id)newObj;
+<span class="hljs-keyword">return</span> (id)newObj;
 }
 
 </code></pre>
 <p>从 objc_destroyWeak 函数传入的 HaveOld = true、HaveNew = false、CrashIfDeallocating = false，首先将 __weak 变量的内存指针指向 oldObj，将当前值变成旧值，对应的从 SideTables 取出对应的 SideTable 为 oldTable，将 newTable 赋值为 nil。然后，将 oldTable 和 newTable 加锁，如果旧值存在并且旧值 __weak 变量内存地址中的值和旧值不相等的话，那么需要重新执行第一步骤以保证销毁工作进行。接下来就是注销 oldObj 对应的 weak_table 中 __weak 变量的弱引用。最后，解开 oldTable 和 newTable 的锁，返回 nil，将 __weak 变量置 nil。</p>
 <h5 id="weak_unregister_no_lock" tabindex="-1">weak_unregister_no_lock</h5>
-<pre><code class="language-Objective-C">void
-weak_unregister_no_lock(weak_table_t *weak_table, id referent_id, 
-id *referrer_id)
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-built_in">void</span>
+weak_unregister_no_lock(weak_table_t *weak_table, id <span class="hljs-built_in">ref</span>erent_id, 
+id *<span class="hljs-built_in">ref</span>errer_id)
 {
-objc_object *referent = (objc_object *)referent_id;
-objc_object **referrer = (objc_object **)referrer_id;
+objc_object *<span class="hljs-built_in">ref</span>erent = (objc_object *)<span class="hljs-built_in">ref</span>erent_id;
+objc_object **<span class="hljs-built_in">ref</span>errer = (objc_object **)<span class="hljs-built_in">ref</span>errer_id;
 
 weak_entry_t *entry;
 
-if (!referent) return;
+<span class="hljs-keyword">if</span> (!<span class="hljs-built_in">ref</span>erent) <span class="hljs-keyword">return</span>;
 
-if ((entry = weak_entry_for_referent(weak_table, referent))) {
-remove_referrer(entry, referrer);
-bool empty = true;
-if (entry-&gt;out_of_line()  &amp;&amp;  entry-&gt;num_refs != 0) {
-empty = false;
+<span class="hljs-keyword">if</span> ((entry = weak_entry_for_referent(weak_table, <span class="hljs-built_in">ref</span>erent))) {
+remove_referrer(entry, <span class="hljs-built_in">ref</span>errer);
+<span class="hljs-built_in">bool</span> empty = <span class="hljs-literal">true</span>;
+<span class="hljs-keyword">if</span> (entry-&gt;out_of_line()  &amp;&amp;  entry-&gt;num_refs != <span class="hljs-number">0</span>) {
+empty = <span class="hljs-literal">false</span>;
 }
-else {
-for (size_t i = 0; i &lt; WEAK_INLINE_COUNT; i++) {
-if (entry-&gt;inline_referrers[i]) {
-empty = false; 
-break;
+<span class="hljs-keyword">else</span> {
+<span class="hljs-keyword">for</span> (size_t i = <span class="hljs-number">0</span>; i &lt; WEAK_INLINE_COUNT; i++) {
+<span class="hljs-keyword">if</span> (entry-&gt;inline_referrers[i]) {
+empty = <span class="hljs-literal">false</span>; 
+<span class="hljs-keyword">break</span>;
 }
 }
 }
 
-if (empty) {
+<span class="hljs-keyword">if</span> (empty) {
 weak_entry_remove(weak_table, entry);
 }
 }
 
-// Do not set *referrer = nil. objc_storeWeak() requires that the 
-// value not change.
+<span class="hljs-comment">// Do not set *referrer = nil. objc_storeWeak() requires that the </span>
+<span class="hljs-comment">// value not change.</span>
 }
 </code></pre>
 <p>首先，通过 weak_entry_for_referent 找到 weak_table 中的弱引用条目 entry，然后通过 remove_referrer 函数从 entry 的引用指针列表中删除 __weak变量指针。如果 entry 中没有引用指针了，那么便会执行 weak_entry_remove 从弱引用表 weak_table 中删除该弱引用条目。</p>
 <h5 id="remove_referrer" tabindex="-1">remove_referrer</h5>
-<pre><code class="language-Objective-C">static void remove_referrer(weak_entry_t *entry, objc_object **old_referrer)
+<pre class="hljs codehilite language-Objective-C"><code>static void remove_referrer(weak_entry_t *entry, objc_object **old_referrer)
 {
-if (! entry-&gt;out_of_line()) {
-for (size_t i = 0; i &lt; WEAK_INLINE_COUNT; i++) {
-if (entry-&gt;inline_referrers[i] == old_referrer) {
-entry-&gt;inline_referrers[i] = nil;
+<span class="hljs-function"><span class="hljs-title">if</span> (! entry-&gt;</span>out_of_line()) {
+<span class="hljs-keyword">for</span> (size_t i = <span class="hljs-number">0</span>; i &lt; WEAK_INLINE_COUNT; i++) {
+<span class="hljs-function"><span class="hljs-title">if</span> (entry-&gt;</span>inline_referrers[i] == old_referrer) {
+<span class="hljs-function"><span class="hljs-title">entry</span>-&gt;</span>inline_referrers[i] = <span class="hljs-literal">nil</span>;
 return;
 }
 }
-_objc_inform(&quot;Attempted to unregister unknown __weak variable &quot;
-&quot;at %p. This is probably incorrect use of &quot;
-&quot;objc_storeWeak() and objc_loadWeak(). &quot;
-&quot;Break on objc_weak_error to debug.\n&quot;, 
+_objc_inform(<span class="hljs-string">&quot;Attempted to unregister unknown __weak variable &quot;</span>
+<span class="hljs-string">&quot;at %p. This is probably incorrect use of &quot;</span>
+<span class="hljs-string">&quot;objc_storeWeak() and objc_loadWeak(). &quot;</span>
+<span class="hljs-string">&quot;Break on objc_weak_error to debug.\n&quot;</span>, 
 old_referrer);
 objc_weak_error();
 return;
 }
 
-size_t begin = w_hash_pointer(old_referrer) &amp; (entry-&gt;mask);
+<span class="hljs-function"><span class="hljs-title">size_t</span> begin = w_hash_pointer(old_referrer) &amp; (entry-&gt;</span>mask);
 size_t index = begin;
-size_t hash_displacement = 0;
-while (entry-&gt;referrers[index] != old_referrer) {
-index = (index+1) &amp; entry-&gt;mask;
-if (index == begin) bad_weak_table(entry);
+size_t hash_displacement = <span class="hljs-number">0</span>;
+<span class="hljs-function"><span class="hljs-title">while</span> (entry-&gt;</span>referrers[index] != old_referrer) {
+<span class="hljs-function"><span class="hljs-title">index</span> = (index+1) &amp; entry-&gt;</span>mask;
+<span class="hljs-keyword">if</span> (index == begin) bad_weak_table(entry);
 hash_displacement++;
-if (hash_displacement &gt; entry-&gt;max_hash_displacement) {
-_objc_inform(&quot;Attempted to unregister unknown __weak variable &quot;
-&quot;at %p. This is probably incorrect use of &quot;
-&quot;objc_storeWeak() and objc_loadWeak(). &quot;
-&quot;Break on objc_weak_error to debug.\n&quot;, 
+<span class="hljs-function"><span class="hljs-title">if</span> (hash_displacement &gt; entry-&gt;</span>max_hash_displacement) {
+_objc_inform(<span class="hljs-string">&quot;Attempted to unregister unknown __weak variable &quot;</span>
+<span class="hljs-string">&quot;at %p. This is probably incorrect use of &quot;</span>
+<span class="hljs-string">&quot;objc_storeWeak() and objc_loadWeak(). &quot;</span>
+<span class="hljs-string">&quot;Break on objc_weak_error to debug.\n&quot;</span>, 
 old_referrer);
 objc_weak_error();
 return;
 }
 }
-entry-&gt;referrers[index] = nil;
-entry-&gt;num_refs--;
+<span class="hljs-function"><span class="hljs-title">entry</span>-&gt;</span>referrers[index] = <span class="hljs-literal">nil</span>;
+<span class="hljs-function"><span class="hljs-title">entry</span>-&gt;</span>num_refs--;
 }
 </code></pre>
 <p>如果，entry 的引用指针数不超过 inline_referrers 的容量，那么遍历 inline_referrers 找到引用指针的位置并置为nil。如果引用指针数不超过 inline_referrers 的容量，那么便得去 referrers 中找到引用指针置为nil并将 referrers 的长度减一。如果找不到便会调用 objc_weak_error()</p>
 <h5 id="weak_entry_remove" tabindex="-1">weak_entry_remove</h5>
-<pre><code class="language-Objective-C">static void weak_entry_remove(weak_table_t *weak_table, weak_entry_t *entry)
+<pre class="hljs codehilite language-Objective-C"><code>static void <span class="hljs-built_in">weak_entry_remove</span>(weak_table_t *weak_table, weak_entry_t *entry)
 {
-// remove entry
-if (entry-&gt;out_of_line()) free(entry-&gt;referrers);
-bzero(entry, sizeof(*entry));
+<span class="hljs-comment">// remove entry</span>
+if (entry-&gt;out_of_line()) <span class="hljs-built_in">free</span>(entry-&gt;referrers);
+<span class="hljs-built_in">bzero</span>(entry, sizeof(*entry));
 
 weak_table-&gt;num_entries--;
 
-weak_compact_maybe(weak_table);
+<span class="hljs-built_in">weak_compact_maybe</span>(weak_table);
 }
 
 </code></pre>
 <p>此函数将弱引用条目 entry 从 weak_table 中删除，然后通过 weak_compact_maybe 去检查是否需要缩小 weak_table 的容量。</p>
 <h4 id="weak_compact_maybe" tabindex="-1">weak_compact_maybe</h4>
-<pre><code class="language-Objective-C">#define TABLE_SIZE(entry) (entry-&gt;mask ? entry-&gt;mask + 1 : 0)
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-meta">#<span class="hljs-keyword">define</span> TABLE_SIZE(entry) (entry-&gt;mask ? entry-&gt;mask + 1 : 0)</span>
 
-static void weak_compact_maybe(weak_table_t *weak_table)
-{
-size_t old_size = TABLE_SIZE(weak_table);
+<span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title">weak_compact_maybe</span><span class="hljs-params">(<span class="hljs-type">weak_table_t</span> *weak_table)</span>
+</span>{
+<span class="hljs-type">size_t</span> old_size = <span class="hljs-built_in">TABLE_SIZE</span>(weak_table);
 
-// Shrink if larger than 1024 buckets and at most 1/16 full.
-if (old_size &gt;= 1024  &amp;&amp; old_size / 16 &gt;= weak_table-&gt;num_entries) {
-weak_resize(weak_table, old_size / 8);
-// leaves new table no more than 1/2 full
+<span class="hljs-comment">// Shrink if larger than 1024 buckets and at most 1/16 full.</span>
+<span class="hljs-keyword">if</span> (old_size &gt;= <span class="hljs-number">1024</span>  &amp;&amp; old_size / <span class="hljs-number">16</span> &gt;= weak_table-&gt;num_entries) {
+<span class="hljs-built_in">weak_resize</span>(weak_table, old_size / <span class="hljs-number">8</span>);
+<span class="hljs-comment">// leaves new table no more than 1/2 full</span>
 }
 }
 </code></pre>

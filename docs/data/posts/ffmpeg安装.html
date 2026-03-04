@@ -1,78 +1,78 @@
 <h3 id="homebrew-方式安装" tabindex="-1">Homebrew 方式安装</h3>
 <p>1、执行安装命令</p>
-<pre><code>brew install ffmpeg
-brew install ffmpeg --HEAD # 安装最新
+<pre class="hljs codehilite"><code><span class="hljs-keyword">brew </span><span class="hljs-keyword">install </span>ffmpeg
+<span class="hljs-keyword">brew </span><span class="hljs-keyword">install </span>ffmpeg --HEAD <span class="hljs-comment"># 安装最新</span>
 </code></pre>
 <p>2、选择第三方仓库: homebrew-ffmpeg 和 varenc-homebrew-ffmpeg</p>
-<pre><code>brew tap homebrew-ffmpeg/ffmpeg # homebrew-ffmpeg 仓库
+<pre class="hljs codehilite"><code>brew tap homebrew-ffmpeg/ffmpeg <span class="hljs-comment"># homebrew-ffmpeg 仓库</span>
 </code></pre>
 <!-- more -->
 <p>3、根据第三方仓库安装</p>
-<pre><code>brew install homebrew-ffmpeg/ffmpeg/ffmpeg
+<pre class="hljs codehilite"><code>brew install homebrew-ffmpeg<span class="hljs-regexp">/ffmpeg/</span>ffmpeg
 </code></pre>
 <p>4、关联 options</p>
-<pre><code># 获取支持的options
-brew options homebrew-ffmpeg/ffmpeg/ffmpeg
+<pre class="hljs codehilite"><code><span class="hljs-comment"># 获取支持的options</span>
+<span class="hljs-string">brew</span> <span class="hljs-string">options</span> <span class="hljs-string">homebrew-ffmpeg</span>/<span class="hljs-string">ffmpeg</span>/<span class="hljs-string">ffmpeg</span>
 
-# 关联options
-brew install homebrew-ffmpeg/ffmpeg/ffmpeg --with-aribb24 --with-chromaprint --with-decklink --with-fdk-aac --with-game-music-emu --with-jack --with-jpeg-xl --with-libaribb24 --with-libbluray --with-libbs2b --with-libcaca --with-libflite --with-libgsm --with-libmodplug --with-libopenmpt --with-librist --with-librsvg --with-libsoxr --with-libssh --with-libvidstab --with-libvmaf --with-libxml2 --with-libzvbi --with-opencore-amr --with-openh264 --with-openjpeg --with-openssl --with-openssl@1.1 --with-rav1e --with-rtmpdump --with-rubberband --with-speex --with-srt --with-svt-av1 --with-tesseract --with-two-lame --with-webp --with-xvid --with-zeromq --with-zimg
+<span class="hljs-comment"># 关联options</span>
+<span class="hljs-string">brew</span> <span class="hljs-string">install</span> <span class="hljs-string">homebrew-ffmpeg</span>/<span class="hljs-string">ffmpeg</span>/<span class="hljs-string">ffmpeg</span> <span class="hljs-built_in">--with-aribb24</span> <span class="hljs-built_in">--with-chromaprint</span> <span class="hljs-built_in">--with-decklink</span> <span class="hljs-built_in">--with-fdk-aac</span> <span class="hljs-built_in">--with-game-music-emu</span> <span class="hljs-built_in">--with-jack</span> <span class="hljs-built_in">--with-jpeg-xl</span> <span class="hljs-built_in">--with-libaribb24</span> <span class="hljs-built_in">--with-libbluray</span> <span class="hljs-built_in">--with-libbs2b</span> <span class="hljs-built_in">--with-libcaca</span> <span class="hljs-built_in">--with-libflite</span> <span class="hljs-built_in">--with-libgsm</span> <span class="hljs-built_in">--with-libmodplug</span> <span class="hljs-built_in">--with-libopenmpt</span> <span class="hljs-built_in">--with-librist</span> <span class="hljs-built_in">--with-librsvg</span> <span class="hljs-built_in">--with-libsoxr</span> <span class="hljs-built_in">--with-libssh</span> <span class="hljs-built_in">--with-libvidstab</span> <span class="hljs-built_in">--with-libvmaf</span> <span class="hljs-built_in">--with-libxml2</span> <span class="hljs-built_in">--with-libzvbi</span> <span class="hljs-built_in">--with-opencore-amr</span> <span class="hljs-built_in">--with-openh264</span> <span class="hljs-built_in">--with-openjpeg</span> <span class="hljs-built_in">--with-openssl</span> <span class="hljs-built_in">--with-openssl@1.1</span> <span class="hljs-built_in">--with-rav1e</span> <span class="hljs-built_in">--with-rtmpdump</span> <span class="hljs-built_in">--with-rubberband</span> <span class="hljs-built_in">--with-speex</span> <span class="hljs-built_in">--with-srt</span> <span class="hljs-built_in">--with-svt-av1</span> <span class="hljs-built_in">--with-tesseract</span> <span class="hljs-built_in">--with-two-lame</span> <span class="hljs-built_in">--with-webp</span> <span class="hljs-built_in">--with-xvid</span> <span class="hljs-built_in">--with-zeromq</span> <span class="hljs-built_in">--with-zimg</span>
 </code></pre>
 <h3 id="ffmpeg-支持-rtmp-h265" tabindex="-1">FFmpeg 支持 RTMP H265</h3>
 <h4 id="安装-libx264" tabindex="-1">安装 libx264</h4>
-<pre><code>git clone https://code.videolan.org/videolan/x264.git
-cd x264
+<pre class="hljs codehilite"><code>git clone https:<span class="hljs-string">//code.videolan.org/videolan/x264.git</span>
+<span class="hljs-keyword">cd</span> x264
 mkdir build
-./configure --prefix=$(pwd)/build --disable-asm --disable-cli --disable-shared --enable-static
+<span class="hljs-string">./configure</span> <span class="hljs-params">--prefix=</span>$<span class="hljs-params">(pwd)</span><span class="hljs-string">/build</span> <span class="hljs-params">--disable-asm</span> <span class="hljs-params">--disable-cli</span> <span class="hljs-params">--disable-shared</span> <span class="hljs-params">--enable-static</span>
 make -j10
 make install
 </code></pre>
 <h4 id="安装-libx265" tabindex="-1">安装 libx265</h4>
-<pre><code>git clone https://bitbucket.org/multicoreware/x265_git.git
-cd x265_git/build/linux
-mkdir build
-cmake -DCMAKE_INSTALL_PREFIX=$(pwd)/build -DENABLE_SHARED=OFF ../../source
+<pre class="hljs codehilite"><code>git <span class="hljs-built_in">clone</span> https://bitbucket.org/multicoreware/x265_git.git
+<span class="hljs-built_in">cd</span> x265_git/build/linux
+<span class="hljs-built_in">mkdir</span> build
+cmake -DCMAKE_INSTALL_PREFIX=$(<span class="hljs-built_in">pwd</span>)/build -DENABLE_SHARED=OFF ../../source
 make -j10
 make install
 </code></pre>
 <h4 id="设置-libx264libx265-环境变量" tabindex="-1">设置 libx264、libx265 环境变量</h4>
-<pre><code>export PKG_CONFIG_PATH=~/x264/build/lib/pkgconfig:~/x265_git/build/linux/build/lib/pkgconfig
+<pre class="hljs codehilite"><code>export <span class="hljs-variable constant_">PKG_CONFIG_PATH</span>=~<span class="hljs-regexp">/x264/build</span><span class="hljs-regexp">/lib/pkgconfig</span><span class="hljs-symbol">:~/x265_git/build/linux/build/lib/pkgconfig</span>
 </code></pre>
 <h4 id="ffmpeg-中-rtmpflv-模块支持-h265" tabindex="-1">ffmpeg 中 rtmp/flv 模块支持 h.265</h4>
-<pre><code>git clone -b 5.1 https://github.com/runner365/ffmpeg_rtmp_h265.git
-cd ffmpeg_rtmp_h265
-cp flv.h ~/FFmpeg/libavformat/
-cp flv*.c ~/FFmpeg/libavformat/
+<pre class="hljs codehilite"><code>git <span class="hljs-built_in">clone</span> -b 5.1 https://github.com/runner365/ffmpeg_rtmp_h265.git
+<span class="hljs-built_in">cd</span> ffmpeg_rtmp_h265
+<span class="hljs-built_in">cp</span> flv.h ~/FFmpeg/libavformat/
+<span class="hljs-built_in">cp</span> flv*.c ~/FFmpeg/libavformat/
 </code></pre>
 <h4 id="ffmpeg-重新编译安装" tabindex="-1">ffmpeg 重新编译安装</h4>
-<pre><code>git clone https://github.com/FFmpeg/FFmpeg.git
-cd FFmpeg
+<pre class="hljs codehilite"><code>git clone https:<span class="hljs-string">//github.com/FFmpeg/FFmpeg.git</span>
+<span class="hljs-keyword">cd</span> FFmpeg
 git checkout n6.0
 mkdir build
-./configure \
-  --prefix=$(pwd)/build \
-  --enable-gpl --enable-nonfree --enable-pthreads --extra-libs=-lpthread \
-  --disable-asm --disable-x86asm --disable-inline-asm \
-  --enable-decoder=aac --enable-decoder=aac_fixed --enable-decoder=aac_latm --enable-encoder=aac \
-  --enable-libx264 --enable-libx265 \
-  --pkg-config-flags='--static'
+<span class="hljs-string">./configure</span> \
+  <span class="hljs-params">--prefix=</span>$<span class="hljs-params">(pwd)</span><span class="hljs-string">/build</span> \
+  <span class="hljs-params">--enable-gpl</span> <span class="hljs-params">--enable-nonfree</span> <span class="hljs-params">--enable-pthreads</span> <span class="hljs-params">--extra-libs=-lpthread</span> \
+  <span class="hljs-params">--disable-asm</span> <span class="hljs-params">--disable-x86asm</span> <span class="hljs-params">--disable-inline-asm</span> \
+  <span class="hljs-params">--enable-decoder=aac</span> <span class="hljs-params">--enable-decoder=aac_fixed</span> <span class="hljs-params">--enable-decoder=aac_latm</span> <span class="hljs-params">--enable-encoder=aac</span> \
+  <span class="hljs-params">--enable-libx264</span> <span class="hljs-params">--enable-libx265</span> \
+  <span class="hljs-params">--pkg-config-flags=</span>&#x27;<span class="hljs-params">--static</span>&#x27;
 make -j10
 make install
 </code></pre>
 <h3 id="rtmpflv-h265-服务器支持" tabindex="-1">rtmp/flv h.265 服务器支持</h3>
 <p>nginx-rtmp 只支持 h.264, SRS 已支持 rtmp/flv h.265, 因此建议使用 SRS 服务.</p>
-<pre><code>git clone https://github.com/ossrs/srs.git
-cd trunk
-./configure --osx --h265=on
+<pre class="hljs codehilite"><code>git clone https:<span class="hljs-string">//github.com/ossrs/srs.git</span>
+<span class="hljs-keyword">cd</span> trunk
+<span class="hljs-string">./configure</span> <span class="hljs-params">--osx</span> <span class="hljs-params">--h265=on</span>
 make
 </code></pre>
 <p>SRS 相关操作指令</p>
-<pre><code># 启动
+<pre class="hljs codehilite"><code><span class="hljs-comment"># 启动</span>
 ./objs/srs -c conf/rtmp.conf
 
-# 查看日志
-tail -n 30 -f ./objs/srs.log
+<span class="hljs-comment"># 查看日志</span>
+<span class="hljs-built_in">tail</span> -n 30 -f ./objs/srs.log
 
-# 查看服务器状态
+<span class="hljs-comment"># 查看服务器状态</span>
 ./etc/init.d/srs status
 </code></pre>
 <p>具体详细见文档<a href="https://ossrs.net/lts/zh-cn/docs/v5/doc/getting-started-build">SRS</a></p>

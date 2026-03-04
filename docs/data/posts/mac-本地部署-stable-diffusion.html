@@ -9,47 +9,47 @@
 <h4 id="homebrew" tabindex="-1">Homebrew</h4>
 <h5 id="官方安装-需要梯子" tabindex="-1">官方安装 (需要梯子)</h5>
 <p>安装命令:</p>
-<pre><code class="language-bash">/bin/zsh -c &quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)&quot;
+<pre class="hljs codehilite language-bash"><code>/bin/zsh -c <span class="hljs-string">&quot;<span class="hljs-subst">$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)</span>&quot;</span>
 </code></pre>
 <p>卸载命令:</p>
-<pre><code class="language-bash">/bin/zsh -c &quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall.sh)&quot;
+<pre class="hljs codehilite language-bash"><code>/bin/zsh -c <span class="hljs-string">&quot;<span class="hljs-subst">$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall.sh)</span>&quot;</span>
 </code></pre>
 <h5 id="国内维护镜像" tabindex="-1">国内维护镜像</h5>
 <p>安装命令:</p>
-<pre><code class="language-bash">/bin/zsh -c &quot;$(curl -fsSL https://gitee.com/cunkai/HomebrewCN/raw/master/Homebrew.sh)&quot;
+<pre class="hljs codehilite language-bash"><code>/bin/zsh -c <span class="hljs-string">&quot;<span class="hljs-subst">$(curl -fsSL https://gitee.com/cunkai/HomebrewCN/raw/master/Homebrew.sh)</span>&quot;</span>
 </code></pre>
 <p>卸载命令:</p>
-<pre><code class="language-bash">/bin/zsh -c &quot;$(curl -fsSL https://gitee.com/cunkai/HomebrewCN/raw/master/HomebrewUninstall.sh)&quot;
+<pre class="hljs codehilite language-bash"><code>/bin/zsh -c <span class="hljs-string">&quot;<span class="hljs-subst">$(curl -fsSL https://gitee.com/cunkai/HomebrewCN/raw/master/HomebrewUninstall.sh)</span>&quot;</span>
 </code></pre>
 <h5 id="homebrew-基础指令" tabindex="-1">Homebrew 基础指令</h5>
-<pre><code class="language-bash"># 查看版本
+<pre class="hljs codehilite language-bash"><code><span class="hljs-comment"># 查看版本</span>
 brew -v
 
-# 安装
+<span class="hljs-comment"># 安装</span>
 brew install xxx
 </code></pre>
 <h4 id="python" tabindex="-1">Python</h4>
 <p>查看 Python 是否安装</p>
-<pre><code class="language-bash">python3 -V
+<pre class="hljs codehilite language-bash"><code>python3 -V
 
 输出: Python 3.10.10
 </code></pre>
 <p>如果没有输出版本号, 前往 <a href="https://www.python.org/downloads/macos/">Python 官网</a> 下载, 教程使用的 Python 3.10.10, 具体以 <a href="https://github.com/AUTOMATIC1111/stable-diffusion-webui">stable-diffusion-webui</a> 要求.</p>
 <p>安装后, 需要配置环境变量.</p>
-<pre><code class="language-bash"># 1.编辑 ~/.zprofile
+<pre class="hljs codehilite language-bash"><code><span class="hljs-comment"># 1.编辑 ~/.zprofile</span>
 vim ~/.zprofile
 
-# 2.在 zprofile 加入以下内容:
-PATH=&quot;/Library/Frameworks/Python.framework/Versions/3.10/bin:${PATH}&quot;
-export PATH
-alias python=&quot;/Library/Frameworks/Python.framework/Versions/3.10/bin/python3&quot;
+<span class="hljs-comment"># 2.在 zprofile 加入以下内容:</span>
+PATH=<span class="hljs-string">&quot;/Library/Frameworks/Python.framework/Versions/3.10/bin:<span class="hljs-variable">${PATH}</span>&quot;</span>
+<span class="hljs-built_in">export</span> PATH
+<span class="hljs-built_in">alias</span> python=<span class="hljs-string">&quot;/Library/Frameworks/Python.framework/Versions/3.10/bin/python3&quot;</span>
 
-# 3.使配置生效
-source ~/.zprofile
+<span class="hljs-comment"># 3.使配置生效</span>
+<span class="hljs-built_in">source</span> ~/.zprofile
 </code></pre>
 <h3 id="下载-stable-diffusion" tabindex="-1">下载 Stable Diffusion</h3>
 <p>使用 git clone Stable Diffusino WebUI 仓库</p>
-<pre><code class="language-bash">git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui
+<pre class="hljs codehilite language-bash"><code>git <span class="hljs-built_in">clone</span> https://github.com/AUTOMATIC1111/stable-diffusion-webui
 </code></pre>
 <h3 id="下载模型" tabindex="-1">下载模型</h3>
 <h4 id="模型类型" tabindex="-1">模型类型</h4>
@@ -71,11 +71,11 @@ source ~/.zprofile
 <p><img src="https://destinmure.github.io/pic/postImage/Mac-%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2-StableDiffusion/LiblibAI.png" alt="image"></p>
 <h3 id="启动-webui" tabindex="-1">启动 WebUI</h3>
 <h4 id="准备依赖工具" tabindex="-1">准备依赖工具</h4>
-<pre><code class="language-bash">brew install cmake protobuf rust wget
+<pre class="hljs codehilite language-bash"><code>brew install cmake protobuf rust wget
 </code></pre>
 <h4 id="执行-webuish" tabindex="-1">执行 <a href="http://webui.sh">webui.sh</a></h4>
 <p>进入从 git 拉取下来的 stable-diffusion-webui 目录, 执行下面命令.</p>
-<pre><code class="language-bash"> cd stable-diffusion-webui
+<pre class="hljs codehilite language-bash"><code> <span class="hljs-built_in">cd</span> stable-diffusion-webui
 
 ./webui.sh
 </code></pre>
@@ -85,11 +85,11 @@ source ~/.zprofile
 <h4 id="遇到的问题" tabindex="-1">遇到的问题</h4>
 <h5 id="1-failed-building-wheel-for-basicsr" tabindex="-1">1. <a href="https://github.com/AUTOMATIC1111/stable-diffusion-webui/issues/13113">Failed building wheel for basicsr</a></h5>
 <p>在 stable-diffusion-webui/modules/launch_utils.py 文件第138行中的 python 命令中插入 --use-pep517</p>
-<pre><code>return run(f'&quot;{python}&quot; -m pip {command} --use-pep517 --prefer-binary{index_url_line}', desc=f&quot;Installing {desc}&quot;, errdesc=f&quot;Couldn't install {desc}&quot;, live=live)
+<pre class="hljs codehilite"><code><span class="hljs-keyword">return</span> run(<span class="hljs-string">f&#x27;&quot;<span class="hljs-subst">{python}</span>&quot; -m pip <span class="hljs-subst">{command}</span> --use-pep517 --prefer-binary<span class="hljs-subst">{index_url_line}</span>&#x27;</span>, desc=<span class="hljs-string">f&quot;Installing <span class="hljs-subst">{desc}</span>&quot;</span>, errdesc=<span class="hljs-string">f&quot;Couldn&#x27;t install <span class="hljs-subst">{desc}</span>&quot;</span>, live=live)
 </code></pre>
 <p><a href="https://github.com/AUTOMATIC1111/stable-diffusion-webui/issues/13113">github issues</a></p>
 <h5 id="2-stable-diffusion-webui-extensions-加载-ssl-错误" tabindex="-1">2. [stable-diffusion-webui-extensions 加载 SSL 错误]</h5>
 <p>在 launch_utils.py 中的 from module.paths_internal import script_path, extensions_dir 后面添加:</p>
-<pre><code>import ssl ssl._create_default_https_context = ssl._create_unverified_context
+<pre class="hljs codehilite"><code><span class="hljs-keyword">import</span> ssl ssl.<span class="hljs-number">_</span>create<span class="hljs-number">_</span><span class="hljs-keyword">default</span><span class="hljs-number">_</span>https<span class="hljs-number">_</span>context = ssl.<span class="hljs-number">_</span>create<span class="hljs-number">_u</span>nverified<span class="hljs-number">_</span>context
 </code></pre>
 <p><a href="https://github.com/AUTOMATIC1111/stable-diffusion-webui/issues/9285">github issues</a></p>

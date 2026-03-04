@@ -14,183 +14,183 @@
 <h4 id="webview-资源缓存" tabindex="-1">WebView 资源缓存</h4>
 <h5 id="urlscheme-设置" tabindex="-1">URLScheme 设置</h5>
 <p>WKWebView 提供 WKURLSchemeHandler 机制拦截资源请求，需传入自定义的资源链接 URLScheme，不能是 http、https，必须是自己定义的。</p>
-<pre><code class="language-swift">// WebURLSchemeHandler
-static let urlScheme = &quot;hooimageprex&quot;
+<pre class="hljs codehilite language-swift"><code><span class="hljs-comment">// WebURLSchemeHandler</span>
+<span class="hljs-keyword">static</span> <span class="hljs-keyword">let</span> urlScheme <span class="hljs-operator">=</span> <span class="hljs-string">&quot;hooimageprex&quot;</span>
 
-let config = WKWebViewConfiguration()
-config.setURLSchemeHandler(WebURLSchemeHandler(), forURLScheme: WebURLSchemeHandler.urlScheme)
-let webView = WKWebView.init(frame: CGRect(x: 0, y: 0, width: kScreenWidth - 16, height: 200), configuration: config)
+<span class="hljs-keyword">let</span> config <span class="hljs-operator">=</span> <span class="hljs-type">WKWebViewConfiguration</span>()
+config.setURLSchemeHandler(<span class="hljs-type">WebURLSchemeHandler</span>(), forURLScheme: <span class="hljs-type">WebURLSchemeHandler</span>.urlScheme)
+<span class="hljs-keyword">let</span> webView <span class="hljs-operator">=</span> <span class="hljs-type">WKWebView</span>.<span class="hljs-keyword">init</span>(frame: <span class="hljs-type">CGRect</span>(x: <span class="hljs-number">0</span>, y: <span class="hljs-number">0</span>, width: kScreenWidth <span class="hljs-operator">-</span> <span class="hljs-number">16</span>, height: <span class="hljs-number">200</span>), configuration: config)
 </code></pre>
 <p>后端返回的 HTML 字符串中，图片地址的 URLScheme 是 https，因此，只能通过正则匹配方式获取 图片地址在字符串中的位置，然后逐一修改成 hooimageprex:// 。</p>
 <h5 id="wkurlschemehandler-资源请求拦截处理" tabindex="-1">WKURLSchemeHandler 资源请求拦截处理</h5>
 <p>使用 WKURLSchemeHandler，需实现两个协议方法</p>
-<pre><code class="language-swift">/// 资源请求开始
-func webView(_ webView: WKWebView, start urlSchemeTask: WKURLSchemeTask)
+<pre class="hljs codehilite language-swift"><code><span class="hljs-comment">/// 资源请求开始</span>
+<span class="hljs-keyword">func</span> <span class="hljs-title function_">webView</span>(<span class="hljs-keyword">_</span> <span class="hljs-params">webView</span>: <span class="hljs-type">WKWebView</span>, <span class="hljs-params">start</span> <span class="hljs-params">urlSchemeTask</span>: <span class="hljs-type">WKURLSchemeTask</span>)
 
-/// 资源请求结束
-func webView(_ webView: WKWebView, stop urlSchemeTask: WKURLSchemeTask) 
+<span class="hljs-comment">/// 资源请求结束</span>
+<span class="hljs-keyword">func</span> <span class="hljs-title function_">webView</span>(<span class="hljs-keyword">_</span> <span class="hljs-params">webView</span>: <span class="hljs-type">WKWebView</span>, <span class="hljs-params">stop</span> <span class="hljs-params">urlSchemeTask</span>: <span class="hljs-type">WKURLSchemeTask</span>) 
 </code></pre>
 <p>WebView 进行资源请求时，便会调用该方法，我们需将资源地址恢复成正常的 http 地址，以资源地址为 key 去获取资源缓存，若获得缓存，则将资源数据填充给 urlSchemeTask。若未获得缓存，则通过资源地址下载，下载成功后，将资源数据填充给 urlSchemeTask 并缓存。如下载失败，调用 didFailWithError 方法结束资源请求。</p>
-<pre><code class="language-swift">/// 资源请求开始
-func webView(_ webView: WKWebView, start urlSchemeTask: WKURLSchemeTask) {
-    urlSchemeTaskList[urlSchemeTask.description] = false
+<pre class="hljs codehilite language-swift"><code><span class="hljs-comment">/// 资源请求开始</span>
+<span class="hljs-keyword">func</span> <span class="hljs-title function_">webView</span>(<span class="hljs-keyword">_</span> <span class="hljs-params">webView</span>: <span class="hljs-type">WKWebView</span>, <span class="hljs-params">start</span> <span class="hljs-params">urlSchemeTask</span>: <span class="hljs-type">WKURLSchemeTask</span>) {
+    urlSchemeTaskList[urlSchemeTask.description] <span class="hljs-operator">=</span> <span class="hljs-literal">false</span>
 
-    let urlSchemeUrlString = urlSchemeTask.request.url?.absoluteString ?? &quot;&quot;
-    guard urlSchemeUrlString.starts(with: HooWebURLSchemeHandler.urlScheme) else { return }
-    let resourceUrlString = urlSchemeUrlString.replacingOccurrences(of: HooWebURLSchemeHandler.urlScheme, with: &quot;https&quot;)
-    /// 首先读取缓存
-    ImageCache.default.retrieveImage(forKey: resourceUrlString) { [weak self] result in
-        switch result {
-            case let .success(cacheResult):
-                logDebug(&quot;HooWebURLSchemeHandler: 命中缓存&quot;)
-                if let requestUrl = urlSchemeTask.request.url, let cacheImage = cacheResult.image, let imageData = cacheImage.compressedData() {
-                    self?.urlTaskCompletionStatusList[resourceUrlString] = true
-                    logDebug(&quot;HooWebURLSchemeHandler: 命中缓存，填充&quot;)
-                    if self?.urlSchemeTaskIsStop(urlSchemeTask: urlSchemeTask) ?? false == false {
-                        let mimeType = self?.mimeType(forPathExtension: requestUrl.pathExtension)
-                        let response:URLResponse = URLResponse.init(url: requestUrl, mimeType: mimeType, expectedContentLength: imageData.count, textEncodingName: nil)
+    <span class="hljs-keyword">let</span> urlSchemeUrlString <span class="hljs-operator">=</span> urlSchemeTask.request.url<span class="hljs-operator">?</span>.absoluteString <span class="hljs-operator">??</span> <span class="hljs-string">&quot;&quot;</span>
+    <span class="hljs-keyword">guard</span> urlSchemeUrlString.starts(with: <span class="hljs-type">HooWebURLSchemeHandler</span>.urlScheme) <span class="hljs-keyword">else</span> { <span class="hljs-keyword">return</span> }
+    <span class="hljs-keyword">let</span> resourceUrlString <span class="hljs-operator">=</span> urlSchemeUrlString.replacingOccurrences(of: <span class="hljs-type">HooWebURLSchemeHandler</span>.urlScheme, with: <span class="hljs-string">&quot;https&quot;</span>)
+    <span class="hljs-comment">/// 首先读取缓存</span>
+    <span class="hljs-type">ImageCache</span>.default.retrieveImage(forKey: resourceUrlString) { [<span class="hljs-keyword">weak</span> <span class="hljs-keyword">self</span>] result <span class="hljs-keyword">in</span>
+        <span class="hljs-keyword">switch</span> result {
+            <span class="hljs-keyword">case</span> <span class="hljs-keyword">let</span> .success(cacheResult):
+                logDebug(<span class="hljs-string">&quot;HooWebURLSchemeHandler: 命中缓存&quot;</span>)
+                <span class="hljs-keyword">if</span> <span class="hljs-keyword">let</span> requestUrl <span class="hljs-operator">=</span> urlSchemeTask.request.url, <span class="hljs-keyword">let</span> cacheImage <span class="hljs-operator">=</span> cacheResult.image, <span class="hljs-keyword">let</span> imageData <span class="hljs-operator">=</span> cacheImage.compressedData() {
+                    <span class="hljs-keyword">self</span><span class="hljs-operator">?</span>.urlTaskCompletionStatusList[resourceUrlString] <span class="hljs-operator">=</span> <span class="hljs-literal">true</span>
+                    logDebug(<span class="hljs-string">&quot;HooWebURLSchemeHandler: 命中缓存，填充&quot;</span>)
+                    <span class="hljs-keyword">if</span> <span class="hljs-keyword">self</span><span class="hljs-operator">?</span>.urlSchemeTaskIsStop(urlSchemeTask: urlSchemeTask) <span class="hljs-operator">??</span> <span class="hljs-literal">false</span> <span class="hljs-operator">==</span> <span class="hljs-literal">false</span> {
+                        <span class="hljs-keyword">let</span> mimeType <span class="hljs-operator">=</span> <span class="hljs-keyword">self</span><span class="hljs-operator">?</span>.mimeType(forPathExtension: requestUrl.pathExtension)
+                        <span class="hljs-keyword">let</span> response:<span class="hljs-type">URLResponse</span> <span class="hljs-operator">=</span> <span class="hljs-type">URLResponse</span>.<span class="hljs-keyword">init</span>(url: requestUrl, mimeType: mimeType, expectedContentLength: imageData.count, textEncodingName: <span class="hljs-literal">nil</span>)
                         urlSchemeTask.didReceive(response)
                         urlSchemeTask.didReceive(imageData)
                         urlSchemeTask.didFinish()
                     }
-                } else {
-                    logDebug(&quot;HooWebURLSchemeHandler: 未命中缓存，请求&quot;)
-                    self?.needNetWorkRequestImageSource(urlSchemeTask: urlSchemeTask, urlString: resourceUrlString)
+                } <span class="hljs-keyword">else</span> {
+                    logDebug(<span class="hljs-string">&quot;HooWebURLSchemeHandler: 未命中缓存，请求&quot;</span>)
+                    <span class="hljs-keyword">self</span><span class="hljs-operator">?</span>.needNetWorkRequestImageSource(urlSchemeTask: urlSchemeTask, urlString: resourceUrlString)
                 }
-                break
-            case .failure(_):
-                logDebug(&quot;HooWebURLSchemeHandler: 未命中缓存错误，请求&quot;)
-                self?.needNetWorkRequestImageSource(urlSchemeTask: urlSchemeTask, urlString: resourceUrlString)
-                break
+                <span class="hljs-keyword">break</span>
+            <span class="hljs-keyword">case</span> .failure(<span class="hljs-keyword">_</span>):
+                logDebug(<span class="hljs-string">&quot;HooWebURLSchemeHandler: 未命中缓存错误，请求&quot;</span>)
+                <span class="hljs-keyword">self</span><span class="hljs-operator">?</span>.needNetWorkRequestImageSource(urlSchemeTask: urlSchemeTask, urlString: resourceUrlString)
+                <span class="hljs-keyword">break</span>
         }
     }
 }
 </code></pre>
 <p>缓存未命中情况下，根据资源地址下载资源填充到 urlSchemeTask 并缓存</p>
-<pre><code class="language-swift">/// 缓存未命中，需自行下载并置入缓存
-private func needNetWorkRequestImageSource(urlSchemeTask: WKURLSchemeTask, urlString: String) {
-    if let downURL = URL.safe(urlString: urlString) {
-        logDebug(&quot;HooWebURLSchemeHandler: 资源请求&quot;)
-        ImageDownloader.default.downloadImage(with: downURL, options: [.processor(WebPProcessor.default), .cacheSerializer(WebPSerializer.default)]) { [weak self] result in
-            switch result {
-                case let .success(imageLoadingResult):
-                    logDebug(&quot;HooWebURLSchemeHandler: 资源请求成功&quot;)
-                    if let requestUrl = urlSchemeTask.request.url {
-                        self?.urlTaskCompletionStatusList[urlString] = true
-                        logDebug(&quot;HooWebURLSchemeHandler: 资源请求成功，填充&quot;)
-                        ImageCache.default.store(imageLoadingResult.image, forKey: urlString)
-                        if self?.urlSchemeTaskIsStop(urlSchemeTask: urlSchemeTask) ?? false == false {
-                            let mimeType = self?.mimeType(forPathExtension: requestUrl.pathExtension)
-                            let imageData = imageLoadingResult.originalData
-                            let response:URLResponse = URLResponse.init(url: requestUrl, mimeType: mimeType, expectedContentLength: imageData.count, textEncodingName: nil)
+<pre class="hljs codehilite language-swift"><code><span class="hljs-comment">/// 缓存未命中，需自行下载并置入缓存</span>
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">func</span> <span class="hljs-title function_">needNetWorkRequestImageSource</span>(<span class="hljs-params">urlSchemeTask</span>: <span class="hljs-type">WKURLSchemeTask</span>, <span class="hljs-params">urlString</span>: <span class="hljs-type">String</span>) {
+    <span class="hljs-keyword">if</span> <span class="hljs-keyword">let</span> downURL <span class="hljs-operator">=</span> <span class="hljs-type">URL</span>.safe(urlString: urlString) {
+        logDebug(<span class="hljs-string">&quot;HooWebURLSchemeHandler: 资源请求&quot;</span>)
+        <span class="hljs-type">ImageDownloader</span>.default.downloadImage(with: downURL, options: [.processor(<span class="hljs-type">WebPProcessor</span>.default), .cacheSerializer(<span class="hljs-type">WebPSerializer</span>.default)]) { [<span class="hljs-keyword">weak</span> <span class="hljs-keyword">self</span>] result <span class="hljs-keyword">in</span>
+            <span class="hljs-keyword">switch</span> result {
+                <span class="hljs-keyword">case</span> <span class="hljs-keyword">let</span> .success(imageLoadingResult):
+                    logDebug(<span class="hljs-string">&quot;HooWebURLSchemeHandler: 资源请求成功&quot;</span>)
+                    <span class="hljs-keyword">if</span> <span class="hljs-keyword">let</span> requestUrl <span class="hljs-operator">=</span> urlSchemeTask.request.url {
+                        <span class="hljs-keyword">self</span><span class="hljs-operator">?</span>.urlTaskCompletionStatusList[urlString] <span class="hljs-operator">=</span> <span class="hljs-literal">true</span>
+                        logDebug(<span class="hljs-string">&quot;HooWebURLSchemeHandler: 资源请求成功，填充&quot;</span>)
+                        <span class="hljs-type">ImageCache</span>.default.store(imageLoadingResult.image, forKey: urlString)
+                        <span class="hljs-keyword">if</span> <span class="hljs-keyword">self</span><span class="hljs-operator">?</span>.urlSchemeTaskIsStop(urlSchemeTask: urlSchemeTask) <span class="hljs-operator">??</span> <span class="hljs-literal">false</span> <span class="hljs-operator">==</span> <span class="hljs-literal">false</span> {
+                            <span class="hljs-keyword">let</span> mimeType <span class="hljs-operator">=</span> <span class="hljs-keyword">self</span><span class="hljs-operator">?</span>.mimeType(forPathExtension: requestUrl.pathExtension)
+                            <span class="hljs-keyword">let</span> imageData <span class="hljs-operator">=</span> imageLoadingResult.originalData
+                            <span class="hljs-keyword">let</span> response:<span class="hljs-type">URLResponse</span> <span class="hljs-operator">=</span> <span class="hljs-type">URLResponse</span>.<span class="hljs-keyword">init</span>(url: requestUrl, mimeType: mimeType, expectedContentLength: imageData.count, textEncodingName: <span class="hljs-literal">nil</span>)
                             urlSchemeTask.didReceive(response)
                             urlSchemeTask.didReceive(imageData)
                             urlSchemeTask.didFinish()
                         }
-                    } else {
-                        self?.urlTaskCompletionStatusList[urlString] = false
-                        logDebug(&quot;HooWebURLSchemeHandler: 资源请求异常&quot;)
-                        if self?.urlSchemeTaskIsStop(urlSchemeTask: urlSchemeTask) ?? false == false {
-                            urlSchemeTask.didFailWithError(HooWebURLSchemeHandlerDownError.downFail)
+                    } <span class="hljs-keyword">else</span> {
+                        <span class="hljs-keyword">self</span><span class="hljs-operator">?</span>.urlTaskCompletionStatusList[urlString] <span class="hljs-operator">=</span> <span class="hljs-literal">false</span>
+                        logDebug(<span class="hljs-string">&quot;HooWebURLSchemeHandler: 资源请求异常&quot;</span>)
+                        <span class="hljs-keyword">if</span> <span class="hljs-keyword">self</span><span class="hljs-operator">?</span>.urlSchemeTaskIsStop(urlSchemeTask: urlSchemeTask) <span class="hljs-operator">??</span> <span class="hljs-literal">false</span> <span class="hljs-operator">==</span> <span class="hljs-literal">false</span> {
+                            urlSchemeTask.didFailWithError(<span class="hljs-type">HooWebURLSchemeHandlerDownError</span>.downFail)
                         }
                     }
-                    break
-                default:
-                    self?.urlTaskCompletionStatusList[urlString] = false
-                    logDebug(&quot;HooWebURLSchemeHandler: 资源请求失败&quot;)
-                    if self?.urlSchemeTaskIsStop(urlSchemeTask: urlSchemeTask) ?? false == false {
-                        urlSchemeTask.didFailWithError(HooWebURLSchemeHandlerDownError.downFail)
+                    <span class="hljs-keyword">break</span>
+                <span class="hljs-keyword">default</span>:
+                    <span class="hljs-keyword">self</span><span class="hljs-operator">?</span>.urlTaskCompletionStatusList[urlString] <span class="hljs-operator">=</span> <span class="hljs-literal">false</span>
+                    logDebug(<span class="hljs-string">&quot;HooWebURLSchemeHandler: 资源请求失败&quot;</span>)
+                    <span class="hljs-keyword">if</span> <span class="hljs-keyword">self</span><span class="hljs-operator">?</span>.urlSchemeTaskIsStop(urlSchemeTask: urlSchemeTask) <span class="hljs-operator">??</span> <span class="hljs-literal">false</span> <span class="hljs-operator">==</span> <span class="hljs-literal">false</span> {
+                        urlSchemeTask.didFailWithError(<span class="hljs-type">HooWebURLSchemeHandlerDownError</span>.downFail)
                     }
-                    break
+                    <span class="hljs-keyword">break</span>
             }
         }
-    } else {
-        urlTaskCompletionStatusList[urlString] = false
-        logDebug(&quot;HooWebURLSchemeHandler: 资源请求链接错误&quot;)
-        if urlSchemeTaskIsStop(urlSchemeTask: urlSchemeTask) == false {
-            urlSchemeTask.didFailWithError(HooWebURLSchemeHandlerDownError.downFail)
+    } <span class="hljs-keyword">else</span> {
+        urlTaskCompletionStatusList[urlString] <span class="hljs-operator">=</span> <span class="hljs-literal">false</span>
+        logDebug(<span class="hljs-string">&quot;HooWebURLSchemeHandler: 资源请求链接错误&quot;</span>)
+        <span class="hljs-keyword">if</span> urlSchemeTaskIsStop(urlSchemeTask: urlSchemeTask) <span class="hljs-operator">==</span> <span class="hljs-literal">false</span> {
+            urlSchemeTask.didFailWithError(<span class="hljs-type">HooWebURLSchemeHandlerDownError</span>.downFail)
         }
     }
 }
 </code></pre>
 <p>当 WebView 释放时，urlSchemeTask 会停止任务并调用 “func webView(_ webView: WKWebView, stop urlSchemeTask: WKURLSchemeTask)” ，如果这时我们还往 urlSchemeTask 中填充资源数据，会引发程序崩溃。</p>
-<pre><code class="language-swift">/// 资源请求结束
-func webView(_ webView: WKWebView, stop urlSchemeTask: WKURLSchemeTask) {
-    urlSchemeTaskList[urlSchemeTask.description] = true
+<pre class="hljs codehilite language-swift"><code><span class="hljs-comment">/// 资源请求结束</span>
+<span class="hljs-keyword">func</span> <span class="hljs-title function_">webView</span>(<span class="hljs-keyword">_</span> <span class="hljs-params">webView</span>: <span class="hljs-type">WKWebView</span>, <span class="hljs-params">stop</span> <span class="hljs-params">urlSchemeTask</span>: <span class="hljs-type">WKURLSchemeTask</span>) {
+    urlSchemeTaskList[urlSchemeTask.description] <span class="hljs-operator">=</span> <span class="hljs-literal">true</span>
 }
 </code></pre>
 <p>urlSchemeTaskList 用于记录 urlSchemeTask 是否停止任务，在上述关于 urlSchemeTask 填充资源数据之前，都会对 urlSchemeTask 的状态进行判断。</p>
-<pre><code class="language-swift">/// 判断资源请求是否已停止
-private func urlSchemeTaskIsStop(urlSchemeTask: WKURLSchemeTask) -&gt; Bool {
-    return urlSchemeTaskList[urlSchemeTask.description] ?? false
+<pre class="hljs codehilite language-swift"><code><span class="hljs-comment">/// 判断资源请求是否已停止</span>
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">func</span> <span class="hljs-title function_">urlSchemeTaskIsStop</span>(<span class="hljs-params">urlSchemeTask</span>: <span class="hljs-type">WKURLSchemeTask</span>) -&gt; <span class="hljs-type">Bool</span> {
+    <span class="hljs-keyword">return</span> urlSchemeTaskList[urlSchemeTask.description] <span class="hljs-operator">??</span> <span class="hljs-literal">false</span>
 }
 </code></pre>
 <h4 id="hoowkwebviewpool-缓存池" tabindex="-1">HooWKWebViewPool 缓存池</h4>
 <p>创建缓存池单例</p>
-<pre><code class="language-swift">/// webView 缓存池
-class HooWKWebViewPool {
-    static let share = HooWKWebViewPool()
-    /// identifiler 和 webView 的映射
-    private var poolDict: [String: HooWKPrepareWebView] = [:]
-    /// identifiler 数组
-    private var identifilerList: [String] = []
-    /// 最大缓存数量
-    private let initialViewsMaxCount = 20
-    /// 队列
-    private let lockQueue = DispatchQueue(label: &quot;WKWebViewPool_lock_queue&quot;, qos: .userInitiated)
-    ......
+<pre class="hljs codehilite language-swift"><code><span class="hljs-comment">/// webView 缓存池</span>
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">HooWKWebViewPool</span> {
+    <span class="hljs-keyword">static</span> <span class="hljs-keyword">let</span> share <span class="hljs-operator">=</span> <span class="hljs-type">HooWKWebViewPool</span>()
+    <span class="hljs-comment">/// identifiler 和 webView 的映射</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">var</span> poolDict: [<span class="hljs-type">String</span>: <span class="hljs-type">HooWKPrepareWebView</span>] <span class="hljs-operator">=</span> [:]
+    <span class="hljs-comment">/// identifiler 数组</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">var</span> identifilerList: [<span class="hljs-type">String</span>] <span class="hljs-operator">=</span> []
+    <span class="hljs-comment">/// 最大缓存数量</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">let</span> initialViewsMaxCount <span class="hljs-operator">=</span> <span class="hljs-number">20</span>
+    <span class="hljs-comment">/// 队列</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">let</span> lockQueue <span class="hljs-operator">=</span> <span class="hljs-type">DispatchQueue</span>(label: <span class="hljs-string">&quot;WKWebViewPool_lock_queue&quot;</span>, qos: .userInitiated)
+    <span class="hljs-operator">......</span>
 </code></pre>
 <p>根据 HTML 字符串和对应的缓存标识进行预加载处理，首先，通过缓存标识判断，该内容是否已经进行了预加载处理，若未进行过预加载处理，则创建新的 WebView 去加载 HTML 字符串，并存入缓存池中。</p>
-<pre><code class="language-swift">/// 预加载web
-/// - Parameter infoList: 预加载信息列表
-func prepare(infoList: [HooWKWebViewPrepareInfo]) {
-    for info in infoList {
-        logDebug(&quot;预加载web \(info.identifiler ?? &quot;&quot;)&quot;)
-        guard let identifiler = info.identifiler, identifiler.count &gt; 0 else { continue }
-        if let cacheWebView = getWebView(identifiler: identifiler) {
-            if cacheWebView.isNeedReload {
+<pre class="hljs codehilite language-swift"><code><span class="hljs-comment">/// 预加载web</span>
+<span class="hljs-comment">/// - Parameter infoList: 预加载信息列表</span>
+<span class="hljs-keyword">func</span> <span class="hljs-title function_">prepare</span>(<span class="hljs-params">infoList</span>: [<span class="hljs-type">HooWKWebViewPrepareInfo</span>]) {
+    <span class="hljs-keyword">for</span> info <span class="hljs-keyword">in</span> infoList {
+        logDebug(<span class="hljs-string">&quot;预加载web <span class="hljs-subst">\(info.identifiler <span class="hljs-operator">??</span> <span class="hljs-string">&quot;&quot;</span>)</span>&quot;</span>)
+        <span class="hljs-keyword">guard</span> <span class="hljs-keyword">let</span> identifiler <span class="hljs-operator">=</span> info.identifiler, identifiler.count <span class="hljs-operator">&gt;</span> <span class="hljs-number">0</span> <span class="hljs-keyword">else</span> { <span class="hljs-keyword">continue</span> }
+        <span class="hljs-keyword">if</span> <span class="hljs-keyword">let</span> cacheWebView <span class="hljs-operator">=</span> getWebView(identifiler: identifiler) {
+            <span class="hljs-keyword">if</span> cacheWebView.isNeedReload {
                 cacheWebView.reloadContent()
             }
-            continue
+            <span class="hljs-keyword">continue</span>
         }
-        let webView = createWebView()
-        webView.loadContent(content: info.content ?? &quot;&quot;)
+        <span class="hljs-keyword">let</span> webView <span class="hljs-operator">=</span> createWebView()
+        webView.loadContent(content: info.content <span class="hljs-operator">??</span> <span class="hljs-string">&quot;&quot;</span>)
         cachePrepareWebView(webView: webView, prepareInfo: info)
     }
 }
 
-/// 将 webView 存入缓存池
-/// - Parameters:
-/// - prepareInfo: 预加载信息
-func cachePrepareWebView(webView: HooWKPrepareWebView, prepareInfo: HooWKWebViewPrepareInfo) {
-    lockQueue.async(flags: .barrier) { [weak self] in
-        let identifiler = prepareInfo.identifiler ?? &quot;&quot;
-        if identifiler.count == 0 || self?.identifilerList.contains(identifiler) ?? false {
-            return
+<span class="hljs-comment">/// 将 webView 存入缓存池</span>
+<span class="hljs-comment">/// - Parameters:</span>
+<span class="hljs-comment">/// - prepareInfo: 预加载信息</span>
+<span class="hljs-keyword">func</span> <span class="hljs-title function_">cachePrepareWebView</span>(<span class="hljs-params">webView</span>: <span class="hljs-type">HooWKPrepareWebView</span>, <span class="hljs-params">prepareInfo</span>: <span class="hljs-type">HooWKWebViewPrepareInfo</span>) {
+    lockQueue.async(flags: .barrier) { [<span class="hljs-keyword">weak</span> <span class="hljs-keyword">self</span>] <span class="hljs-keyword">in</span>
+        <span class="hljs-keyword">let</span> identifiler <span class="hljs-operator">=</span> prepareInfo.identifiler <span class="hljs-operator">??</span> <span class="hljs-string">&quot;&quot;</span>
+        <span class="hljs-keyword">if</span> identifiler.count <span class="hljs-operator">==</span> <span class="hljs-number">0</span> <span class="hljs-operator">||</span> <span class="hljs-keyword">self</span><span class="hljs-operator">?</span>.identifilerList.contains(identifiler) <span class="hljs-operator">??</span> <span class="hljs-literal">false</span> {
+            <span class="hljs-keyword">return</span>
         }
-        if self?.identifilerList.count ?? 0 &gt;= self?.initialViewsMaxCount ?? 0 {
-            let removeIdentifiler = self?.identifilerList.removeFirst()
-            self?.poolDict.removeValue(forKey: removeIdentifiler ?? &quot;&quot;)
+        <span class="hljs-keyword">if</span> <span class="hljs-keyword">self</span><span class="hljs-operator">?</span>.identifilerList.count <span class="hljs-operator">??</span> <span class="hljs-number">0</span> <span class="hljs-operator">&gt;=</span> <span class="hljs-keyword">self</span><span class="hljs-operator">?</span>.initialViewsMaxCount <span class="hljs-operator">??</span> <span class="hljs-number">0</span> {
+            <span class="hljs-keyword">let</span> removeIdentifiler <span class="hljs-operator">=</span> <span class="hljs-keyword">self</span><span class="hljs-operator">?</span>.identifilerList.removeFirst()
+            <span class="hljs-keyword">self</span><span class="hljs-operator">?</span>.poolDict.removeValue(forKey: removeIdentifiler <span class="hljs-operator">??</span> <span class="hljs-string">&quot;&quot;</span>)
         }
-        logDebug(&quot;存入预加载web \(identifiler)&quot;)
-        self?.identifilerList.append(identifiler)
-        self?.poolDict[identifiler] = webView
+        logDebug(<span class="hljs-string">&quot;存入预加载web <span class="hljs-subst">\(identifiler)</span>&quot;</span>)
+        <span class="hljs-keyword">self</span><span class="hljs-operator">?</span>.identifilerList.append(identifiler)
+        <span class="hljs-keyword">self</span><span class="hljs-operator">?</span>.poolDict[identifiler] <span class="hljs-operator">=</span> webView
     }
 }
 
-/// 根据 identifiler 获取 webView
-/// - Parameter identifiler: 标识
-/// - Returns: webView
-func getWebView(identifiler: String) -&gt; HooWKPrepareWebView? {
+<span class="hljs-comment">/// 根据 identifiler 获取 webView</span>
+<span class="hljs-comment">/// - Parameter identifiler: 标识</span>
+<span class="hljs-comment">/// - Returns: webView</span>
+<span class="hljs-keyword">func</span> <span class="hljs-title function_">getWebView</span>(<span class="hljs-params">identifiler</span>: <span class="hljs-type">String</span>) -&gt; <span class="hljs-type">HooWKPrepareWebView</span>? {
     lockQueue.sync {
-        return self.poolDict[identifiler]
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">self</span>.poolDict[identifiler]
     }
 }
     
-/// 创建预加载 webView
-/// - Returns: webView
-private func createWebView() -&gt; HooWKPrepareWebView {
-    return HooWKPrepareWebView()
+<span class="hljs-comment">/// 创建预加载 webView</span>
+<span class="hljs-comment">/// - Returns: webView</span>
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">func</span> <span class="hljs-title function_">createWebView</span>() -&gt; <span class="hljs-type">HooWKPrepareWebView</span> {
+    <span class="hljs-keyword">return</span> <span class="hljs-type">HooWKPrepareWebView</span>()
 }
 </code></pre>
 <h3 id="总结" tabindex="-1">总结</h3>

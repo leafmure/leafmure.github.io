@@ -1,11 +1,11 @@
 <h3 id="p" tabindex="-1">%p</h3>
 <p>用于输出变量内存地址</p>
-<pre><code class="language-Objective-C">NSString *a = @&quot;six god&quot;;
-NSLog(@&quot;%p&quot;, a);
-NSLog(@&quot;%p&quot;, &amp;a);
+<pre class="hljs codehilite language-Objective-C"><code>NSString *a = @<span class="hljs-string">&quot;six god&quot;</span>;
+NSLog(@<span class="hljs-string">&quot;<span class="hljs-variable">%p</span>&quot;</span>, a);
+NSLog(@<span class="hljs-string">&quot;<span class="hljs-variable">%p</span>&quot;</span>, &amp;a);
 
-print: 0x100004008
-print: 0x16fdff418
+<span class="hljs-keyword">print</span>: <span class="hljs-number">0x100004008</span>
+<span class="hljs-keyword">print</span>: <span class="hljs-number">0x16fdff418</span>
 </code></pre>
 <p>在日志输出中，a 和 &amp;a 的区别是：</p>
 <ul>
@@ -15,37 +15,37 @@ print: 0x16fdff418
 <!-- more -->
 <h3 id="二级指针" tabindex="-1">二级指针</h3>
 <p>在上面 *a 是一级指针，而二级指针就是指向指针的指针如：</p>
-<pre><code class="language-Objective-C">// 下面代码只支持在 MRC 模式
-// 在MRC下，二级指针类型定义为属性、成员变量或者参数都是可行的
-// 在ARC下，二级指针类型则不能定义为属性或成员变量，但是可以作为参数传递
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-comment">// 下面代码只支持在 MRC 模式</span>
+<span class="hljs-comment">// 在MRC下，二级指针类型定义为属性、成员变量或者参数都是可行的</span>
+<span class="hljs-comment">// 在ARC下，二级指针类型则不能定义为属性或成员变量，但是可以作为参数传递</span>
 
-NSString *a = @&quot;six god&quot;;
-NSString** p = &amp;a;
-*p = @&quot;six six&quot;
+<span class="hljs-built_in">NSString</span> *a = <span class="hljs-string">@&quot;six god&quot;</span>;
+<span class="hljs-built_in">NSString</span>** p = &amp;a;
+*p = <span class="hljs-string">@&quot;six six&quot;</span>
 </code></pre>
 <p>可以通过*号来访问、操作内存，访问的过程为：二级指针访问一级指针的内容。一级指针存的是内容地址，系统会根据该地址访问一级指针指向的内容。二级指针 p 存的是 一级指针 a 的地址。</p>
-<pre><code class="language-Objective-C">示例1：
-NSString *a = @&quot;six god&quot;;
-NSLog(@&quot;修改前: %@&quot;, a);
-[self update:&amp;a];
-NSLog(@&quot;修改后：%@&quot;, a);
+<pre class="hljs codehilite language-Objective-C"><code>示例<span class="hljs-number">1</span>：
+<span class="hljs-built_in">NSString</span> *a = <span class="hljs-string">@&quot;six god&quot;</span>;
+<span class="hljs-built_in">NSLog</span>(<span class="hljs-string">@&quot;修改前: %@&quot;</span>, a);
+[<span class="hljs-keyword">self</span> update:&amp;a];
+<span class="hljs-built_in">NSLog</span>(<span class="hljs-string">@&quot;修改后：%@&quot;</span>, a);
 
-- (void)update:(NSString **)v {
-    *v = @&quot;hi! six&quot;;
+- (<span class="hljs-type">void</span>)update:(<span class="hljs-built_in">NSString</span> **)v {
+    *v = <span class="hljs-string">@&quot;hi! six&quot;</span>;
 }
 
 print:
 修改前: six god
 修改后：hi! six
 
-示例2：
-NSString *a = @&quot;six god&quot;;
-NSLog(@&quot;修改前: %@&quot;, a);
-[self update:a];
-NSLog(@&quot;修改后：%@&quot;, a);
+示例<span class="hljs-number">2</span>：
+<span class="hljs-built_in">NSString</span> *a = <span class="hljs-string">@&quot;six god&quot;</span>;
+<span class="hljs-built_in">NSLog</span>(<span class="hljs-string">@&quot;修改前: %@&quot;</span>, a);
+[<span class="hljs-keyword">self</span> update:a];
+<span class="hljs-built_in">NSLog</span>(<span class="hljs-string">@&quot;修改后：%@&quot;</span>, a);
 
-- (void)update:(NSString *)v {
-    *v = @&quot;hi! six&quot;;
+- (<span class="hljs-type">void</span>)update:(<span class="hljs-built_in">NSString</span> *)v {
+    *v = <span class="hljs-string">@&quot;hi! six&quot;</span>;
 }
 
 print:

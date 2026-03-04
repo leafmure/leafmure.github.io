@@ -135,11 +135,11 @@
 MP3 48k, 1152个采样点，每帧则为 24毫秒: 1152/48000= 0.024 秒 = 24毫秒；</p>
 <h3 id="交错模式" tabindex="-1">交错模式</h3>
 <p>数字音频信号存储的方式。数据以连续帧的方式存放，即首先记录帧1的左声道样本和右声道样本，再开始帧2的记录…</p>
-<pre><code>L R L R L R L R L R
+<pre class="hljs codehilite"><code>L <span class="hljs-attribute">R</span> L <span class="hljs-attribute">R</span> L <span class="hljs-attribute">R</span> L <span class="hljs-attribute">R</span> L <span class="hljs-attribute">R</span>
 </code></pre>
 <h3 id="非交错模式" tabindex="-1">非交错模式</h3>
 <p>首先记录的是一个周期内所有帧的左声道样本，再记录所有右声道样本</p>
-<pre><code>L L L ... R R R
+<pre class="hljs codehilite"><code>L L L ... <span class="hljs-attribute">R</span> <span class="hljs-attribute">R</span> <span class="hljs-attribute">R</span>
 </code></pre>
 <p>比如AAC 一帧是1024，那么在交错模式下记录一帧记录的就是【LRLRLR…】，而在非交错模式下一帧记录的就是1024【LLLL…】+ （1024）【RRRR…】</p>
 <h2 id="视频相关知识" tabindex="-1">视频相关知识</h2>

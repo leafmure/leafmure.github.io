@@ -8,34 +8,34 @@
 </blockquote>
 <!-- more -->
 <p>Kingfisher、RealmSwift 库处于上述情况，如果项目中使用的是 Swift UI 则需要将最低兼容版本改为 iOS 12。由于个人项目需要兼容 iOS 10 并且项目中也没有使用到 Swift UI，所以修改 pod file，在 pod install 时将Kingfisher、RealmSwift库的 Swift UI 相关代码删除。</p>
-<pre><code class="language-Ruby">pre_install do |installer|
+<pre class="hljs codehilite language-Ruby"><code>pre_install <span class="hljs-keyword">do</span> |<span class="hljs-params">installer</span>|
   remove_Kingfisher_swiftui()
   remove_RealmSwift_swiftui()
-end
+<span class="hljs-keyword">end</span>
 
-def remove_Kingfisher_swiftui
-  code_file = &quot;./Pods/Kingfisher/Sources/General/KFOptionsSetter.swift&quot;
-  code_text = File.read(code_file)
-  code_text.gsub!(/#if canImport\(SwiftUI\) \&amp;\&amp; canImport\(Combine\)(.|\n)+#endif/,'')
-  file = File.new(code_file, 'w+')
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">remove_Kingfisher_swiftui</span>
+  code_file = <span class="hljs-string">&quot;./Pods/Kingfisher/Sources/General/KFOptionsSetter.swift&quot;</span>
+  code_text = <span class="hljs-title class_">File</span>.read(code_file)
+  code_text.gsub!(<span class="hljs-regexp">/#if canImport\(SwiftUI\) \&amp;\&amp; canImport\(Combine\)(.|\n)+#endif/</span>,<span class="hljs-string">&#x27;&#x27;</span>)
+  file = <span class="hljs-title class_">File</span>.new(code_file, <span class="hljs-string">&#x27;w+&#x27;</span>)
   file.syswrite(code_text)
   file.close()
-end
+<span class="hljs-keyword">end</span>
 
-def remove_RealmSwift_swiftui
-  code_file = &quot;./Pods/RealmSwift/RealmSwift/SwiftUI.swift&quot;
-  code_text = File.read(code_file)
-  code_text.gsub!(/#if canImport\(SwiftUI\) \&amp;\&amp; canImport\(Combine\)(.|\n)+#else/,'')
-  code_text = code_text.gsub(/#endif/,'')
-  file = File.new(code_file, 'w+')
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">remove_RealmSwift_swiftui</span>
+  code_file = <span class="hljs-string">&quot;./Pods/RealmSwift/RealmSwift/SwiftUI.swift&quot;</span>
+  code_text = <span class="hljs-title class_">File</span>.read(code_file)
+  code_text.gsub!(<span class="hljs-regexp">/#if canImport\(SwiftUI\) \&amp;\&amp; canImport\(Combine\)(.|\n)+#else/</span>,<span class="hljs-string">&#x27;&#x27;</span>)
+  code_text = code_text.gsub(<span class="hljs-regexp">/#endif/</span>,<span class="hljs-string">&#x27;&#x27;</span>)
+  file = <span class="hljs-title class_">File</span>.new(code_file, <span class="hljs-string">&#x27;w+&#x27;</span>)
   file.syswrite(code_text)
   file.close()
-end
+<span class="hljs-keyword">end</span>
 </code></pre>
 <p>在 Ruby 中 gsub 函数用于替换字符，示例用法如下：</p>
-<pre><code class="language-Ruby">'abc'.gsub(/a/,d) =&gt; 'dbc'
-'abc'.gsub!(/a/,d) =&gt; 'dbc'
-'abc'.gsub(/d/,e) =&gt; 'abc'
-'abc'.gsub!(/d/,e) =&gt; nil
+<pre class="hljs codehilite language-Ruby"><code><span class="hljs-string">&#x27;abc&#x27;</span>.gsub(<span class="hljs-regexp">/a/</span>,d) =&gt; <span class="hljs-string">&#x27;dbc&#x27;</span>
+<span class="hljs-string">&#x27;abc&#x27;</span>.gsub!(<span class="hljs-regexp">/a/</span>,d) =&gt; <span class="hljs-string">&#x27;dbc&#x27;</span>
+<span class="hljs-string">&#x27;abc&#x27;</span>.gsub(<span class="hljs-regexp">/d/</span>,e) =&gt; <span class="hljs-string">&#x27;abc&#x27;</span>
+<span class="hljs-string">&#x27;abc&#x27;</span>.gsub!(<span class="hljs-regexp">/d/</span>,e) =&gt; <span class="hljs-literal">nil</span>
 </code></pre>
 <p>若有其他第三方库遇到这种情况，可以尝试根据上面的示例编写对应函数，删除 Swift UI 代码。</p>

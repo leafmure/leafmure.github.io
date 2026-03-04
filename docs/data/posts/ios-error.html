@@ -10,8 +10,8 @@
 <h3 id="this-application-is-modifying-the-autolayout-engin-from-a-background-thread" tabindex="-1">This application is modifying the autolayout engin from a background thread</h3>
 <p>原因：未回主线程刷新UI</p>
 <p>解决方案：</p>
-<pre><code class="language-Objective-C">dispatch_async(dispatch_get_main_queue(), ^{
-// 有关UI的操作
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-selector-tag">dispatch_async</span>(<span class="hljs-built_in">dispatch_get_main_queue</span>(), ^{
+<span class="hljs-comment">// 有关UI的操作</span>
 });
 </code></pre>
 <h3 id="target-编译报错-build-input-file-cannot-be-found" tabindex="-1">Target 编译报错: Build input file cannot be found</h3>

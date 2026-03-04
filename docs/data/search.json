@@ -57,6 +57,50 @@
     ]
   },
   {
+    "id": "hexo-seo设置",
+    "title": "Hexo SEO设置",
+    "url": "/post/hexo-seo设置",
+    "content": "SEO（Search Engine Optimization）:汉译为搜索引擎优化。是一种方式:利用搜索引擎的规则提高网站在有关搜索引擎内的自然排名。目的是：为网站提供生态式的自我营销解决方案，让其在行业内占据领先地位，获得品牌收益；SEO包含站外SEO和站内SEO两方面；为了从搜索引擎中获得更多的免费流量，从网站结构、内容建设方案、用户互动传播、页面等角度进行合理规划，还会使搜索引擎中显示的网站相关信息对用户来说更具有吸引力 =>百度百科 百度收录站点 登录百度站长平台，在用户中心 => 站点管理添加你的站点网址 配置完站点属性后，进入最后一步：验证网站。有三种方式：文件验证、HTML标签验证、CNAME验证，文件验证和CNAME验证都比较简单，也有相对应的帮助文本，在此我选择的是HTML标签验证。 在主题的_config.yml文件中，设置：baidu_site_verification: true，如果没有该字段就手动添加。 在themes/next/layout/_partials/head.swig文件中添加下列代码 // 每个人的content值都不一致，请注意更换成你的content值 {% if theme.baidu_site_verification %} <meta name=\"baidu-site-verification\" content=\"6K5YmdK",
+    "category": "hexo",
+    "tags": [
+      "hexo 配置"
+    ],
+    "keywords": [
+      "hexo",
+      "hexo seo",
+      "seo"
+    ]
+  },
+  {
+    "id": "hexo项目同步github",
+    "title": "Hexo项目同步github",
+    "url": "/post/hexo项目同步github",
+    "content": "hexo文件托管到github 克隆gitHub上的XXX.github.io项目的文件到本地 git clone https://github.com/yourname/xxx.github.io.git 删除文件夹里除了.git的其他所有文件 把hexo项目文件下的所有文件全部复制过来(除了.git) 里面应该有一个叫.gitignore的文件，如果没有就输入 touch .gitignore，创建一个,并输入以下内容 .DS_Store Thumbs.db db.json *.log node_modules/ public/ .deploy*/ 创建一个叫hexo的分支并切换到这个分支上 git checkout -b hexo 提交复制过来的文件到暂存区 $ git add --all 因为thme/next是一个git仓库，所以git add 会失败 解决方案一 删除主题next中的.git文件，然后就可以add了。 解决方案二 新建一个github仓库，将next本地仓库所关联的远程仓库更改为自己新建的仓库地址并上传文件，然后将新建的仓库作为hexo分支的子模块 // 查看所有远程仓库 $ git remote // 删除所关联的远程仓库地址 $ git remote rm origin // 添加新仓库地址 $ git remote add origin 新仓库地址",
+    "category": "hexo",
+    "tags": [
+      "hexo 文件管理"
+    ],
+    "keywords": [
+      "hexo",
+      "hexo同步github",
+      "hexo托管到github"
+    ]
+  },
+  {
+    "id": "next主题集成不蒜子统计",
+    "title": "next主题集成不蒜子统计",
+    "url": "/post/next主题集成不蒜子统计",
+    "content": "打开next主题配置文件_config.yml 搜索busuanzi_count修改配置 // next 6.0 的配置样式 busuanzi_count: enable: true total_visitors: true total_visitors_icon: user total_views: true total_views_icon: eye post_views: true post_views_icon: eye // next 5.0 的配置样式 busuanzi_count: enable: true site_uv: true site_uv_header: <i class=\"fa fa-user\"></i> 本站访问数 site_uv_footer: 人 site_pv: true site_pv_header: <i class=\"fa fa-eye\"></i> 本站总访问量 site_pv_footer: 次 page_pv: false page_pv_header: <i class=\"fa fa-file-o\"></i> 本文总阅读量 page_pv_footer: 次 配置完后如发现不能统计, 可能是引用网址更换了，检查 themes\\next\\layout_third-party\\analytics\\busuanzi-counter.swig",
+    "category": "hexo",
+    "tags": [
+      "next 主题配置"
+    ],
+    "keywords": [
+      "不蒜子统计",
+      "next主题"
+    ]
+  },
+  {
     "id": "git-仓库搭建",
     "title": "Git 仓库搭建",
     "url": "/post/git-仓库搭建",
@@ -122,7 +166,8 @@
       "启动优化"
     ],
     "keywords": [
-      "App启动流程,启动优化"
+      "App启动流程",
+      "启动优化"
     ]
   },
   {
@@ -275,7 +320,8 @@
       "属性包装器"
     ],
     "keywords": [
-      "Swift,属性包装器"
+      "Swift",
+      "属性包装器"
     ]
   },
   {
@@ -301,7 +347,8 @@
       "自定义运算符"
     ],
     "keywords": [
-      "Swift,自定义运算符"
+      "Swift",
+      "自定义运算符"
     ]
   },
   {
@@ -330,7 +377,9 @@
       "UITableView Error"
     ],
     "keywords": [
-      "UITableView,Invalid,update"
+      "UITableView",
+      "Invalid",
+      "update"
     ]
   },
   {
@@ -359,7 +408,9 @@
       "Cocoapods"
     ],
     "keywords": [
-      "Cocoapods,私有库,公开库"
+      "Cocoapods",
+      "私有库",
+      "公开库"
     ]
   },
   {
@@ -430,7 +481,8 @@
       "内存管理"
     ],
     "keywords": [
-      "内存地址,二级指针"
+      "内存地址",
+      "二级指针"
     ]
   },
   {
@@ -488,7 +540,8 @@
       "单元测试"
     ],
     "keywords": [
-      "单元测试,XCTest"
+      "单元测试",
+      "XCTest"
     ]
   },
   {
@@ -501,7 +554,10 @@
       "FFmpeg"
     ],
     "keywords": [
-      "FFmpeg,rtmp,SRS,H.256"
+      "FFmpeg",
+      "rtmp",
+      "SRS",
+      "H.256"
     ]
   },
   {
@@ -515,7 +571,12 @@
       "Cocoapods"
     ],
     "keywords": [
-      "Ruby,Cocoapods,HomeBrew,M1,M2,Mac"
+      "Ruby",
+      "Cocoapods",
+      "HomeBrew",
+      "M1",
+      "M2",
+      "Mac"
     ]
   },
   {
@@ -528,51 +589,8 @@
       "Stable Diffusion"
     ],
     "keywords": [
-      "Stable Diffusion,Mac"
-    ]
-  },
-  {
-    "id": "hexo-seo设置",
-    "title": "Hexo SEO设置",
-    "url": "/post/hexo-seo设置",
-    "content": "SEO（Search Engine Optimization）:汉译为搜索引擎优化。是一种方式:利用搜索引擎的规则提高网站在有关搜索引擎内的自然排名。目的是：为网站提供生态式的自我营销解决方案，让其在行业内占据领先地位，获得品牌收益；SEO包含站外SEO和站内SEO两方面；为了从搜索引擎中获得更多的免费流量，从网站结构、内容建设方案、用户互动传播、页面等角度进行合理规划，还会使搜索引擎中显示的网站相关信息对用户来说更具有吸引力 =>百度百科 百度收录站点 登录百度站长平台，在用户中心 => 站点管理添加你的站点网址 配置完站点属性后，进入最后一步：验证网站。有三种方式：文件验证、HTML标签验证、CNAME验证，文件验证和CNAME验证都比较简单，也有相对应的帮助文本，在此我选择的是HTML标签验证。 在主题的_config.yml文件中，设置：baidu_site_verification: true，如果没有该字段就手动添加。 在themes/next/layout/_partials/head.swig文件中添加下列代码 // 每个人的content值都不一致，请注意更换成你的content值 {% if theme.baidu_site_verification %} <meta name=\"baidu-site-verification\" content=\"6K5YmdK",
-    "category": "hexo",
-    "tags": [
-      "hexo 配置"
-    ],
-    "keywords": [
-      "hexo",
-      "hexo seo",
-      "seo"
-    ]
-  },
-  {
-    "id": "hexo项目同步github",
-    "title": "Hexo项目同步github",
-    "url": "/post/hexo项目同步github",
-    "content": "hexo文件托管到github 克隆gitHub上的XXX.github.io项目的文件到本地 git clone https://github.com/yourname/xxx.github.io.git 删除文件夹里除了.git的其他所有文件 把hexo项目文件下的所有文件全部复制过来(除了.git) 里面应该有一个叫.gitignore的文件，如果没有就输入 touch .gitignore，创建一个,并输入以下内容 .DS_Store Thumbs.db db.json *.log node_modules/ public/ .deploy*/ 创建一个叫hexo的分支并切换到这个分支上 git checkout -b hexo 提交复制过来的文件到暂存区 $ git add --all 因为thme/next是一个git仓库，所以git add 会失败 解决方案一 删除主题next中的.git文件，然后就可以add了。 解决方案二 新建一个github仓库，将next本地仓库所关联的远程仓库更改为自己新建的仓库地址并上传文件，然后将新建的仓库作为hexo分支的子模块 // 查看所有远程仓库 $ git remote // 删除所关联的远程仓库地址 $ git remote rm origin // 添加新仓库地址 $ git remote add origin 新仓库地址",
-    "category": "hexo",
-    "tags": [
-      "hexo 文件管理"
-    ],
-    "keywords": [
-      "hexo",
-      "hexo同步github",
-      "hexo托管到github"
-    ]
-  },
-  {
-    "id": "next主题集成不蒜子统计",
-    "title": "next主题集成不蒜子统计",
-    "url": "/post/next主题集成不蒜子统计",
-    "content": "打开next主题配置文件_config.yml 搜索busuanzi_count修改配置 // next 6.0 的配置样式 busuanzi_count: enable: true total_visitors: true total_visitors_icon: user total_views: true total_views_icon: eye post_views: true post_views_icon: eye // next 5.0 的配置样式 busuanzi_count: enable: true site_uv: true site_uv_header: <i class=\"fa fa-user\"></i> 本站访问数 site_uv_footer: 人 site_pv: true site_pv_header: <i class=\"fa fa-eye\"></i> 本站总访问量 site_pv_footer: 次 page_pv: false page_pv_header: <i class=\"fa fa-file-o\"></i> 本文总阅读量 page_pv_footer: 次 配置完后如发现不能统计, 可能是引用网址更换了，检查 themes\\next\\layout_third-party\\analytics\\busuanzi-counter.swig",
-    "category": "hexo",
-    "tags": [
-      "next 主题配置"
-    ],
-    "keywords": [
-      "不蒜子统计",
-      "next主题"
+      "Stable Diffusion",
+      "Mac"
     ]
   },
   {

@@ -1,26 +1,26 @@
 <p>打开next主题配置文件_config.yml 搜索busuanzi_count修改配置</p>
 <!-- more -->
-<pre><code>// next 6.0 的配置样式
-busuanzi_count:
-enable: true
-total_visitors: true
-total_visitors_icon: user
-total_views: true
-total_views_icon: eye
-post_views: true
-post_views_icon: eye
+<pre class="hljs codehilite"><code><span class="hljs-operator">//</span> next <span class="hljs-number">6.0</span> 的配置样式
+<span class="hljs-params">busuanzi_count:</span>
+<span class="hljs-params">enable:</span> <span class="hljs-literal">true</span>
+<span class="hljs-params">total_visitors:</span> <span class="hljs-literal">true</span>
+<span class="hljs-params">total_visitors_icon:</span> user
+<span class="hljs-params">total_views:</span> <span class="hljs-literal">true</span>
+<span class="hljs-params">total_views_icon:</span> eye
+<span class="hljs-params">post_views:</span> <span class="hljs-literal">true</span>
+<span class="hljs-params">post_views_icon:</span> eye
 
-// next 5.0 的配置样式
-busuanzi_count:
-enable: true
-site_uv: true
-site_uv_header: &lt;i class=&quot;fa fa-user&quot;&gt;&lt;/i&gt; 本站访问数
-site_uv_footer: 人
-site_pv: true
-site_pv_header: &lt;i class=&quot;fa fa-eye&quot;&gt;&lt;/i&gt; 本站总访问量
-site_pv_footer: 次
-page_pv: false
-page_pv_header: &lt;i class=&quot;fa fa-file-o&quot;&gt;&lt;/i&gt; 本文总阅读量
-page_pv_footer: 次
+<span class="hljs-operator">//</span> next <span class="hljs-number">5.0</span> 的配置样式
+<span class="hljs-params">busuanzi_count:</span>
+<span class="hljs-params">enable:</span> <span class="hljs-literal">true</span>
+<span class="hljs-params">site_uv:</span> <span class="hljs-literal">true</span>
+<span class="hljs-params">site_uv_header:</span> <span class="hljs-operator">&lt;</span>i class<span class="hljs-operator">=</span><span class="hljs-string">&quot;fa fa-user&quot;</span><span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-operator">/</span>i<span class="hljs-operator">&gt;</span> 本站访问数
+<span class="hljs-params">site_uv_footer:</span> 人
+<span class="hljs-params">site_pv:</span> <span class="hljs-literal">true</span>
+<span class="hljs-params">site_pv_header:</span> <span class="hljs-operator">&lt;</span>i class<span class="hljs-operator">=</span><span class="hljs-string">&quot;fa fa-eye&quot;</span><span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-operator">/</span>i<span class="hljs-operator">&gt;</span> 本站总访问量
+<span class="hljs-params">site_pv_footer:</span> 次
+<span class="hljs-params">page_pv:</span> <span class="hljs-literal">false</span>
+<span class="hljs-params">page_pv_header:</span> <span class="hljs-operator">&lt;</span>i class<span class="hljs-operator">=</span><span class="hljs-string">&quot;fa fa-file-o&quot;</span><span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-operator">/</span>i<span class="hljs-operator">&gt;</span> 本文总阅读量
+<span class="hljs-params">page_pv_footer:</span> 次
 </code></pre>
 <p>配置完后如发现不能统计, 可能是引用网址更换了，检查 themes\next\layout_third-party\analytics\busuanzi-counter.swig 文件，更换引用地址为：<a href="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js">https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js</a></p>

@@ -6,210 +6,210 @@
 <h4 id="ekeventstore" tabindex="-1">EKEventStore</h4>
 <p>EKEventStore 类似一个数据库，管理着日历事件和提醒事项，我们通过它来操作日历事件和提醒事项。
 首先我们创建一个 EKEventStore：</p>
-<pre><code class="language-Objective-C">EKEventStore *eventStore = [[EKEventStore alloc] init];
+<pre class="hljs codehilite language-Objective-C"><code>EKEventStore *eventStore <span class="hljs-operator">=</span> [[EKEventStore alloc] init]<span class="hljs-comment">;</span>
 </code></pre>
 <p>获取授权，entityType 是授权实体类型，completion 是授权状态回调</p>
-<pre><code class="language-Objective-C">/*
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-comment">/*
 typedef NS_ENUM(NSUInteger, EKEntityType) {
 EKEntityTypeEvent,  // 日历事件
 EKEntityTypeReminder  // 提醒事项
 };
-*/
-- (void)requestAccessToEntityType:(EKEntityType)entityType completion:(EKEventStoreRequestAccessCompletionHandler)completion NS_AVAILABLE(10_9, 6_0);
+*/</span>
+- (<span class="hljs-type">void</span>)requestAccessToEntityType:(EKEntityType)entityType completion:(EKEventStoreRequestAccessCompletionHandler)completion <span class="hljs-built_in">NS_AVAILABLE</span>(<span class="hljs-number">10</span>_9, <span class="hljs-number">6</span>_0);
 
-// 获取日历事件授权
-[eventStore requestAccessToEntityType:EKEntityTypeEvent completion:^(BOOL granted, NSError *error){
-//  granted 是否授权
-//  error 授权失败原因
-if (granted) {
-// 授权成功
-} else {
-// 授权失败
+<span class="hljs-comment">// 获取日历事件授权</span>
+[eventStore requestAccessToEntityType:EKEntityTypeEvent completion:^(<span class="hljs-type">BOOL</span> granted, <span class="hljs-built_in">NSError</span> *error){
+<span class="hljs-comment">//  granted 是否授权</span>
+<span class="hljs-comment">//  error 授权失败原因</span>
+<span class="hljs-keyword">if</span> (granted) {
+<span class="hljs-comment">// 授权成功</span>
+} <span class="hljs-keyword">else</span> {
+<span class="hljs-comment">// 授权失败</span>
 }
 }];
 </code></pre>
 <h4 id="eksource" tabindex="-1">EKSource</h4>
 <p>日历源中拥有多个日历对象，将日历对象进行划分。</p>
-<pre><code class="language-Objective-C">
-typedef NS_ENUM(NSInteger, EKSourceType) {
-EKSourceTypeLocal,  // 本地日历源
-EKSourceTypeExchange,  // Exchange协议远程源，网络联网同步数据。
-EKSourceTypeCalDAV, // CalDAV协议远程源，网络联网同步数据，iCloud 便是这这类。
-EKSourceTypeMobileMe, // 我的iphone
-EKSourceTypeSubscribed,  // 订阅
-EKSourceTypeBirthdays  // 生日
+<pre class="hljs codehilite language-Objective-C"><code>
+<span class="hljs-keyword">typedef</span> <span class="hljs-built_in">NS_ENUM</span>(<span class="hljs-built_in">NSInteger</span>, EKSourceType) {
+EKSourceTypeLocal,  <span class="hljs-comment">// 本地日历源</span>
+EKSourceTypeExchange,  <span class="hljs-comment">// Exchange协议远程源，网络联网同步数据。</span>
+EKSourceTypeCalDAV, <span class="hljs-comment">// CalDAV协议远程源，网络联网同步数据，iCloud 便是这这类。</span>
+EKSourceTypeMobileMe, <span class="hljs-comment">// 我的iphone</span>
+EKSourceTypeSubscribed,  <span class="hljs-comment">// 订阅</span>
+EKSourceTypeBirthdays  <span class="hljs-comment">// 生日</span>
 };
 
-@interface EKSource : EKObject
+<span class="hljs-class"><span class="hljs-keyword">@interface</span> <span class="hljs-title">EKSource</span> : <span class="hljs-title">EKObject</span></span>
 
-// 源标识
-@property(nonatomic, readonly) NSString        *sourceIdentifier;
-// 源类型
-@property(nonatomic, readonly) EKSourceType     sourceType;
-// 源标题
-@property(nonatomic, readonly) NSString        *title;
+<span class="hljs-comment">// 源标识</span>
+<span class="hljs-keyword">@property</span>(<span class="hljs-keyword">nonatomic</span>, <span class="hljs-keyword">readonly</span>) <span class="hljs-built_in">NSString</span>        *sourceIdentifier;
+<span class="hljs-comment">// 源类型</span>
+<span class="hljs-keyword">@property</span>(<span class="hljs-keyword">nonatomic</span>, <span class="hljs-keyword">readonly</span>) EKSourceType     sourceType;
+<span class="hljs-comment">// 源标题</span>
+<span class="hljs-keyword">@property</span>(<span class="hljs-keyword">nonatomic</span>, <span class="hljs-keyword">readonly</span>) <span class="hljs-built_in">NSString</span>        *title;
 
-// 日历源中的日历对象数组
-@property(nonatomic, readonly) NSSet&lt;EKCalendar *&gt; *calendars NS_DEPRECATED(NA, NA, 4_0, 6_0);
+<span class="hljs-comment">// 日历源中的日历对象数组</span>
+<span class="hljs-keyword">@property</span>(<span class="hljs-keyword">nonatomic</span>, <span class="hljs-keyword">readonly</span>) <span class="hljs-built_in">NSSet</span>&lt;EKCalendar *&gt; *calendars <span class="hljs-built_in">NS_DEPRECATED</span>(NA, NA, <span class="hljs-number">4</span>_0, <span class="hljs-number">6</span>_0);
 
 
-// 根据实体类型获取源中相对应类型的日历对象
-- (NSSet&lt;EKCalendar *&gt; *)calendarsForEntityType:(EKEntityType)entityType NS_AVAILABLE(10_8, 6_0);
+<span class="hljs-comment">// 根据实体类型获取源中相对应类型的日历对象</span>
+- (<span class="hljs-built_in">NSSet</span>&lt;EKCalendar *&gt; *)calendarsForEntityType:(EKEntityType)entityType <span class="hljs-built_in">NS_AVAILABLE</span>(<span class="hljs-number">10</span>_8, <span class="hljs-number">6</span>_0);
 
-@end
+<span class="hljs-keyword">@end</span>
 
 </code></pre>
 <p>日历源也是通过 EKEventStore 这个管理者获取的， EKEventStore 有个属性</p>
-<pre><code class="language-Objective-C">// 所有日历源
-@property (nonatomic, readonly) NSArray&lt;EKSource *&gt; *sources;
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-comment">// 所有日历源</span>
+<span class="hljs-keyword">@property</span> (<span class="hljs-keyword">nonatomic</span>, <span class="hljs-keyword">readonly</span>) <span class="hljs-built_in">NSArray</span>&lt;EKSource *&gt; *sources;
 
-// 根据 identifier 获取日历源
-- (nullable EKSource *)sourceWithIdentifier:(NSString *)identifier;
+<span class="hljs-comment">// 根据 identifier 获取日历源</span>
+- (<span class="hljs-keyword">nullable</span> EKSource *)sourceWithIdentifier:(<span class="hljs-built_in">NSString</span> *)identifier;
 </code></pre>
 <p>我们可以根据名称和类型获取我们要的日历源</p>
-<pre><code class="language-Objective-C">for (EKSource *source in eventStore.sources) {
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-keyword">for</span> (EKSource *<span class="hljs-keyword">source</span> in eventStore.sources) {
 
-// 获取 iCloud 源
-if (source.sourceType == EKSourceTypeCalDAV &amp;&amp; [source.title isEqualToString:@&quot;iCloud&quot;]) {
+<span class="hljs-comment">// 获取 iCloud 源</span>
+<span class="hljs-keyword">if</span> (<span class="hljs-keyword">source</span>.sourceType == EKSourceTypeCalDAV &amp;&amp; [<span class="hljs-keyword">source</span>.title isEqualToString:@<span class="hljs-string">&quot;iCloud&quot;</span>]) {
 
-calendarSource = source;
+calendarSource = <span class="hljs-keyword">source</span>;
 }
 }
 </code></pre>
 <h4 id="ekcalendar" tabindex="-1">EKCalendar</h4>
 <p>EKCalendar 日历，添加的日历事件需要选择一个日历对象，日历对象可以通过 EKEventStore 来获取，也可以获取对应的日历源来获取。</p>
-<pre><code class="language-Objective-C">// 所有的日历对象
-@property(nonatomic, readonly) NSArray&lt;EKCalendar *&gt; *calendars;
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-comment">// 所有的日历对象</span>
+<span class="hljs-keyword">@property</span>(<span class="hljs-keyword">nonatomic</span>, <span class="hljs-keyword">readonly</span>) <span class="hljs-built_in">NSArray</span>&lt;EKCalendar *&gt; *calendars;
 
-// 通过实体类型来获取相对应的日历对象
-- (NSArray&lt;EKCalendar *&gt; *)calendarsForEntityType:(EKEntityType)entityType;
+<span class="hljs-comment">// 通过实体类型来获取相对应的日历对象</span>
+- (<span class="hljs-built_in">NSArray</span>&lt;EKCalendar *&gt; *)calendarsForEntityType:(EKEntityType)entityType;
 
-// 一般有指定的默认使用的日历对象，有可能没有，需小心使用
-- (nullable EKCalendar *)defaultCalendarForNewReminders;
+<span class="hljs-comment">// 一般有指定的默认使用的日历对象，有可能没有，需小心使用</span>
+- (<span class="hljs-keyword">nullable</span> EKCalendar *)defaultCalendarForNewReminders;
 </code></pre>
 <p>当然，有的时候你想添加一个由自己命名的日历对象：</p>
-<pre><code class="language-Objective-C">
+<pre class="hljs codehilite language-Objective-C"><code>
 // 事件数据管理者
-EKEventStore *eventStore = [[EKEventStore alloc] init];
+EKEventStore <span class="hljs-comment">*eventStore = [[EKEventStore alloc] init];</span>
 // 获取日历源
-EKSource *calendarSource = [self findSource];
+EKSource <span class="hljs-comment">*calendarSource = [self findSource];</span>
 
 // 创建事件日历
-EKCalendar *calendar = [EKCalendar calendarForEntityType:EKEntityTypeEvent eventStore:eventStore];
-calendar.title = title;
+EKCalendar <span class="hljs-comment">*calendar = [EKCalendar calendarForEntityType:EKEntityTypeEvent eventStore:eventStore];</span>
+calendar.<span class="hljs-keyword">title</span> = <span class="hljs-keyword">title</span>;
 calendar.source = calendarSource;
 
-NSError *err;
-[self.eventStore saveCalendar:calendar commit:YES error:&amp;err];
-if (err) {
+NSError <span class="hljs-comment">*err;</span>
+[self.eventStore saveCalendar:calendar commit:YES <span class="hljs-keyword">error</span>:<span class="hljs-variable">&amp;err</span>];
+<span class="hljs-keyword">if</span> (err) {
 
-NSLog(@&quot;添加事件日历失败&quot;);
+NS<span class="hljs-meta">Log</span>(@<span class="hljs-string">&quot;添加事件日历失败&quot;</span>);
 }
 </code></pre>
 <h4 id="ekevent" tabindex="-1">EKEvent</h4>
 <p>EKEvent 是日历事件，显示在下拉框的日程中。</p>
 <h5 id="添加日历事件" tabindex="-1">添加日历事件</h5>
-<pre><code class="language-Objective-C">// 事件数据管理者
-EKEventStore *eventStore = [[EKEventStore alloc] init];
-EKEvent *event  = [EKEvent eventWithEventStore:eventStore];
-event.title = title; // 标题
-event.location = content; // 内容
-event.startDate = startDate; // 事件开始时间
-event.endDate = endDate; // 事件结束事件
-event.allDay = allDay; // 提示是否为 全天事件
-event.notes = note; // 备注
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-comment">// 事件数据管理者</span>
+EKEventStore *eventStore = [[EKEventStore alloc] <span class="hljs-keyword">init</span>];
+EKEvent *<span class="hljs-keyword">event</span>  = [EKEvent eventWithEventStore:eventStore];
+<span class="hljs-keyword">event</span>.title = title; <span class="hljs-comment">// 标题</span>
+<span class="hljs-keyword">event</span>.location = content; <span class="hljs-comment">// 内容</span>
+<span class="hljs-keyword">event</span>.startDate = startDate; <span class="hljs-comment">// 事件开始时间</span>
+<span class="hljs-keyword">event</span>.endDate = endDate; <span class="hljs-comment">// 事件结束事件</span>
+<span class="hljs-keyword">event</span>.allDay = allDay; <span class="hljs-comment">// 提示是否为 全天事件</span>
+<span class="hljs-keyword">event</span>.notes = note; <span class="hljs-comment">// 备注</span>
 
-// 添加提醒，-1800: 开始前半小时提醒，单位秒，可添加多个
-[event addAlarm:[EKAlarm alarmWithRelativeOffset:-1800]];
+<span class="hljs-comment">// 添加提醒，-1800: 开始前半小时提醒，单位秒，可添加多个</span>
+[<span class="hljs-meta">event addAlarm:[EKAlarm alarmWithRelativeOffset:-1800</span>]];
 
-// 每天重复
-EKRecurrenceRule *rule = [[EKRecurrenceRule alloc]initRecurrenceWithFrequency:EKRecurrenceFrequencyDaily interval:1 end:[EKRecurrenceEnd recurrenceEndWithEndDate:endDate]];
-event.recurrenceRules = @[rule];
+<span class="hljs-comment">// 每天重复</span>
+EKRecurrenceRule *rule = [[EKRecurrenceRule alloc]initRecurrenceWithFrequency:EKRecurrenceFrequencyDaily interval:<span class="hljs-number">1</span> end:[EKRecurrenceEnd recurrenceEndWithEndDate:endDate]];
+<span class="hljs-keyword">event</span>.recurrenceRules = @[rule];
 
-// 设置事件所属的日历对象
-[event setCalendar:calendar];
+<span class="hljs-comment">// 设置事件所属的日历对象</span>
+[<span class="hljs-meta">event setCalendar:calendar</span>];
 
-// 添加日历事件
+<span class="hljs-comment">// 添加日历事件</span>
 NSError *err;
-[eventStore saveEvent:event span:EKSpanThisEvent error:&amp;err];
-if (err) {
-NSLog(@&quot;添加失败&quot;);
-} else {
-NSLog(@&quot;已添加到系统日历中&quot;);
+[<span class="hljs-meta">eventStore saveEvent:event span:EKSpanThisEvent error:&amp;err</span>];
+<span class="hljs-keyword">if</span> (err) {
+NSLog(<span class="hljs-string">@&quot;添加失败&quot;</span>);
+} <span class="hljs-keyword">else</span> {
+NSLog(<span class="hljs-string">@&quot;已添加到系统日历中&quot;</span>);
 }
 
-// 添加日历事件
-- (BOOL)saveEvent:(EKEvent *)event span:(EKSpan)span commit:(BOOL)commit error:(NSError **)error;
+<span class="hljs-comment">// 添加日历事件</span>
+- (BOOL)saveEvent:(EKEvent *)<span class="hljs-keyword">event</span> span:(EKSpan)span commit:(BOOL)commit error:(NSError **)error;
 
-// 添加提醒事项
-// commit 为YES时，马上提交更改，一次处理一个事件。为 NO 时，不会马上提交改动，可以连续提交多个，在调用 - (BOOL)commit:(NSError **)error 方法后提交所有改动。
+<span class="hljs-comment">// 添加提醒事项</span>
+<span class="hljs-comment">// commit 为YES时，马上提交更改，一次处理一个事件。为 NO 时，不会马上提交改动，可以连续提交多个，在调用 - (BOOL)commit:(NSError **)error 方法后提交所有改动。</span>
 - (BOOL)saveReminder:(EKReminder *)reminder commit:(BOOL)commit error:(NSError **)error;
 </code></pre>
 <h5 id="重复规则" tabindex="-1">重复规则</h5>
-<pre><code class="language-Objective-C">// 此枚举类型用于指示对重复事件进行更改的范围。EKSpanThis指示更改应仅应用于此事件，EKSpanFutureEvents指示更改应应用于此事件以及模式中的所有未来事件。
-typedef NS_ENUM(NSInteger, EKSpan) {
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-comment">// 此枚举类型用于指示对重复事件进行更改的范围。EKSpanThis指示更改应仅应用于此事件，EKSpanFutureEvents指示更改应应用于此事件以及模式中的所有未来事件。</span>
+<span class="hljs-keyword">typedef</span> <span class="hljs-built_in">NS_ENUM</span>(<span class="hljs-built_in">NSInteger</span>, EKSpan) {
 EKSpanThisEvent,
 EKSpanFutureEvents
 };
 
-// 重复频率类型
-typedef NS_ENUM(NSInteger, EKRecurrenceFrequency) {
+<span class="hljs-comment">// 重复频率类型</span>
+<span class="hljs-keyword">typedef</span> <span class="hljs-built_in">NS_ENUM</span>(<span class="hljs-built_in">NSInteger</span>, EKRecurrenceFrequency) {
 EKRecurrenceFrequencyDaily, 
 EKRecurrenceFrequencyWeekly,
 EKRecurrenceFrequencyMonthly,
 EKRecurrenceFrequencyYearly
 };
 
-// 完整初始化方法
-- (instancetype)initRecurrenceWithFrequency:(EKRecurrenceFrequency)type
-interval:(NSInteger)interval 
-daysOfTheWeek:(nullable NSArray&lt;EKRecurrenceDayOfWeek *&gt; *)days
-daysOfTheMonth:(nullable NSArray&lt;NSNumber *&gt; *)monthDays
-monthsOfTheYear:(nullable NSArray&lt;NSNumber *&gt; *)months
-weeksOfTheYear:(nullable NSArray&lt;NSNumber *&gt; *)weeksOfTheYear
-daysOfTheYear:(nullable NSArray&lt;NSNumber *&gt; *)daysOfTheYear
-setPositions:(nullable NSArray&lt;NSNumber *&gt; *)setPositions
-end:(nullable EKRecurrenceEnd *)end;
+<span class="hljs-comment">// 完整初始化方法</span>
+- (<span class="hljs-keyword">instancetype</span>)initRecurrenceWithFrequency:(EKRecurrenceFrequency)type
+interval:(<span class="hljs-built_in">NSInteger</span>)interval 
+daysOfTheWeek:(<span class="hljs-keyword">nullable</span> <span class="hljs-built_in">NSArray</span>&lt;EKRecurrenceDayOfWeek *&gt; *)days
+daysOfTheMonth:(<span class="hljs-keyword">nullable</span> <span class="hljs-built_in">NSArray</span>&lt;<span class="hljs-built_in">NSNumber</span> *&gt; *)monthDays
+monthsOfTheYear:(<span class="hljs-keyword">nullable</span> <span class="hljs-built_in">NSArray</span>&lt;<span class="hljs-built_in">NSNumber</span> *&gt; *)months
+weeksOfTheYear:(<span class="hljs-keyword">nullable</span> <span class="hljs-built_in">NSArray</span>&lt;<span class="hljs-built_in">NSNumber</span> *&gt; *)weeksOfTheYear
+daysOfTheYear:(<span class="hljs-keyword">nullable</span> <span class="hljs-built_in">NSArray</span>&lt;<span class="hljs-built_in">NSNumber</span> *&gt; *)daysOfTheYear
+setPositions:(<span class="hljs-keyword">nullable</span> <span class="hljs-built_in">NSArray</span>&lt;<span class="hljs-built_in">NSNumber</span> *&gt; *)setPositions
+end:(<span class="hljs-keyword">nullable</span> EKRecurrenceEnd *)end;
 
 type：重复频率类型
-interval：间隔多少天/周/月/年，必须大于0，为1时，表示每天/周/月/年
+interval：间隔多少天/周/月/年，必须大于<span class="hljs-number">0</span>，为<span class="hljs-number">1</span>时，表示每天/周/月/年
 daysOfTheWeek：EKRecurrenceFrequencyWeekly类型有效，一周中的哪几天触发
-daysOfTheMonth：EKRecurrenceFrequencyMonthly类型有效，一个月中的哪几号触发，取值范围：-31～31，必须大于0，-1表示一个月的最后一天
-monthsOfTheYear：EKRecurrenceFrequencyYearly类型有效，一年中哪几个月触发，取值范围：1～12，-1表示一年的最后一月
-weeksOfTheYear：EKRecurrenceFrequencyYearly类型有效，一年中的哪几周触发，取值范围：-53～53，-1表示一年的最后一周
-daysOfTheYear：EKRecurrenceFrequencyYearly类型有效，一年中的哪几天触发，取值范围：-366～366，-1表示一年的最后一天
+daysOfTheMonth：EKRecurrenceFrequencyMonthly类型有效，一个月中的哪几号触发，取值范围：<span class="hljs-number">-31</span>～<span class="hljs-number">31</span>，必须大于<span class="hljs-number">0</span>，<span class="hljs-number">-1</span>表示一个月的最后一天
+monthsOfTheYear：EKRecurrenceFrequencyYearly类型有效，一年中哪几个月触发，取值范围：<span class="hljs-number">1</span>～<span class="hljs-number">12</span>，<span class="hljs-number">-1</span>表示一年的最后一月
+weeksOfTheYear：EKRecurrenceFrequencyYearly类型有效，一年中的哪几周触发，取值范围：<span class="hljs-number">-53</span>～<span class="hljs-number">53</span>，<span class="hljs-number">-1</span>表示一年的最后一周
+daysOfTheYear：EKRecurrenceFrequencyYearly类型有效，一年中的哪几天触发，取值范围：<span class="hljs-number">-366</span>～<span class="hljs-number">366</span>，<span class="hljs-number">-1</span>表示一年的最后一天
 setPositions：此属性对于具有有效的daysOfTheWeek、daysOfTheMonth、weeksOfTheYear或monthsOfTheYear属性的规则有效，它允许您指定一组序号，以帮助您从所选事件集中选择哪些对象
-包括。例如：将daysOfTheWeek 设置为 Monday-Friday，并在数组中包含-1的值将指示重复范围（月、年等）的最后一个工作日，取值范围：-366～366。
+包括。例如：将daysOfTheWeek 设置为 Monday-Friday，并在数组中包含<span class="hljs-number">-1</span>的值将指示重复范围（月、年等）的最后一个工作日，取值范围：<span class="hljs-number">-366</span>～<span class="hljs-number">366</span>。
 end：结束规则
 </code></pre>
 <h5 id="查询事件" tabindex="-1">查询事件</h5>
-<pre><code class="language-Objective-C">// 通过事件标识获取
-- (nullable EKEvent *)eventWithIdentifier:(NSString *)identifier;
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-comment">// 通过事件标识获取</span>
+- (<span class="hljs-keyword">nullable</span> EKEvent *)eventWithIdentifier:(<span class="hljs-built_in">NSString</span> *)identifier;
 
-// 通过 predicate筛选规则获取
-- (NSArray&lt;EKEvent *&gt; *)eventsMatchingPredicate:(NSPredicate *)predicate;
+<span class="hljs-comment">// 通过 predicate筛选规则获取</span>
+- (<span class="hljs-built_in">NSArray</span>&lt;EKEvent *&gt; *)eventsMatchingPredicate:(<span class="hljs-built_in">NSPredicate</span> *)predicate;
 
-// 日历事件 predicate 筛选规则 创建
-// 根据开始时间和结束时间，从多个或一个日历对象筛选出符合的日历事件
-- (NSPredicate *)predicateForEventsWithStartDate:(NSDate *)startDate endDate:(NSDate *)endDate calendars:(nullable NSArray&lt;EKCalendar *&gt; *)calendars;
+<span class="hljs-comment">// 日历事件 predicate 筛选规则 创建</span>
+<span class="hljs-comment">// 根据开始时间和结束时间，从多个或一个日历对象筛选出符合的日历事件</span>
+- (<span class="hljs-built_in">NSPredicate</span> *)predicateForEventsWithStartDate:(<span class="hljs-built_in">NSDate</span> *)startDate endDate:(<span class="hljs-built_in">NSDate</span> *)endDate calendars:(<span class="hljs-keyword">nullable</span> <span class="hljs-built_in">NSArray</span>&lt;EKCalendar *&gt; *)calendars;
 
-// 提醒事项 predicate 筛选规则 创建
-// 筛选出多个或一个日历对象中的提醒事项
-- (NSPredicate *)predicateForRemindersInCalendars:(nullable NSArray&lt;EKCalendar *&gt; *)calendars;
-// 根据开始时间和结束时间，筛选多个或一个日历对象中进行的提醒事项
-- (NSPredicate *)predicateForIncompleteRemindersWithDueDateStarting:(nullable NSDate *)startDate ending:(nullable NSDate *)endDate calendars:(nullable NSArray&lt;EKCalendar *&gt; *)calendars;
-// 根据开始时间和结束时间，筛选多个或一个日历对象中完成的提醒事项
-- (NSPredicate *)predicateForCompletedRemindersWithCompletionDateStarting:(nullable NSDate *)startDate ending:(nullable NSDate *)endDate calendars:(nullable NSArray&lt;EKCalendar *&gt; *)calendars;
+<span class="hljs-comment">// 提醒事项 predicate 筛选规则 创建</span>
+<span class="hljs-comment">// 筛选出多个或一个日历对象中的提醒事项</span>
+- (<span class="hljs-built_in">NSPredicate</span> *)predicateForRemindersInCalendars:(<span class="hljs-keyword">nullable</span> <span class="hljs-built_in">NSArray</span>&lt;EKCalendar *&gt; *)calendars;
+<span class="hljs-comment">// 根据开始时间和结束时间，筛选多个或一个日历对象中进行的提醒事项</span>
+- (<span class="hljs-built_in">NSPredicate</span> *)predicateForIncompleteRemindersWithDueDateStarting:(<span class="hljs-keyword">nullable</span> <span class="hljs-built_in">NSDate</span> *)startDate ending:(<span class="hljs-keyword">nullable</span> <span class="hljs-built_in">NSDate</span> *)endDate calendars:(<span class="hljs-keyword">nullable</span> <span class="hljs-built_in">NSArray</span>&lt;EKCalendar *&gt; *)calendars;
+<span class="hljs-comment">// 根据开始时间和结束时间，筛选多个或一个日历对象中完成的提醒事项</span>
+- (<span class="hljs-built_in">NSPredicate</span> *)predicateForCompletedRemindersWithCompletionDateStarting:(<span class="hljs-keyword">nullable</span> <span class="hljs-built_in">NSDate</span> *)startDate ending:(<span class="hljs-keyword">nullable</span> <span class="hljs-built_in">NSDate</span> *)endDate calendars:(<span class="hljs-keyword">nullable</span> <span class="hljs-built_in">NSArray</span>&lt;EKCalendar *&gt; *)calendars;
 </code></pre>
 <h5 id="删除事件" tabindex="-1">删除事件</h5>
-<pre><code class="language-Objective-C">[eventStore removeEvent:event span:EKSpanFutureEvents error:&amp;removeError];
-// 删除日历事件方法，span 看重复规则那一节
-// commit 为YES时，马上提交更改，一次处理一个事件。为 NO 时，不会马上提交改动，可以连续提交多个，在调用 - (BOOL)commit:(NSError **)error 方法后提交所有改动。
-- (BOOL)removeEvent:(EKEvent *)event span:(EKSpan)span error:(NSError **)error;
-- (BOOL)removeEvent:(EKEvent *)event span:(EKSpan)span commit:(BOOL)commit error:(NSError **)error;
+<pre class="hljs codehilite language-Objective-C"><code>[eventStore removeEvent:event span:EKSpanFutureEvents <span class="hljs-built_in">error</span>:&amp;removeError];
+<span class="hljs-comment">// 删除日历事件方法，span 看重复规则那一节</span>
+<span class="hljs-comment">// commit 为YES时，马上提交更改，一次处理一个事件。为 NO 时，不会马上提交改动，可以连续提交多个，在调用 - (BOOL)commit:(NSError **)error 方法后提交所有改动。</span>
+- (<span class="hljs-keyword">BOOL</span>)removeEvent:(EKEvent *)event span:(EKSpan)span <span class="hljs-built_in">error</span>:(NSError **)<span class="hljs-built_in">error</span>;
+- (<span class="hljs-keyword">BOOL</span>)removeEvent:(EKEvent *)event span:(EKSpan)span commit:(<span class="hljs-keyword">BOOL</span>)commit <span class="hljs-built_in">error</span>:(NSError **)<span class="hljs-built_in">error</span>;
 
-// 提醒事项
-- (BOOL)removeReminder:(EKReminder *)reminder commit:(BOOL)commit error:(NSError **)error;
+<span class="hljs-comment">// 提醒事项</span>
+- (<span class="hljs-keyword">BOOL</span>)removeReminder:(EKReminder *)reminder commit:(<span class="hljs-keyword">BOOL</span>)commit <span class="hljs-built_in">error</span>:(NSError **)<span class="hljs-built_in">error</span>;
 </code></pre>
 <h4 id="后言" tabindex="-1">后言</h4>
 <p>EventKit 并未提供修改事件的方法，所以你需获取保存事件，删除 EventStore 中该事件，然后再次添加。</p>

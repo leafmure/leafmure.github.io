@@ -26,12 +26,12 @@
 <li>MPEG-4</li>
 </ul>
 <h2 id="audiofilestream-初始化" tabindex="-1">AudioFileStream 初始化</h2>
-<pre><code class="language-Objective-C">extern OSStatus AudioFileStreamOpen (void * inClientData,
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-function"><span class="hljs-keyword">extern</span> OSStatus <span class="hljs-title">AudioFileStreamOpen</span> <span class="hljs-params">(<span class="hljs-type">void</span> * inClientData,
                                      AudioFileStream_PropertyListenerProc inPropertyListenerProc,
                                      AudioFileStream_PacketsProc inPacketsProc,
                                      AudioFileTypeID inFileTypeHint,
-                                     AudioFileStreamID * outAudioFileStream)
-</code></pre>
+                                     AudioFileStreamID * outAudioFileStream)</span>
+</span></code></pre>
 <ul>
 <li>
 <p>inClientData: 上下文对象.</p>
@@ -50,36 +50,36 @@
 </li>
 </ul>
 <h3 id="audiofiletypeid" tabindex="-1">AudioFileTypeID</h3>
-<pre><code class="language-Objective-C">CF_ENUM(AudioFileTypeID) {
-        kAudioFileAIFFType              = 'AIFF',
-        kAudioFileAIFCType              = 'AIFC',
-        kAudioFileWAVEType              = 'WAVE',
-        kAudioFileRF64Type              = 'RF64',
-        kAudioFileBW64Type              = 'BW64',
-        kAudioFileWave64Type            = 'W64f',
-        kAudioFileSoundDesigner2Type    = 'Sd2f',
-        kAudioFileNextType              = 'NeXT',
-        kAudioFileMP3Type               = 'MPG3',   // mpeg layer 3
-        kAudioFileMP2Type               = 'MPG2',   // mpeg layer 2
-        kAudioFileMP1Type               = 'MPG1',   // mpeg layer 1
-        kAudioFileAC3Type               = 'ac-3',
-        kAudioFileAAC_ADTSType          = 'adts',
-        kAudioFileMPEG4Type             = 'mp4f',
-        kAudioFileM4AType               = 'm4af',
-        kAudioFileM4BType               = 'm4bf',
-        kAudioFileCAFType               = 'caff',
-        kAudioFile3GPType               = '3gpp',
-        kAudioFile3GP2Type              = '3gp2',       
-        kAudioFileAMRType               = 'amrf',
-        kAudioFileFLACType              = 'flac',
-        kAudioFileLATMInLOASType        = 'loas'
+<pre class="hljs codehilite language-Objective-C"><code>CF_ENUM(AudioFileTypeID) {
+        kAudioFileAIFFType              = <span class="hljs-string">&#x27;AIFF&#x27;</span>,
+        kAudioFileAIFCType              = <span class="hljs-string">&#x27;AIFC&#x27;</span>,
+        kAudioFileWAVEType              = <span class="hljs-string">&#x27;WAVE&#x27;</span>,
+        kAudioFileRF64<span class="hljs-built_in">Type</span>              = <span class="hljs-string">&#x27;RF64&#x27;</span>,
+        kAudioFileBW64<span class="hljs-built_in">Type</span>              = <span class="hljs-string">&#x27;BW64&#x27;</span>,
+        kAudioFileWave64<span class="hljs-built_in">Type</span>            = <span class="hljs-string">&#x27;W64f&#x27;</span>,
+        kAudioFileSoundDesigner2<span class="hljs-built_in">Type</span>    = <span class="hljs-string">&#x27;Sd2f&#x27;</span>,
+        kAudioFileNextType              = <span class="hljs-string">&#x27;NeXT&#x27;</span>,
+        kAudioFileMP3<span class="hljs-built_in">Type</span>               = <span class="hljs-string">&#x27;MPG3&#x27;</span>,   // mpeg layer <span class="hljs-number">3</span>
+        kAudioFileMP2<span class="hljs-built_in">Type</span>               = <span class="hljs-string">&#x27;MPG2&#x27;</span>,   // mpeg layer <span class="hljs-number">2</span>
+        kAudioFileMP1<span class="hljs-built_in">Type</span>               = <span class="hljs-string">&#x27;MPG1&#x27;</span>,   // mpeg layer <span class="hljs-number">1</span>
+        kAudioFileAC3<span class="hljs-built_in">Type</span>               = <span class="hljs-string">&#x27;ac-3&#x27;</span>,
+        kAudioFileAAC_ADTSType          = <span class="hljs-string">&#x27;adts&#x27;</span>,
+        kAudioFileMPEG4<span class="hljs-built_in">Type</span>             = <span class="hljs-string">&#x27;mp4f&#x27;</span>,
+        kAudioFileM4AType               = <span class="hljs-string">&#x27;m4af&#x27;</span>,
+        kAudioFileM4BType               = <span class="hljs-string">&#x27;m4bf&#x27;</span>,
+        kAudioFileCAFType               = <span class="hljs-string">&#x27;caff&#x27;</span>,
+        kAudioFile3GPType               = <span class="hljs-string">&#x27;3gpp&#x27;</span>,
+        kAudioFile3GP2<span class="hljs-built_in">Type</span>              = <span class="hljs-string">&#x27;3gp2&#x27;</span>,       
+        kAudioFileAMRType               = <span class="hljs-string">&#x27;amrf&#x27;</span>,
+        kAudioFileFLACType              = <span class="hljs-string">&#x27;flac&#x27;</span>,
+        kAudioFileLATMInLOASType        = <span class="hljs-string">&#x27;loas&#x27;</span>
 };
 </code></pre>
 <h2 id="解析音频流数据" tabindex="-1">解析音频流数据</h2>
-<pre><code class="language-Objective-C">extern OSStatus AudioFileStreamParseBytes(AudioFileStreamID inAudioFileStream,
-                                          UInt32 inDataByteSize,
-                                          const void* inData,
-                                          UInt32 inFlags);
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-keyword">extern</span> OSStatus AudioFileStreamParseBytes(AudioFileStreamID inAudioFileStream,
+                                          <span class="hljs-built_in">UInt32</span> inDataByteSize,
+                                          <span class="hljs-keyword">const</span> <span class="hljs-type">void</span>* inData,
+                                          <span class="hljs-built_in">UInt32</span> inFlags);
 </code></pre>
 <ul>
 <li>
@@ -96,41 +96,41 @@
 </li>
 </ul>
 <p><strong>AudioFileStreamParseBytes</strong> 方法会返回 OSStatus, 解析成功返回 noErr, 以下是相关操作的错误码:</p>
-<pre><code class="language-Objective-C">CF_ENUM(OSStatus)
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-title function_">CF_ENUM</span>(<span class="hljs-params">OSStatus</span>)
 {
-    /// 不支持该文件类型
-    kAudioFileStreamError_UnsupportedFileType       = 'typ?',
-    /// 此文件类型不支持数据格式
-    kAudioFileStreamError_UnsupportedDataFormat     = 'fmt?',
-    /// 不支持该属性
-    kAudioFileStreamError_UnsupportedProperty       = 'pty?',
-    /// 属性数据的大小不正确. 
-    kAudioFileStreamError_BadPropertySize           = '!siz',
-    /// 由于文件的数据包表或其他定义, 信息要么不存在, 要么在音频数据之后. 总的来说这个文件需要全部下载完才能播放, 无法流播. 
-    kAudioFileStreamError_NotOptimized              = 'optm',
-    /// 数据包偏移量小于零或超过文件末尾, 或者在构建数据包表时读取损坏的数据包大小. 
-    kAudioFileStreamError_InvalidPacketOffset       = 'pck?',
-    /// 该文件格式不正确, 或者不是其类型的音频文件的有效实例, 或者未被识别为音频文件. 
-    kAudioFileStreamError_InvalidFile               = 'dta?',
-    /// 在音频数据之前, 此文件中不存在属性值. 
-    kAudioFileStreamError_ValueUnknown              = 'unk?',
-    /// 提供给分析器的数据量不足以产生任何结果. 
-    kAudioFileStreamError_DataUnavailable           = 'more',
-    /// 试图进行非法操作. 
-    kAudioFileStreamError_IllegalOperation          = 'nope',
-    /// 发生了未指定的错误. 
-    kAudioFileStreamError_UnspecifiedError          = 'wht?',
-    /// 不连续性无法恢复
-    kAudioFileStreamError_DiscontinuityCantRecover  = 'dsc!'
+    <span class="hljs-comment">/// 不支持该文件类型</span>
+    kAudioFileStreamError_UnsupportedFileType       = <span class="hljs-string">&#x27;typ?&#x27;</span>,
+    <span class="hljs-comment">/// 此文件类型不支持数据格式</span>
+    kAudioFileStreamError_UnsupportedDataFormat     = <span class="hljs-string">&#x27;fmt?&#x27;</span>,
+    <span class="hljs-comment">/// 不支持该属性</span>
+    kAudioFileStreamError_UnsupportedProperty       = <span class="hljs-string">&#x27;pty?&#x27;</span>,
+    <span class="hljs-comment">/// 属性数据的大小不正确. </span>
+    kAudioFileStreamError_BadPropertySize           = <span class="hljs-string">&#x27;!siz&#x27;</span>,
+    <span class="hljs-comment">/// 由于文件的数据包表或其他定义, 信息要么不存在, 要么在音频数据之后. 总的来说这个文件需要全部下载完才能播放, 无法流播. </span>
+    kAudioFileStreamError_NotOptimized              = <span class="hljs-string">&#x27;optm&#x27;</span>,
+    <span class="hljs-comment">/// 数据包偏移量小于零或超过文件末尾, 或者在构建数据包表时读取损坏的数据包大小. </span>
+    kAudioFileStreamError_InvalidPacketOffset       = <span class="hljs-string">&#x27;pck?&#x27;</span>,
+    <span class="hljs-comment">/// 该文件格式不正确, 或者不是其类型的音频文件的有效实例, 或者未被识别为音频文件. </span>
+    kAudioFileStreamError_InvalidFile               = <span class="hljs-string">&#x27;dta?&#x27;</span>,
+    <span class="hljs-comment">/// 在音频数据之前, 此文件中不存在属性值. </span>
+    kAudioFileStreamError_ValueUnknown              = <span class="hljs-string">&#x27;unk?&#x27;</span>,
+    <span class="hljs-comment">/// 提供给分析器的数据量不足以产生任何结果. </span>
+    kAudioFileStreamError_DataUnavailable           = <span class="hljs-string">&#x27;more&#x27;</span>,
+    <span class="hljs-comment">/// 试图进行非法操作. </span>
+    kAudioFileStreamError_IllegalOperation          = <span class="hljs-string">&#x27;nope&#x27;</span>,
+    <span class="hljs-comment">/// 发生了未指定的错误. </span>
+    kAudioFileStreamError_UnspecifiedError          = <span class="hljs-string">&#x27;wht?&#x27;</span>,
+    <span class="hljs-comment">/// 不连续性无法恢复</span>
+    kAudioFileStreamError_DiscontinuityCantRecover  = <span class="hljs-string">&#x27;dsc!&#x27;</span>
 };
 </code></pre>
 <h2 id="解析音频信息" tabindex="-1">解析音频信息</h2>
 <h3 id="audiofilestream_propertylistenerproc" tabindex="-1">AudioFileStream_PropertyListenerProc</h3>
 <p>在调用 <strong>AudioFileStreamParseBytes</strong> 后, 首先会去解析音频流中的音频属性信息. 解析到后触发 <strong>AudioFileStream_PropertyListenerProc</strong> 回调.</p>
-<pre><code class="language-Objective-C">typedef void (*AudioFileStream_PropertyListenerProc)(void * inClientData,
-                                                     AudioFileStreamID inAudioFileStream,
-                                                     AudioFileStreamPropertyID inPropertyID,
-                                                     UInt32 * ioFlags);
+<pre class="hljs codehilite language-Objective-C"><code>typedef void (*<span class="hljs-type">AudioFileStream_PropertyListenerProc</span>)(void * inClientData,
+                                                     <span class="hljs-type">AudioFileStreamID</span> inAudioFileStream,
+                                                     <span class="hljs-type">AudioFileStreamPropertyID</span> inPropertyID,
+                                                     <span class="hljs-type">UInt32</span> * ioFlags);
 </code></pre>
 <ul>
 <li>inClientData: 上下文对象.</li>
@@ -140,152 +140,152 @@
 </ul>
 <p><strong>AudioFileStream_PropertyListenerProc</strong> 会多次触发, 可以根据回调的 <strong>AudioFileStreamPropertyID</strong> 去读取对应信息.</p>
 <h3 id="audiofilestreampropertyid" tabindex="-1">AudioFileStreamPropertyID</h3>
-<pre><code class="language-Objective-C">CF_ENUM(AudioFileStreamPropertyID)
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-title function_">CF_ENUM</span>(<span class="hljs-params">AudioFileStreamPropertyID</span>)
 {
-    kAudioFileStreamProperty_ReadyToProducePackets          =   'redy',
-    kAudioFileStreamProperty_FileFormat                     =   'ffmt',
-    kAudioFileStreamProperty_DataFormat                     =   'dfmt',
-    kAudioFileStreamProperty_FormatList                     =   'flst',
-    kAudioFileStreamProperty_MagicCookieData                =   'mgic',
-    kAudioFileStreamProperty_AudioDataByteCount             =   'bcnt',
-    kAudioFileStreamProperty_AudioDataPacketCount           =   'pcnt',
-    kAudioFileStreamProperty_MaximumPacketSize              =   'psze',
-    kAudioFileStreamProperty_DataOffset                     =   'doff',
-    kAudioFileStreamProperty_ChannelLayout                  =   'cmap',
-    kAudioFileStreamProperty_PacketToFrame                  =   'pkfr',
-    kAudioFileStreamProperty_FrameToPacket                  =   'frpk',
-    kAudioFileStreamProperty_RestrictsRandomAccess          =   'rrap',
-    kAudioFileStreamProperty_PacketToRollDistance           =   'pkrl',
-    kAudioFileStreamProperty_PreviousIndependentPacket      =   'pind',
-    kAudioFileStreamProperty_NextIndependentPacket          =   'nind',
-    kAudioFileStreamProperty_PacketToDependencyInfo         =   'pkdp',
-    kAudioFileStreamProperty_PacketToByte                   =   'pkby',
-    kAudioFileStreamProperty_ByteToPacket                   =   'bypk',
-    kAudioFileStreamProperty_PacketTableInfo                =   'pnfo',
-    kAudioFileStreamProperty_PacketSizeUpperBound           =   'pkub',
-    kAudioFileStreamProperty_AverageBytesPerPacket          =   'abpp',
-    kAudioFileStreamProperty_BitRate                        =   'brat',
-    kAudioFileStreamProperty_InfoDictionary                 =   'info'
+    kAudioFileStreamProperty_ReadyToProducePackets          =   <span class="hljs-string">&#x27;redy&#x27;</span>,
+    kAudioFileStreamProperty_FileFormat                     =   <span class="hljs-string">&#x27;ffmt&#x27;</span>,
+    kAudioFileStreamProperty_DataFormat                     =   <span class="hljs-string">&#x27;dfmt&#x27;</span>,
+    kAudioFileStreamProperty_FormatList                     =   <span class="hljs-string">&#x27;flst&#x27;</span>,
+    kAudioFileStreamProperty_MagicCookieData                =   <span class="hljs-string">&#x27;mgic&#x27;</span>,
+    kAudioFileStreamProperty_AudioDataByteCount             =   <span class="hljs-string">&#x27;bcnt&#x27;</span>,
+    kAudioFileStreamProperty_AudioDataPacketCount           =   <span class="hljs-string">&#x27;pcnt&#x27;</span>,
+    kAudioFileStreamProperty_MaximumPacketSize              =   <span class="hljs-string">&#x27;psze&#x27;</span>,
+    kAudioFileStreamProperty_DataOffset                     =   <span class="hljs-string">&#x27;doff&#x27;</span>,
+    kAudioFileStreamProperty_ChannelLayout                  =   <span class="hljs-string">&#x27;cmap&#x27;</span>,
+    kAudioFileStreamProperty_PacketToFrame                  =   <span class="hljs-string">&#x27;pkfr&#x27;</span>,
+    kAudioFileStreamProperty_FrameToPacket                  =   <span class="hljs-string">&#x27;frpk&#x27;</span>,
+    kAudioFileStreamProperty_RestrictsRandomAccess          =   <span class="hljs-string">&#x27;rrap&#x27;</span>,
+    kAudioFileStreamProperty_PacketToRollDistance           =   <span class="hljs-string">&#x27;pkrl&#x27;</span>,
+    kAudioFileStreamProperty_PreviousIndependentPacket      =   <span class="hljs-string">&#x27;pind&#x27;</span>,
+    kAudioFileStreamProperty_NextIndependentPacket          =   <span class="hljs-string">&#x27;nind&#x27;</span>,
+    kAudioFileStreamProperty_PacketToDependencyInfo         =   <span class="hljs-string">&#x27;pkdp&#x27;</span>,
+    kAudioFileStreamProperty_PacketToByte                   =   <span class="hljs-string">&#x27;pkby&#x27;</span>,
+    kAudioFileStreamProperty_ByteToPacket                   =   <span class="hljs-string">&#x27;bypk&#x27;</span>,
+    kAudioFileStreamProperty_PacketTableInfo                =   <span class="hljs-string">&#x27;pnfo&#x27;</span>,
+    kAudioFileStreamProperty_PacketSizeUpperBound           =   <span class="hljs-string">&#x27;pkub&#x27;</span>,
+    kAudioFileStreamProperty_AverageBytesPerPacket          =   <span class="hljs-string">&#x27;abpp&#x27;</span>,
+    kAudioFileStreamProperty_BitRate                        =   <span class="hljs-string">&#x27;brat&#x27;</span>,
+    kAudioFileStreamProperty_InfoDictionary                 =   <span class="hljs-string">&#x27;info&#x27;</span>
 };
 </code></pre>
 <h4 id="kaudiofilestreamproperty_readytoproducepackets" tabindex="-1">kAudioFileStreamProperty_ReadyToProducePackets</h4>
 <p>表示音频信息解析完成, 开始分离音频帧.</p>
 <h4 id="kaudiofilestreamproperty_dataoffset" tabindex="-1">kAudioFileStreamProperty_DataOffset</h4>
 <p>获取音频内容在音频流中开始的位置</p>
-<pre><code class="language-Objective-C">SInt64 dataOffset
-UInt32 offsetSize = sizeof(dataOffset);
-AudioFileStreamGetProperty(_audioFileStreamID, kAudioFileStreamProperty_DataOffset, &amp;offsetSize, &amp;dataOffset);
+<pre class="hljs codehilite language-Objective-C"><code>SInt64 dataOffset
+UInt32 offsetSize = sizeof(<span class="hljs-name">dataOffset</span>)<span class="hljs-comment">;</span>
+AudioFileStreamGetProperty(<span class="hljs-name">_audioFileStreamID</span>, kAudioFileStreamProperty_DataOffset, <span class="hljs-symbol">&amp;offsetSize</span>, <span class="hljs-symbol">&amp;dataOffset</span>)<span class="hljs-comment">;</span>
 </code></pre>
 <h4 id="kaudiofilestreamproperty_audiodatabytecount" tabindex="-1">kAudioFileStreamProperty_AudioDataByteCount</h4>
 <p>获取音频流中音频内容数据长度</p>
-<pre><code class="language-Objective-C">SInt64 audioDataByteCount = 0;
-UInt32 sizeOfUInt32 = sizeof(audioDataByteCount);
-AudioFileStreamGetProperty(_audioFileStreamID, kAudioFileStreamProperty_AudioDataByteCount, &amp;sizeOfUInt32, &amp;audioDataByteCount);
+<pre class="hljs codehilite language-Objective-C"><code>SInt64 audioDataByteCount = <span class="hljs-number">0</span><span class="hljs-comment">;</span>
+UInt32 sizeOfUInt32 = sizeof(<span class="hljs-name">audioDataByteCount</span>)<span class="hljs-comment">;</span>
+AudioFileStreamGetProperty(<span class="hljs-name">_audioFileStreamID</span>, kAudioFileStreamProperty_AudioDataByteCount, <span class="hljs-symbol">&amp;sizeOfUInt32</span>, <span class="hljs-symbol">&amp;audioDataByteCount</span>)<span class="hljs-comment">;</span>
 </code></pre>
 <p>如获取不到, 可以通过 fileSize(音频文件总长度) 和 <strong>kAudioFileStreamProperty_DataOffset</strong> 计算获得.</p>
-<pre><code class="language-Objective-C">SInt64 audioDataByteCount = fileSize - dataOffset;
+<pre class="hljs codehilite language-Objective-C"><code>SInt64 audioDataByteCount <span class="hljs-operator">=</span> fileSize - dataOffset<span class="hljs-comment">;</span>
 </code></pre>
 <h4 id="kaudiofilestreamproperty_bitrate" tabindex="-1">kAudioFileStreamProperty_BitRate</h4>
 <p>获取音频数据的码率, 获取这个 Property 是为了计算音频的总时长 Duration.</p>
-<pre><code class="language-Objective-C">/// 这是 CBR 固定码率音频的计算方式, VBR 需解析 Xing 头获取总帧数, 总帧数 * 帧时长.
-estimatedDuration = (audioDataByteCount * 8.0) / bitRate * 1000
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-operator">//</span><span class="hljs-symbol">/</span> 这是 CBR 固定码率音频的计算方式, VBR 需解析 Xing 头获取总帧数, 总帧数 <span class="hljs-operator">*</span> 帧时长.
+e<span class="hljs-attr">stimatedDuration</span> <span class="hljs-operator">=</span> (audioDataByteCount <span class="hljs-operator">*</span> <span class="hljs-number">8.0</span>) <span class="hljs-symbol">/</span> bitRate <span class="hljs-operator">*</span> <span class="hljs-number">1000</span>
 </code></pre>
 <p>BitRate 可能获取不到或者为 0, 那么就需要根据解析的音频帧进行计算平均码率.</p>
-<pre><code class="language-Objective-C">averagePacketSize = packetsSizeTotal / packetsCount;
-packetDuration = fileFormat.mFramesPerPacket / fileFormat.mSampleRate;
-averageBitRate =  8.0 * averagePacketSize / packetDuration;
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-attribute">averagePacketSize</span> <span class="hljs-operator">=</span> packetsSizeTotal / packetsCount<span class="hljs-comment">;</span>
+<span class="hljs-attribute">packetDuration</span> <span class="hljs-operator">=</span> fileFormat.mFramesPerPacket / fileFormat.mSampleRate<span class="hljs-comment">;</span>
+<span class="hljs-attribute">averageBitRate</span> <span class="hljs-operator">=</span>  <span class="hljs-number">8.0</span> * averagePacketSize / packetDuration<span class="hljs-comment">;</span>
 </code></pre>
 <h4 id="kaudiofilestreamproperty_dataformat" tabindex="-1">kAudioFileStreamProperty_DataFormat</h4>
 <p>基础文件格式, 这个属性用于获取音频流的数据格式. 通过查询这个属性, 你可以获得有关音频流的基本信息, 如采样率、声道数、编码格式等.</p>
-<pre><code class="language-Objective-C">AudioStreamBasicDescription baseFormat;
-UInt32 asbdSize = sizeof(baseFormat);
-AudioFileStreamGetProperty(_audioFileStreamID, kAudioFileStreamProperty_DataFormat, &amp;asbdSize, &amp;baseFormat);
+<pre class="hljs codehilite language-Objective-C"><code>AudioStreamBasicDescription baseFormat<span class="hljs-comment">;</span>
+UInt32 asbdSize = sizeof(<span class="hljs-name">baseFormat</span>)<span class="hljs-comment">;</span>
+AudioFileStreamGetProperty(<span class="hljs-name">_audioFileStreamID</span>, kAudioFileStreamProperty_DataFormat, <span class="hljs-symbol">&amp;asbdSize</span>, <span class="hljs-symbol">&amp;baseFormat</span>)<span class="hljs-comment">;</span>
 </code></pre>
 <h4 id="kaudiofilestreamproperty_formatlist" tabindex="-1">kAudioFileStreamProperty_FormatList</h4>
 <p>这个属性用于获取音频流支持的所有格式列表. 当一个音频流支持多种格式时, 你可以使用这个属性来获取所有支持的格式列表.</p>
-<pre><code class="language-Objective-C">Boolean outWriteable;
+<pre class="hljs codehilite language-Objective-C"><code>Boolean outWriteable;
 UInt32 formatListSize;
-OSStatus status = AudioFileStreamGetPropertyInfo(_audioFileStreamID, kAudioFileStreamProperty_FormatList, &amp;formatListSize, &amp;outWriteable);
-if (status == noErr)
+OSStatus <span class="hljs-keyword">status</span> = AudioFileStreamGetPropertyInfo(_audioFileStreamID, kAudioFileStreamProperty_FormatList, &amp;formatListSize, &amp;outWriteable);
+<span class="hljs-keyword">if</span> (<span class="hljs-keyword">status</span> == noErr)
 {
     AudioFormatListItem *formatList = malloc(formatListSize);
-    OSStatus status = AudioFileStreamGetProperty(_audioFileStreamID, kAudioFileStreamProperty_FormatList, &amp;formatListSize, formatList);
-    if (status == noErr)
+    OSStatus <span class="hljs-keyword">status</span> = AudioFileStreamGetProperty(_audioFileStreamID, kAudioFileStreamProperty_FormatList, &amp;formatListSize, formatList);
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">status</span> == noErr)
     {
         UInt32 supportedFormatsSize;
-        status = AudioFormatGetPropertyInfo(kAudioFormatProperty_DecodeFormatIDs, 0, NULL, &amp;supportedFormatsSize);
-        if (status != noErr)
+        <span class="hljs-keyword">status</span> = AudioFormatGetPropertyInfo(kAudioFormatProperty_DecodeFormatIDs, <span class="hljs-number">0</span>, NULL, &amp;supportedFormatsSize);
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">status</span> <span class="hljs-comment">!= noErr)</span>
         {
-            free(formatList);
-            return;
+            <span class="hljs-keyword">free</span>(formatList);
+            <span class="hljs-keyword">return</span>;
         }
         
         UInt32 supportedFormatCount = supportedFormatsSize / sizeof(OSType);
         OSType *supportedFormats = (OSType *)malloc(supportedFormatsSize);
-        status = AudioFormatGetProperty(kAudioFormatProperty_DecodeFormatIDs, 0, NULL, &amp;supportedFormatsSize, supportedFormats);
-        if (status != noErr)
+        <span class="hljs-keyword">status</span> = AudioFormatGetProperty(kAudioFormatProperty_DecodeFormatIDs, <span class="hljs-number">0</span>, NULL, &amp;supportedFormatsSize, supportedFormats);
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">status</span> <span class="hljs-comment">!= noErr)</span>
         {
-            free(formatList);
-            free(supportedFormats);
-            return;
+            <span class="hljs-keyword">free</span>(formatList);
+            <span class="hljs-keyword">free</span>(supportedFormats);
+            <span class="hljs-keyword">return</span>;
         }
         
-        for (int i = 0; i * sizeof(AudioFormatListItem) &lt; formatListSize; i += sizeof(AudioFormatListItem))
+        for (<span class="hljs-built_in">int</span> i = <span class="hljs-number">0</span>; i * sizeof(AudioFormatListItem) &lt; formatListSize; i += sizeof(AudioFormatListItem))
         {
-            AudioStreamBasicDescription format = formatList[i].mASBD;
-            for (UInt32 j = 0; j &lt; supportedFormatCount; ++j)
+            AudioStreamBasicDescription <span class="hljs-keyword">format</span> = formatList[i].mASBD;
+            for (UInt32 j = <span class="hljs-number">0</span>; j &lt; supportedFormatCount; ++j)
             {
-                if (format.mFormatID == supportedFormats[j])
+                <span class="hljs-keyword">if</span> (<span class="hljs-keyword">format</span>.mFormatID == supportedFormats[j])
                 {
-                    /// 支持的 format
+                    /// 支持的 <span class="hljs-keyword">format</span>
                     break;
                 }
             }
         }
-        free(supportedFormats);
+        <span class="hljs-keyword">free</span>(supportedFormats);
     }
-    free(formatList);
+    <span class="hljs-keyword">free</span>(formatList);
 }
 </code></pre>
 <h4 id="kaudiofilestreamproperty_audiodatapacketcount" tabindex="-1">kAudioFileStreamProperty_AudioDataPacketCount</h4>
 <p>获取音频帧(packet)总数, 此信息存在误差或不准确.</p>
-<pre><code class="language-Objective-C">SInt64 packetCountSize;
-UInt32 sizeOfUInt32 = sizeof(packetCountSize);
-AudioFileStreamGetProperty(_audioFileStreamID, kAudioFileStreamProperty_AudioDataPacketCount, &amp;sizeOfUInt32, &amp;packetCountSize);
+<pre class="hljs codehilite language-Objective-C"><code>SInt64 packetCountSize<span class="hljs-comment">;</span>
+UInt32 sizeOfUInt32 = sizeof(<span class="hljs-name">packetCountSize</span>)<span class="hljs-comment">;</span>
+AudioFileStreamGetProperty(<span class="hljs-name">_audioFileStreamID</span>, kAudioFileStreamProperty_AudioDataPacketCount, <span class="hljs-symbol">&amp;sizeOfUInt32</span>, <span class="hljs-symbol">&amp;packetCountSize</span>)<span class="hljs-comment">;</span>
 </code></pre>
 <h4 id="kaudiofilestreamproperty_averagebytesperpacket" tabindex="-1">kAudioFileStreamProperty_AverageBytesPerPacket</h4>
 <p>用于获取音频流中每个数据包（packet）的平均字节数. 在处理音频文件或流时, 这个属性可以提供有关音频数据包大小的信息, 有助于解析和处理音频数据流.</p>
-<pre><code class="language-Objective-C">SInt64 packetCountSize;
-UInt32 sizeOfUInt32 = sizeof(packetCountSize);
-AudioFileStreamGetProperty(_audioFileStreamID, kAudioFileStreamProperty_AverageBytesPerPacket, &amp;sizeOfUInt32, &amp;packetCountSize);
+<pre class="hljs codehilite language-Objective-C"><code>SInt64 packetCountSize<span class="hljs-comment">;</span>
+UInt32 sizeOfUInt32 = sizeof(<span class="hljs-name">packetCountSize</span>)<span class="hljs-comment">;</span>
+AudioFileStreamGetProperty(<span class="hljs-name">_audioFileStreamID</span>, kAudioFileStreamProperty_AverageBytesPerPacket, <span class="hljs-symbol">&amp;sizeOfUInt32</span>, <span class="hljs-symbol">&amp;packetCountSize</span>)<span class="hljs-comment">;</span>
 </code></pre>
 <h4 id="kaudiofilestreamproperty_maximumpacketsize" tabindex="-1">kAudioFileStreamProperty_MaximumPacketSize</h4>
 <p>获取最大音频帧最大值, 比较贴近实际大小.</p>
-<pre><code class="language-Objective-C">UInt32 realityMaxPacketSize;
-UInt32 sizeOfUInt32 = sizeof(realityMaxPacketSize);
-AudioFileStreamGetProperty(_audioFileStreamID, kAudioFileStreamProperty_MaximumPacketSize, &amp;sizeOfUInt32, &amp;realityMaxPacketSize);
+<pre class="hljs codehilite language-Objective-C"><code>UInt32 realityMaxPacketSize<span class="hljs-comment">;</span>
+UInt32 sizeOfUInt32 = sizeof(<span class="hljs-name">realityMaxPacketSize</span>)<span class="hljs-comment">;</span>
+AudioFileStreamGetProperty(<span class="hljs-name">_audioFileStreamID</span>, kAudioFileStreamProperty_MaximumPacketSize, <span class="hljs-symbol">&amp;sizeOfUInt32</span>, <span class="hljs-symbol">&amp;realityMaxPacketSize</span>)<span class="hljs-comment">;</span>
 </code></pre>
 <h4 id="kaudiofilestreamproperty_packetsizeupperbound" tabindex="-1">kAudioFileStreamProperty_PacketSizeUpperBound</h4>
 <p>获取音频帧最大边界大小, 理论最大.</p>
-<pre><code class="language-Objective-C">UInt32 maxPacketSize;
-UInt32 sizeOfUInt32 = sizeof(maxPacketSize);
-AudioFileStreamGetProperty(_audioFileStreamID, kAudioFileStreamProperty_PacketSizeUpperBound, &amp;sizeOfUInt32, &amp;maxPacketSize);
+<pre class="hljs codehilite language-Objective-C"><code>UInt32 maxPacketSize<span class="hljs-comment">;</span>
+UInt32 sizeOfUInt32 = sizeof(<span class="hljs-name">maxPacketSize</span>)<span class="hljs-comment">;</span>
+AudioFileStreamGetProperty(<span class="hljs-name">_audioFileStreamID</span>, kAudioFileStreamProperty_PacketSizeUpperBound, <span class="hljs-symbol">&amp;sizeOfUInt32</span>, <span class="hljs-symbol">&amp;maxPacketSize</span>)<span class="hljs-comment">;</span>
 </code></pre>
 <h4 id="kaudiofilestreamproperty_magiccookiedata" tabindex="-1">kAudioFileStreamProperty_MagicCookieData</h4>
 <p>Magic Cookie 一种用于描述特定音频格式或编解码器配置信息的数据块, 解码器需要该信息.</p>
-<pre><code class="language-Objective-C">UInt32 cookieSize;
+<pre class="hljs codehilite language-Objective-C"><code>UInt32 cookieSize;
 Boolean writable;
-OSStatus status = AudioFileStreamGetPropertyInfo(_audioFileStreamID, kAudioFileStreamProperty_MagicCookieData, &amp;cookieSize, &amp;writable);
-if (status != noErr)
+OSStatus <span class="hljs-built_in">status</span> = AudioFileStreamGetPropertyInfo(_audioFileStreamID, kAudioFileStreamProperty_MagicCookieData, &amp;cookieSize, &amp;writable);
+<span class="hljs-keyword">if</span> (<span class="hljs-built_in">status</span> != noErr)
 {
-    return nil;
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span>;
 }
 
 void *cookieData = malloc(cookieSize);
-status = AudioFileStreamGetProperty(_audioFileStreamID, kAudioFileStreamProperty_MagicCookieData, &amp;cookieSize, cookieData);
-if (status != noErr)
+<span class="hljs-built_in">status</span> = AudioFileStreamGetProperty(_audioFileStreamID, kAudioFileStreamProperty_MagicCookieData, &amp;cookieSize, cookieData);
+<span class="hljs-keyword">if</span> (<span class="hljs-built_in">status</span> != noErr)
 {
-    return nil;
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span>;
 }
 
 NSData *cookie = [NSData dataWithBytes:cookieData length:cookieSize];
@@ -293,11 +293,11 @@ free(cookieData);
 </code></pre>
 <h2 id="分离音频帧" tabindex="-1">分离音频帧</h2>
 <p>在接收到 <strong>kAudioFileStreamProperty_ReadyToProducePackets</strong> 后, <strong>AudioFileStreamParseBytes</strong> 开始分离音频帧, 分离完成会触发 <strong>AudioFileStream_PacketsProc</strong> 回调.</p>
-<pre><code class="language-Objective-C">typedef void (*AudioFileStream_PacketsProc)(void * inClientData,
-                                            UInt32 numberOfBytes,
-                                            UInt32 numberOfPackets,
+<pre class="hljs codehilite language-Objective-C"><code>typedef void (*<span class="hljs-type">AudioFileStream_PacketsProc</span>)(void * inClientData,
+                                            <span class="hljs-type">UInt32</span> numberOfBytes,
+                                            <span class="hljs-type">UInt32</span> numberOfPackets,
                                             const void * inInputData,
-                                            AudioStreamPacketDescription * inPacketDescriptions);
+                                            <span class="hljs-type">AudioStreamPacketDescription</span> * inPacketDescriptions);
 </code></pre>
 <ul>
 <li>inClientData: 上下文对象.</li>
@@ -306,47 +306,47 @@ free(cookieData);
 <li>inInputData: 本次处理的所有数据.</li>
 <li>inPacketDescriptions: 音频帧信息, 记录音频帧在本次数据中的字节范围和字节大小.</li>
 </ul>
-<pre><code class="language-Objective-C">struct  AudioStreamPacketDescription
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-keyword">struct</span>  AudioStreamPacketDescription
 {
-    SInt64  mStartOffset; /// 开始字节位置
-    UInt32  mVariableFramesInPacket; /// 多少个数据帧
-    UInt32  mDataByteSize; /// 音频帧大小
+    SInt64  mStartOffset; <span class="hljs-comment">/// 开始字节位置</span>
+    <span class="hljs-built_in">UInt32</span>  mVariableFramesInPacket; <span class="hljs-comment">/// 多少个数据帧</span>
+    <span class="hljs-built_in">UInt32</span>  mDataByteSize; <span class="hljs-comment">/// 音频帧大小</span>
 };
 </code></pre>
 <p>处理分离的音频帧:</p>
-<pre><code class="language-Objective-C">/// packets: const void * inInputData
-- (void)handleAudioFileStreamPackets:(const void *)packets
-                       numberOfBytes:(UInt32)numberOfBytes
-                     numberOfPackets:(UInt32)numberOfPackets
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-comment">/// packets: const void * inInputData</span>
+- (<span class="hljs-type">void</span>)handleAudioFileStreamPackets:(<span class="hljs-keyword">const</span> <span class="hljs-type">void</span> *)packets
+                       numberOfBytes:(<span class="hljs-built_in">UInt32</span>)numberOfBytes
+                     numberOfPackets:(<span class="hljs-built_in">UInt32</span>)numberOfPackets
                   packetDescriptions:(AudioStreamPacketDescription *)packetDescriptioins
 {
     
-    if (numberOfBytes == 0 || numberOfPackets == 0)
+    <span class="hljs-keyword">if</span> (numberOfBytes == <span class="hljs-number">0</span> || numberOfPackets == <span class="hljs-number">0</span>)
     {
-        return;
+        <span class="hljs-keyword">return</span>;
     }
     
-    BOOL deletePackDesc = NO;
-    if (packetDescriptioins == NULL)
+    <span class="hljs-type">BOOL</span> deletePackDesc = <span class="hljs-literal">NO</span>;
+    <span class="hljs-keyword">if</span> (packetDescriptioins == <span class="hljs-literal">NULL</span>)
     {
-        // 如果packetDescriptioins不存在, 就按照CBR处理, 平均每一帧的数据后生成packetDescriptioins
-        deletePackDesc = YES;
-        UInt32 packetSize = numberOfBytes / numberOfPackets;
-        AudioStreamPacketDescription *descriptions = (AudioStreamPacketDescription *)malloc(sizeof(AudioStreamPacketDescription) * numberOfPackets);
+        <span class="hljs-comment">// 如果packetDescriptioins不存在, 就按照CBR处理, 平均每一帧的数据后生成packetDescriptioins</span>
+        deletePackDesc = <span class="hljs-literal">YES</span>;
+        <span class="hljs-built_in">UInt32</span> packetSize = numberOfBytes / numberOfPackets;
+        AudioStreamPacketDescription *descriptions = (AudioStreamPacketDescription *)malloc(<span class="hljs-keyword">sizeof</span>(AudioStreamPacketDescription) * numberOfPackets);
         
-        for (int i = 0; i &lt; numberOfPackets; i++)
+        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; numberOfPackets; i++)
         {
-            UInt32 packetOffset = packetSize * i;
-            /// 开始位置
+            <span class="hljs-built_in">UInt32</span> packetOffset = packetSize * i;
+            <span class="hljs-comment">/// 开始位置</span>
             descriptions[i].mStartOffset = packetOffset;
-            /// 数据帧数量
-            descriptions[i].mVariableFramesInPacket = 0;
-            /// 计算数据大小
-            if (i == numberOfPackets - 1)
+            <span class="hljs-comment">/// 数据帧数量</span>
+            descriptions[i].mVariableFramesInPacket = <span class="hljs-number">0</span>;
+            <span class="hljs-comment">/// 计算数据大小</span>
+            <span class="hljs-keyword">if</span> (i == numberOfPackets - <span class="hljs-number">1</span>)
             {
                 descriptions[i].mDataByteSize = numberOfBytes - packetOffset;
             }
-            else
+            <span class="hljs-keyword">else</span>
             {
                 descriptions[i].mDataByteSize = packetSize;
             }
@@ -354,14 +354,14 @@ free(cookieData);
         packetDescriptioins = descriptions;
     }
 
-    for (int i = 0; i &lt; numberOfPackets; ++i)
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; numberOfPackets; ++i)
     {
         SInt64 packetOffset = packetDescriptioins[i].mStartOffset;
-        NSData *data = [NSData dataWithBytes:packets + packetOffset length:packetDescription.mDataByteSize];
+        <span class="hljs-built_in">NSData</span> *data = [<span class="hljs-built_in">NSData</span> dataWithBytes:packets + packetOffset length:packetDescription.mDataByteSize];
         ...
     }
 
-    if (deletePackDesc)
+    <span class="hljs-keyword">if</span> (deletePackDesc)
     {
         free(packetDescriptioins);
     }
@@ -369,12 +369,12 @@ free(cookieData);
 </code></pre>
 <h2 id="audiofilestreamseek" tabindex="-1">AudioFileStreamSeek</h2>
 <p><strong>AudioFileStreamSeek</strong> 可以用来寻找某一个帧（Packet）对应的字节偏移（byte offset）</p>
-<pre><code class="language-Objective-C">extern OSStatus
-AudioFileStreamSeek(    
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-function"><span class="hljs-keyword">extern</span> OSStatus
+<span class="hljs-title">AudioFileStreamSeek</span><span class="hljs-params">(    
                 AudioFileStreamID inAudioFileStream,
                 SInt64  inPacketOffset,
                 SInt64  *outDataByteOffset,
-                AudioFileStreamSeekFlags *ioFlags);
+                AudioFileStreamSeekFlags *ioFlags)</span></span>;
 </code></pre>
 <ul>
 <li>inPacketOffset: 音频文件中第几个音频帧.</li>
@@ -383,5 +383,5 @@ AudioFileStreamSeek(
 </ul>
 <h2 id="关闭audiofilestream" tabindex="-1">关闭AudioFileStream</h2>
 <p>AudioFileStream 使用完毕后需要调用 <strong>AudioFileStreamClose</strong> 进行关闭.</p>
-<pre><code class="language-Objective-C">extern OSStatus AudioFileStreamClose(AudioFileStreamID inAudioFileStream); 
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-function"><span class="hljs-keyword">extern</span> OSStatus <span class="hljs-title">AudioFileStreamClose</span><span class="hljs-params">(AudioFileStreamID inAudioFileStream)</span></span>; 
 </code></pre>

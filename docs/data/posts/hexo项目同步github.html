@@ -1,51 +1,51 @@
 <h4 id="hexo文件托管到github" tabindex="-1">hexo文件托管到github</h4>
 <h5 id="克隆github上的xxxgithubio项目的文件到本地" tabindex="-1">克隆gitHub上的XXX.github.io项目的文件到本地</h5>
-<pre><code>git clone https://github.com/yourname/xxx.github.io.git
+<pre class="hljs codehilite"><code>git <span class="hljs-keyword">clone</span> <span class="hljs-title">https</span>://github.com/yourname/xxx.github.io.git
 </code></pre>
 <!-- more -->
 <h5 id="删除文件夹里除了git的其他所有文件" tabindex="-1">删除文件夹里除了.git的其他所有文件</h5>
 <h5 id="把hexo项目文件下的所有文件全部复制过来除了git" tabindex="-1">把hexo项目文件下的所有文件全部复制过来(除了.git)</h5>
 <h5 id="里面应该有一个叫gitignore的文件如果没有就输入-touch-gitignore创建一个并输入以下内容" tabindex="-1">里面应该有一个叫.gitignore的文件，如果没有就输入 touch .gitignore，创建一个,并输入以下内容</h5>
-<pre><code>.DS_Store 
-Thumbs.db 
-db.json 
+<pre class="hljs codehilite"><code><span class="hljs-meta">.DS_Store</span> 
+Thumbs<span class="hljs-number">.</span><span class="hljs-built_in">db</span> 
+<span class="hljs-built_in">db</span><span class="hljs-number">.</span>json 
 *.log 
 node_modules/ 
-public/ 
-.deploy*/ 
+<span class="hljs-meta">public</span>/ 
+<span class="hljs-meta">.deploy</span>*/ 
 </code></pre>
 <h5 id="创建一个叫hexo的分支并切换到这个分支上" tabindex="-1">创建一个叫hexo的分支并切换到这个分支上</h5>
-<pre><code>git checkout -b hexo 
+<pre class="hljs codehilite"><code><span class="hljs-symbol">git</span> checkout -<span class="hljs-keyword">b</span> hexo 
 </code></pre>
 <h5 id="提交复制过来的文件到暂存区" tabindex="-1">提交复制过来的文件到暂存区</h5>
-<pre><code>$ git add --all
+<pre class="hljs codehilite"><code><span class="hljs-symbol">$</span> git add --<span class="hljs-keyword">all</span>
 </code></pre>
 <h5 id="因为thmenext是一个git仓库所以git-add-会失败" tabindex="-1">因为thme/next是一个git仓库，所以git add 会失败</h5>
 <h6 id="解决方案一" tabindex="-1">解决方案一</h6>
 <p>删除主题next中的.git文件，然后就可以add了。</p>
 <h6 id="解决方案二" tabindex="-1">解决方案二</h6>
 <p>新建一个github仓库，将next本地仓库所关联的远程仓库更改为自己新建的仓库地址并上传文件，然后将新建的仓库作为hexo分支的子模块</p>
-<pre><code>// 查看所有远程仓库
-$ git remote  
-// 删除所关联的远程仓库地址
-$ git remote rm origin  
-// 添加新仓库地址
-$ git remote add origin 新仓库地址
-// 提交至新仓库
-$ git push orign master 
-// cd hexo分支文件下，添加next仓库作为hexo分支的子模块
-$ git submodule add 仓库地址 themes/next
+<pre class="hljs codehilite"><code><span class="hljs-comment">// 查看所有远程仓库</span>
+<span class="hljs-symbol">$</span> git remote  
+<span class="hljs-comment">// 删除所关联的远程仓库地址</span>
+<span class="hljs-symbol">$</span> git remote rm origin  
+<span class="hljs-comment">// 添加新仓库地址</span>
+<span class="hljs-symbol">$</span> git remote add origin 新仓库地址
+<span class="hljs-comment">// 提交至新仓库</span>
+<span class="hljs-symbol">$</span> git push orign master 
+<span class="hljs-comment">// cd hexo分支文件下，添加next仓库作为hexo分支的子模块</span>
+<span class="hljs-symbol">$</span> git submodule add 仓库地址 themes/next
 </code></pre>
 <h5 id="cd到主项目路径将修改文件添加到暂存区提交本地仓库并同步到github上" tabindex="-1">cd到主项目路径，将修改文件添加到暂存区，提交本地仓库并同步到GitHub上</h5>
-<pre><code>$ cd ../../ //切到仓库的根目录
-$ git add .
-$ git commit -m &quot;update next settings in blog sources branch&quot;
-$ git push origin hexo //注意hexo分支
+<pre class="hljs codehilite"><code><span class="hljs-symbol">$</span> cd ../../ <span class="hljs-comment">//切到仓库的根目录</span>
+<span class="hljs-symbol">$</span> git add .
+<span class="hljs-symbol">$</span> git commit -m <span class="hljs-string">&quot;update next settings in blog sources branch&quot;</span>
+<span class="hljs-symbol">$</span> git push origin hexo <span class="hljs-comment">//注意hexo分支</span>
 </code></pre>
 <h5 id="使用" tabindex="-1">使用</h5>
 <p>项目的master分支的内容是由hexo分支生成的，所以使用的时候只需将项目的hexo分支clone下来就行，另外如果theme/next是用子模块管理的，需cd到next文件下执行以下命令获取next主题文件</p>
-<pre><code>$ git submodule init  // 初始化本地配置文件
-$ git submodule update  // 抓取所有数据并检出项目中列出的合适的提交
+<pre class="hljs codehilite"><code><span class="hljs-symbol">$</span> git submodule init  <span class="hljs-comment">// 初始化本地配置文件</span>
+<span class="hljs-symbol">$</span> git submodule update  <span class="hljs-comment">// 抓取所有数据并检出项目中列出的合适的提交</span>
 </code></pre>
 <p>每次更改了next主题文件，记得将更新内容提交至next主题的远程仓库并提交hexo分支！</p>
 <h4 id="建议" tabindex="-1">建议</h4>

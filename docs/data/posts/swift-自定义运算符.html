@@ -1,10 +1,10 @@
 <h5 id="运算符定义类型" tabindex="-1">运算符定义类型</h5>
-<pre><code class="language-swift">var a = 0
-var b = 1
-a += 1
-a ^ b
-a--
---a
+<pre class="hljs codehilite language-swift"><code><span class="hljs-keyword">var</span> a <span class="hljs-operator">=</span> <span class="hljs-number">0</span>
+<span class="hljs-keyword">var</span> b <span class="hljs-operator">=</span> <span class="hljs-number">1</span>
+a <span class="hljs-operator">+=</span> <span class="hljs-number">1</span>
+a <span class="hljs-operator">^</span> b
+a<span class="hljs-operator">--</span>
+<span class="hljs-operator">--</span>a
 </code></pre>
 <p>上面代码的运算是如何实现的呢？
 在 Swift 中提供三种类型运算符：</p>
@@ -15,28 +15,28 @@ a--
 </ul>
 <!-- more -->
 <p>具体应用如下：</p>
-<pre><code class="language-swift">prefix func --(v: inout Int) {
-    v = v - 1
+<pre class="hljs codehilite language-swift"><code><span class="hljs-keyword">prefix</span> <span class="hljs-keyword">func</span> <span class="hljs-title function_">--</span>(<span class="hljs-params">v</span>: <span class="hljs-keyword">inout</span> <span class="hljs-type">Int</span>) {
+    v <span class="hljs-operator">=</span> v <span class="hljs-operator">-</span> <span class="hljs-number">1</span>
 }
-var a = 0
---a
+<span class="hljs-keyword">var</span> a <span class="hljs-operator">=</span> <span class="hljs-number">0</span>
+<span class="hljs-operator">--</span>a
 </code></pre>
-<pre><code class="language-swift">infix operator ++
-func ++(leftv: Int, rightv: Int) -&gt; Int {
-    return leftv + rightv + rightv
+<pre class="hljs codehilite language-swift"><code><span class="hljs-keyword">infix</span> <span class="hljs-keyword">operator</span> <span class="hljs-title">++</span>
+<span class="hljs-keyword">func</span> <span class="hljs-title function_">++</span>(<span class="hljs-params">leftv</span>: <span class="hljs-type">Int</span>, <span class="hljs-params">rightv</span>: <span class="hljs-type">Int</span>) -&gt; <span class="hljs-type">Int</span> {
+    <span class="hljs-keyword">return</span> leftv <span class="hljs-operator">+</span> rightv <span class="hljs-operator">+</span> rightv
 }
-a ++ 1
+a <span class="hljs-operator">++</span> <span class="hljs-number">1</span>
 
 </code></pre>
-<pre><code class="language-swift">postfix func --(v: inout Int) {
-    v = v - 1
+<pre class="hljs codehilite language-swift"><code><span class="hljs-keyword">postfix</span> <span class="hljs-keyword">func</span> <span class="hljs-title function_">--</span>(<span class="hljs-params">v</span>: <span class="hljs-keyword">inout</span> <span class="hljs-type">Int</span>) {
+    v <span class="hljs-operator">=</span> v <span class="hljs-operator">-</span> <span class="hljs-number">1</span>
 }
-a--
+a<span class="hljs-operator">--</span>
 </code></pre>
 <p>可以对系统的运算符的实现函数重载，但是对于“=” 类型的运算符是无法重载的。(注意：重载和重写的区别，运算符实现不支持重写)</p>
 <h5 id="自定义运算符" tabindex="-1">自定义运算符</h5>
 <p>Swift 支持声明和实现自定义运算符，自定义运算符需要在全局作用域，通过关键字 operator 进行定义，同时要指定运算符类型，运算符命名只能包含这些字符：/ = - + * % &lt; &gt;！&amp; | ^。~</p>
-<pre><code class="language-swift">/ = - + * % &lt; &gt;！&amp; | ^。~
+<pre class="hljs codehilite language-swift"><code><span class="hljs-operator">/</span> <span class="hljs-operator">=</span> <span class="hljs-operator">-</span> <span class="hljs-operator">+</span> <span class="hljs-operator">*</span> <span class="hljs-operator">%</span> <span class="hljs-operator">&lt;</span> <span class="hljs-operator">&gt;</span>！<span class="hljs-operator">&amp;</span> <span class="hljs-operator">|</span> <span class="hljs-operator">^。~</span>
 
-postfix operator ~
+<span class="hljs-keyword">postfix</span> <span class="hljs-keyword">operator</span> <span class="hljs-title">~</span>
 </code></pre>

@@ -5,6 +5,10 @@
     "url": "/post/avaudioengine音频流播放",
     "date": "2024-03-14T20:51:30.000Z",
     "category": "音视频",
+    "categories": [
+      "技术综合",
+      "音视频"
+    ],
     "tags": [
       "Audio"
     ],
@@ -25,6 +29,10 @@
     "url": "/post/augraph音频流播放",
     "date": "2024-03-14T19:41:30.000Z",
     "category": "音视频",
+    "categories": [
+      "技术综合",
+      "音视频"
+    ],
     "tags": [
       "Audio"
     ],
@@ -45,6 +53,10 @@
     "url": "/post/audioconverter",
     "date": "2024-03-14T18:51:30.000Z",
     "category": "音视频",
+    "categories": [
+      "技术综合",
+      "音视频"
+    ],
     "tags": [
       "Audio"
     ],
@@ -64,6 +76,10 @@
     "url": "/post/audiofile",
     "date": "2024-03-13T19:40:30.000Z",
     "category": "音视频",
+    "categories": [
+      "技术综合",
+      "音视频"
+    ],
     "tags": [
       "Audio"
     ],
@@ -83,6 +99,10 @@
     "url": "/post/cbr和vbr音频seektime",
     "date": "2024-03-12T19:50:30.000Z",
     "category": "音视频",
+    "categories": [
+      "技术综合",
+      "音视频"
+    ],
     "tags": [
       "Audio"
     ],
@@ -103,6 +123,10 @@
     "url": "/post/audiofilestream",
     "date": "2024-03-12T12:42:30.000Z",
     "category": "音视频",
+    "categories": [
+      "技术综合",
+      "音视频"
+    ],
     "tags": [
       "Audio"
     ],
@@ -123,6 +147,10 @@
     "url": "/post/h264",
     "date": "2023-11-24T18:54:47.000Z",
     "category": "音视频",
+    "categories": [
+      "技术综合",
+      "音视频"
+    ],
     "tags": [
       "H.264"
     ],
@@ -141,6 +169,10 @@
     "url": "/post/音视频基础知识",
     "date": "2023-11-23T18:54:47.000Z",
     "category": "音视频",
+    "categories": [
+      "技术综合",
+      "音视频"
+    ],
     "tags": [
       "音视频"
     ],
@@ -159,11 +191,16 @@
     "url": "/post/mac-本地部署-stable-diffusion",
     "date": "2023-11-14T18:35:47.000Z",
     "category": "工具",
+    "categories": [
+      "技术综合",
+      "工具"
+    ],
     "tags": [
       "Stable Diffusion"
     ],
     "keywords": [
-      "Stable Diffusion,Mac"
+      "Stable Diffusion",
+      "Mac"
     ],
     "description": "",
     "image": "",
@@ -177,11 +214,18 @@
     "url": "/post/ffmpeg安装",
     "date": "2023-09-19T19:35:47.000Z",
     "category": "工具",
+    "categories": [
+      "技术综合",
+      "工具"
+    ],
     "tags": [
       "FFmpeg"
     ],
     "keywords": [
-      "FFmpeg,rtmp,SRS,H.256"
+      "FFmpeg",
+      "rtmp",
+      "SRS",
+      "H.256"
     ],
     "description": "",
     "image": "",
@@ -195,12 +239,21 @@
     "url": "/post/mac-ruby-和-cocoapods-安装-适用-m-系列芯片",
     "date": "2023-07-06T19:35:47.000Z",
     "category": "工具",
+    "categories": [
+      "技术综合",
+      "工具"
+    ],
     "tags": [
       "Ruby",
       "Cocoapods"
     ],
     "keywords": [
-      "Ruby,Cocoapods,HomeBrew,M1,M2,Mac"
+      "Ruby",
+      "Cocoapods",
+      "HomeBrew",
+      "M1",
+      "M2",
+      "Mac"
     ],
     "description": "",
     "image": "",
@@ -214,6 +267,10 @@
     "url": "/post/autoreleasepool详解",
     "date": "2022-03-11T16:25:19.000Z",
     "category": "iOS",
+    "categories": [
+      "技术综合",
+      "iOS"
+    ],
     "tags": [
       "AutoreleasePool"
     ],
@@ -234,6 +291,10 @@
     "url": "/post/swiftobjective-c-访问控制修饰符",
     "date": "2022-03-10T16:17:14.000Z",
     "category": "iOS",
+    "categories": [
+      "技术综合",
+      "iOS"
+    ],
     "tags": [
       "访问控制修饰符"
     ],
@@ -255,6 +316,10 @@
     "url": "/post/ios-事件分发处理-runloop",
     "date": "2022-03-08T17:31:02.000Z",
     "category": "iOS",
+    "categories": [
+      "技术综合",
+      "iOS"
+    ],
     "tags": [
       "RunLoop"
     ],
@@ -274,11 +339,17 @@
     "url": "/post/cocoapods-私有库和公开库",
     "date": "2022-02-10T17:40:13.000Z",
     "category": "iOS",
+    "categories": [
+      "技术综合",
+      "iOS"
+    ],
     "tags": [
       "Cocoapods"
     ],
     "keywords": [
-      "Cocoapods,私有库,公开库"
+      "Cocoapods",
+      "私有库",
+      "公开库"
     ],
     "description": "",
     "image": "",
@@ -292,6 +363,10 @@
     "url": "/post/http协议",
     "date": "2022-02-10T17:35:47.000Z",
     "category": "后端",
+    "categories": [
+      "技术综合",
+      "后端"
+    ],
     "tags": [
       "HTTP 协议"
     ],
@@ -310,11 +385,17 @@
     "url": "/post/uitableview-invalid-update",
     "date": "2022-02-10T17:32:11.000Z",
     "category": "iOS",
+    "categories": [
+      "技术综合",
+      "iOS"
+    ],
     "tags": [
       "UITableView Error"
     ],
     "keywords": [
-      "UITableView,Invalid,update"
+      "UITableView",
+      "Invalid",
+      "update"
     ],
     "description": "",
     "image": "",
@@ -328,6 +409,10 @@
     "url": "/post/restful-api架构",
     "date": "2022-02-10T16:53:59.000Z",
     "category": "后端",
+    "categories": [
+      "技术综合",
+      "后端"
+    ],
     "tags": [
       "RESTful"
     ],
@@ -346,6 +431,10 @@
     "url": "/post/ios-wkwebview秒开优化方案",
     "date": "2022-02-10T16:50:46.000Z",
     "category": "iOS",
+    "categories": [
+      "技术综合",
+      "iOS"
+    ],
     "tags": [
       "WKWebView秒开优化方案"
     ],
@@ -364,11 +453,16 @@
     "url": "/post/swift-属性包装器",
     "date": "2022-02-10T16:48:14.000Z",
     "category": "iOS",
+    "categories": [
+      "技术综合",
+      "iOS"
+    ],
     "tags": [
       "属性包装器"
     ],
     "keywords": [
-      "Swift,属性包装器"
+      "Swift",
+      "属性包装器"
     ],
     "description": "",
     "image": "",
@@ -382,11 +476,16 @@
     "url": "/post/swift-自定义运算符",
     "date": "2022-02-10T16:44:17.000Z",
     "category": "iOS",
+    "categories": [
+      "技术综合",
+      "iOS"
+    ],
     "tags": [
       "自定义运算符"
     ],
     "keywords": [
-      "Swift,自定义运算符"
+      "Swift",
+      "自定义运算符"
     ],
     "description": "",
     "image": "",
@@ -400,11 +499,16 @@
     "url": "/post/单元测试-xctest",
     "date": "2021-12-09T15:23:38.000Z",
     "category": "iOS",
+    "categories": [
+      "技术综合",
+      "iOS"
+    ],
     "tags": [
       "单元测试"
     ],
     "keywords": [
-      "单元测试,XCTest"
+      "单元测试",
+      "XCTest"
     ],
     "description": "",
     "image": "",
@@ -418,6 +522,10 @@
     "url": "/post/xcode13-第三方库swiftui错误",
     "date": "2021-11-01T16:38:42.000Z",
     "category": "iOS",
+    "categories": [
+      "技术综合",
+      "iOS"
+    ],
     "tags": [
       "iOS 问题集"
     ],
@@ -439,6 +547,10 @@
     "url": "/post/ios-加密算法",
     "date": "2021-09-13T20:02:08.000Z",
     "category": "iOS",
+    "categories": [
+      "技术综合",
+      "iOS"
+    ],
     "tags": [
       "加密算法"
     ],
@@ -459,6 +571,10 @@
     "url": "/post/swift-指针",
     "date": "2021-09-13T19:59:34.000Z",
     "category": "iOS",
+    "categories": [
+      "技术综合",
+      "iOS"
+    ],
     "tags": [
       "Swift"
     ],
@@ -477,11 +593,16 @@
     "url": "/post/app-启动",
     "date": "2021-09-13T19:19:46.000Z",
     "category": "iOS",
+    "categories": [
+      "技术综合",
+      "iOS"
+    ],
     "tags": [
       "启动优化"
     ],
     "keywords": [
-      "App启动流程,启动优化"
+      "App启动流程",
+      "启动优化"
     ],
     "description": "",
     "image": "",
@@ -495,11 +616,16 @@
     "url": "/post/ios-内存地址二级指针",
     "date": "2021-09-13T19:16:48.000Z",
     "category": "iOS",
+    "categories": [
+      "技术综合",
+      "iOS"
+    ],
     "tags": [
       "内存管理"
     ],
     "keywords": [
-      "内存地址,二级指针"
+      "内存地址",
+      "二级指针"
     ],
     "description": "",
     "image": "",
@@ -513,6 +639,10 @@
     "url": "/post/swift-函数调度",
     "date": "2021-09-13T19:06:54.000Z",
     "category": "iOS",
+    "categories": [
+      "技术综合",
+      "iOS"
+    ],
     "tags": [
       "Swift"
     ],
@@ -531,6 +661,10 @@
     "url": "/post/category-探究",
     "date": "2018-12-21T14:37:21.000Z",
     "category": "iOS",
+    "categories": [
+      "技术综合",
+      "iOS"
+    ],
     "tags": [
       "category"
     ],
@@ -554,6 +688,10 @@
     "url": "/post/eventkit-日历事件",
     "date": "2018-12-19T13:39:24.000Z",
     "category": "iOS",
+    "categories": [
+      "技术综合",
+      "iOS"
+    ],
     "tags": [
       "EventKit"
     ],
@@ -575,6 +713,10 @@
     "url": "/post/weak-修饰符",
     "date": "2018-12-19T12:03:55.000Z",
     "category": "iOS",
+    "categories": [
+      "技术综合",
+      "iOS"
+    ],
     "tags": [
       "__weak"
     ],
@@ -596,6 +738,10 @@
     "url": "/post/runtime-探究",
     "date": "2018-12-19T11:00:51.000Z",
     "category": "iOS",
+    "categories": [
+      "技术综合",
+      "iOS"
+    ],
     "tags": [
       "Runtime"
     ],
@@ -617,6 +763,10 @@
     "url": "/post/cocoapods-pod-setup太慢",
     "date": "2018-11-28T15:39:50.000Z",
     "category": "iOS",
+    "categories": [
+      "技术综合",
+      "iOS"
+    ],
     "tags": [
       "Cocoapods"
     ],
@@ -637,6 +787,10 @@
     "url": "/post/ios-error",
     "date": "2018-11-28T15:38:08.000Z",
     "category": "iOS",
+    "categories": [
+      "技术综合",
+      "iOS"
+    ],
     "tags": [
       "iOS 问题集"
     ],
@@ -658,6 +812,10 @@
     "url": "/post/ios-warning",
     "date": "2018-11-28T15:36:02.000Z",
     "category": "iOS",
+    "categories": [
+      "技术综合",
+      "iOS"
+    ],
     "tags": [
       "iOS 问题集"
     ],
@@ -678,6 +836,10 @@
     "url": "/post/appstrore上架拒审问题",
     "date": "2018-11-28T15:33:13.000Z",
     "category": "iOS",
+    "categories": [
+      "技术综合",
+      "iOS"
+    ],
     "tags": [
       "iOS 问题集"
     ],
@@ -697,6 +859,10 @@
     "url": "/post/git-仓库搭建",
     "date": "2018-11-28T15:29:59.000Z",
     "category": "Server",
+    "categories": [
+      "技术综合",
+      "Server"
+    ],
     "tags": [
       "Git仓库搭建"
     ],
@@ -718,6 +884,10 @@
     "url": "/post/nginx-安装",
     "date": "2018-11-28T15:26:11.000Z",
     "category": "Server",
+    "categories": [
+      "技术综合",
+      "Server"
+    ],
     "tags": [
       "Nginx"
     ],
@@ -737,6 +907,10 @@
     "url": "/post/centos-用户管理",
     "date": "2018-11-28T15:16:47.000Z",
     "category": "Linux",
+    "categories": [
+      "技术综合",
+      "Linux"
+    ],
     "tags": [
       "CentOS"
     ],
@@ -756,6 +930,10 @@
     "url": "/post/next主题集成不蒜子统计",
     "date": "2018-11-28T15:14:59.000Z",
     "category": "hexo",
+    "categories": [
+      "技术综合",
+      "hexo"
+    ],
     "tags": [
       "next 主题配置"
     ],
@@ -775,6 +953,10 @@
     "url": "/post/hexo-seo设置",
     "date": "2018-11-28T15:09:05.000Z",
     "category": "hexo",
+    "categories": [
+      "技术综合",
+      "hexo"
+    ],
     "tags": [
       "hexo 配置"
     ],
@@ -795,6 +977,10 @@
     "url": "/post/hexo项目同步github",
     "date": "2018-11-28T15:04:50.000Z",
     "category": "hexo",
+    "categories": [
+      "技术综合",
+      "hexo"
+    ],
     "tags": [
       "hexo 文件管理"
     ],
@@ -815,6 +1001,10 @@
     "url": "/post/上传封装工具到cocoapods",
     "date": "2018-11-28T14:58:55.000Z",
     "category": "iOS",
+    "categories": [
+      "技术综合",
+      "iOS"
+    ],
     "tags": [
       "Cocoapods"
     ],
@@ -834,6 +1024,10 @@
     "url": "/post/git-安装",
     "date": "2018-11-28T14:56:29.000Z",
     "category": "Git",
+    "categories": [
+      "技术综合",
+      "Git"
+    ],
     "tags": [
       "Git 使用"
     ],
@@ -853,6 +1047,10 @@
     "url": "/post/git-创建仓库和更换远程仓库地址",
     "date": "2018-11-28T14:50:14.000Z",
     "category": "Git",
+    "categories": [
+      "技术综合",
+      "Git"
+    ],
     "tags": [
       "Git 使用"
     ],
@@ -873,6 +1071,10 @@
     "url": "/post/block",
     "date": "2018-11-28T14:37:57.000Z",
     "category": "iOS",
+    "categories": [
+      "技术综合",
+      "iOS"
+    ],
     "tags": [
       "block"
     ],
@@ -896,6 +1098,10 @@
     "url": "/post/mv系列和viper架构学习",
     "date": "2018-11-28T14:08:59.000Z",
     "category": "iOS",
+    "categories": [
+      "技术综合",
+      "iOS"
+    ],
     "tags": [
       "架构学习"
     ],
@@ -916,6 +1122,10 @@
     "url": "/post/github使用",
     "date": "2018-11-04T15:12:55.000Z",
     "category": "Git",
+    "categories": [
+      "技术综合",
+      "Git"
+    ],
     "tags": [
       "github"
     ],

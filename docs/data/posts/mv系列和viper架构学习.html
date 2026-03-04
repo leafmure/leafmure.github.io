@@ -34,7 +34,7 @@
 <p>由于View混杂在Controller的生命周期中，所以View和ViewController几乎是绑定在一起的。加上处理逻辑代码也编写在Controller中，造成了Controller臃肿，因此也被戏称 “Massive View Controller”。即使可以将一部分逻辑放在Model中处理，但是由于View和Controller的紧密性，对于View的减压毫无办法，之前所说“即使使用的是Apple的MVC架构也会出现原因”便是因为如此。</p>
 <h5 id="我们常用的mvc" tabindex="-1">我们常用的MVC</h5>
 <p>我们可能会看到这样的代码</p>
-<pre><code class="language-swift">var userCell = tableView.dequeueReusableCellWithIdentifier(&quot;identifier&quot;) as UserCell
+<pre class="hljs codehilite language-swift"><code><span class="hljs-keyword">var</span> userCell <span class="hljs-operator">=</span> tableView.dequeueReusableCellWithIdentifier(<span class="hljs-string">&quot;identifier&quot;</span>) <span class="hljs-keyword">as</span> <span class="hljs-type">UserCell</span>
 userCell.configureWithUser(user)
 </code></pre>
 <p>这里View直接调用了Model，这违反了MVC的原则，但是这样的情况让人不觉得有什么不对的地方，因为向Cell中传递一个Model对象可以避免将Cell的设置代码放在Controller中，减少Controller的体积。因此我们用的MVC便成了下面的示意：</p>

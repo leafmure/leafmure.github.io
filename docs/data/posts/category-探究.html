@@ -3,18 +3,18 @@
 <!-- more -->
 <h3 id="与-category-相似的-extension" tabindex="-1">与 category 相似的 extension</h3>
 <p>extension(类扩展) 从代码看起来和 category 十分相像，代码如下:</p>
-<pre><code class="language-Objective-C">// extension
-@interface Father ()
-@property (nonatomic,strong) NSString *name;
-- (void)say;
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-comment">// extension</span>
+<span class="hljs-variable">@interface</span> Father ()
+<span class="hljs-variable">@property</span> (nonatomic,strong) NSString *name;
+<span class="hljs-selector-tag">-</span> (void)<span class="hljs-selector-tag">say</span>;
 
-@end
+@<span class="hljs-selector-tag">end</span>
 
-// category
-@interface Father (skill)
-- (void)fastTalk;
+<span class="hljs-comment">// category</span>
+@<span class="hljs-selector-tag">interface</span> <span class="hljs-selector-tag">Father</span> (skill)
+<span class="hljs-selector-tag">-</span> (void)<span class="hljs-selector-tag">fastTalk</span>;
 
-@end
+@<span class="hljs-selector-tag">end</span>
 </code></pre>
 <p>虽然代码看上去只有括号中有名称的不同，但其实它们是完全不同的，它们的不同之处如下：</p>
 <ul>
@@ -24,34 +24,34 @@
 </ul>
 <h3 id="category-实现和加载" tabindex="-1">category 实现和加载</h3>
 <p>category 的源码定义如下</p>
-<pre><code class="language-Objective-C">typedef struct objc_category *Category;
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-keyword">typedef</span> <span class="hljs-keyword">struct</span> <span class="hljs-title class_">objc_category</span> *Category;
 
-// objc 2.0
-struct objc_category {
-char *category_name                                      OBJC2_UNAVAILABLE;
-char *class_name                                         OBJC2_UNAVAILABLE;
-struct objc_method_list *instance_methods                OBJC2_UNAVAILABLE;
-struct objc_method_list *class_methods                   OBJC2_UNAVAILABLE;
-struct objc_protocol_list *protocols                     OBJC2_UNAVAILABLE;
+<span class="hljs-comment">// objc 2.0</span>
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">objc_category</span> {
+<span class="hljs-type">char</span> *category_name                                      OBJC2_UNAVAILABLE;
+<span class="hljs-type">char</span> *class_name                                         OBJC2_UNAVAILABLE;
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">objc_method_list</span> *instance_methods                OBJC2_UNAVAILABLE;
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">objc_method_list</span> *class_methods                   OBJC2_UNAVAILABLE;
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">objc_protocol_list</span> *protocols                     OBJC2_UNAVAILABLE;
 }
 
-// objc_category 的实现
-struct category_t {
-const char *name;
-classref_t cls;
-struct method_list_t *instanceMethods;
-struct method_list_t *classMethods;
-struct protocol_list_t *protocols;
-struct property_list_t *instanceProperties;
-// Fields below this point are not always present on disk.
-struct property_list_t *_classProperties;
+<span class="hljs-comment">// objc_category 的实现</span>
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">category_t</span> {
+<span class="hljs-type">const</span> <span class="hljs-type">char</span> *name;
+<span class="hljs-type">classref_t</span> cls;
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">method_list_t</span> *instanceMethods;
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">method_list_t</span> *classMethods;
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">protocol_list_t</span> *protocols;
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">property_list_t</span> *instanceProperties;
+<span class="hljs-comment">// Fields below this point are not always present on disk.</span>
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">property_list_t</span> *_classProperties;
 
-method_list_t *methodsForMeta(bool isMeta) {
-if (isMeta) return classMethods;
-else return instanceMethods;
+<span class="hljs-function"><span class="hljs-type">method_list_t</span> *<span class="hljs-title">methodsForMeta</span><span class="hljs-params">(<span class="hljs-type">bool</span> isMeta)</span> </span>{
+<span class="hljs-keyword">if</span> (isMeta) <span class="hljs-keyword">return</span> classMethods;
+<span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> instanceMethods;
 }
 
-property_list_t *propertiesForMeta(bool isMeta, struct header_info *hi);
+<span class="hljs-function"><span class="hljs-type">property_list_t</span> *<span class="hljs-title">propertiesForMeta</span><span class="hljs-params">(<span class="hljs-type">bool</span> isMeta, <span class="hljs-keyword">struct</span> header_info *hi)</span></span>;
 };
 </code></pre>
 <p>从定义中我们可以看到：</p>
@@ -66,31 +66,31 @@ property_list_t *propertiesForMeta(bool isMeta, struct header_info *hi);
 </ul>
 <h4 id="为什么存在-instanceproperties-和-_classproperties" tabindex="-1">为什么存在 instanceProperties 和 _classProperties</h4>
 <p>_classProperties 类的属性，对于我们来说可能很陌生，在开发中很少使用，它的定义和我们常定义的属性差不多，只不过 setter 和 getter方法为 “+ 方法”（类方法）。</p>
-<pre><code class="language-Objective-C">// instance property
-@property (nonatomic,strong) NSString *name;
-- (NSString *)name;
-- (void)setName:(NSString *)name
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-comment">// instance property</span>
+<span class="hljs-keyword">@property</span> (<span class="hljs-keyword">nonatomic</span>,<span class="hljs-keyword">strong</span>) <span class="hljs-built_in">NSString</span> *name;
+- (<span class="hljs-built_in">NSString</span> *)name;
+- (<span class="hljs-type">void</span>)setName:(<span class="hljs-built_in">NSString</span> *)name
 
-// class property
-@property (class,nonatomic,strong) NSString *name;
-+ (NSString *)name;
-+ (void)setName:(NSString *)name
+<span class="hljs-comment">// class property</span>
+<span class="hljs-keyword">@property</span> (<span class="hljs-keyword">class</span>,<span class="hljs-keyword">nonatomic</span>,<span class="hljs-keyword">strong</span>) <span class="hljs-built_in">NSString</span> *name;
++ (<span class="hljs-built_in">NSString</span> *)name;
++ (<span class="hljs-type">void</span>)setName:(<span class="hljs-built_in">NSString</span> *)name
 </code></pre>
 <p>在前面说了：category 是不能添加实例变量的，我们可能就会疑惑了，为什么会有 instanceProperties 和 _classProperties，这我们就得明白成员变量、实例变量、属性的联系了。</p>
-<pre><code class="language-Objective-C">@interface Father : NSObject {
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-class"><span class="hljs-keyword">@interface</span> <span class="hljs-title">Father</span> : <span class="hljs-title">NSObject</span> </span>{
 
-int age;
-NSData *data;
+<span class="hljs-type">int</span> age;
+<span class="hljs-built_in">NSData</span> *data;
 }
 
-@property (nonatomic,strong) NSString *name;
+<span class="hljs-keyword">@property</span> (<span class="hljs-keyword">nonatomic</span>,<span class="hljs-keyword">strong</span>) <span class="hljs-built_in">NSString</span> *name;
 
-@end
+<span class="hljs-keyword">@end</span>
 </code></pre>
 <h5 id="成员变量" tabindex="-1">成员变量</h5>
 <p>在 @interface Father : NSObject {} 中声明的变量都是成员变量，编译器不会自动为成员变量声明 setter 和 getter 方法，因此我们无法通过 .语法糖访问成员变量，可通过 self -&gt; 变量名或直接使用变量名，如：</p>
-<pre><code class="language-Objective-C">age = 23;
-self -&gt; age = 24;
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-attribute">age</span> <span class="hljs-operator">=</span> <span class="hljs-number">23</span><span class="hljs-comment">;</span>
+self -&gt; age <span class="hljs-operator">=</span> <span class="hljs-number">24</span><span class="hljs-comment">;</span>
 </code></pre>
 <h5 id="实例变量" tabindex="-1">实例变量</h5>
 <p>实例变量又是什么呢，从本质上，实例变量就是成员变量，实例变量从名字上就能体现出其是类定义的变量。如 data 就是由 NSData 类定义的实例变量，而 age 是基本数据类型 int 变量，因此 age 不是实例变量。所以我们大概可以总结出：成员变量 = 实例变量 + 基本数据类型变量。</p>
@@ -102,95 +102,95 @@ self -&gt; age = 24;
 <h5 id="在-category-中添加属性" tabindex="-1">在 category 中添加属性</h5>
 <p>在 category 中添加属性后能编译成功，但一旦使用了属性，程序便会崩溃，原因为：未找到属性的 setter 或 getter 方法的实现，于是我们开始为属性手动实现 setter 或 getter 方法，我们会发现无法访问到属性。通过 runtime 的 class_copyPropertyList() 获取类的所有属性 以及 class_copyIvarList() 获取类的变量，我们可以发现，在属性列表中存在该属性，而在变量列表中却没有对应的实例变量，所以我们可知编译器未给属性生成对应的实例变量，因此手动实现 setter 和 getter 方法的想法破灭了。当我们试图在 category 创建成员变量时，编译器会报 Instance variables may not be placed in categories 错误。</p>
 <p>正所谓上有政策下有对策，我们可以创建一个全局变量来保存属性值，就如这样:</p>
-<pre><code class="language-Objective-C">@interface NSObject (test)
-@property (nonatomic,strong) NSString *name;
-@end
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-class"><span class="hljs-keyword">@interface</span> <span class="hljs-title">NSObject</span> (<span class="hljs-title">test</span>)</span>
+<span class="hljs-keyword">@property</span> (<span class="hljs-keyword">nonatomic</span>,<span class="hljs-keyword">strong</span>) <span class="hljs-built_in">NSString</span> *name;
+<span class="hljs-keyword">@end</span>
 
-NSString *_name;
-@implementation NSObject (test)
+<span class="hljs-built_in">NSString</span> *_name;
+<span class="hljs-class"><span class="hljs-keyword">@implementation</span> <span class="hljs-title">NSObject</span> (<span class="hljs-title">test</span>)</span>
 
-- (NSString *)name {
-return _name;
+- (<span class="hljs-built_in">NSString</span> *)name {
+<span class="hljs-keyword">return</span> _name;
 }
 
-- (void)setName:(NSString *)name
+- (<span class="hljs-type">void</span>)setName:(<span class="hljs-built_in">NSString</span> *)name
 {
 _name = name;
 }
 
-@end
+<span class="hljs-keyword">@end</span>
 </code></pre>
 <p>或者我们可以通过 runtime的关联对象 来实现属性的 setter 和 getter 方法</p>
-<pre><code class="language-Objective-C">@interface NSObject (test)
-@property (nonatomic,strong) NSString *name;
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-variable">@interface</span> NSObject (test)
+<span class="hljs-variable">@property</span> (nonatomic,strong) NSString *name;
 
-@end
+<span class="hljs-variable">@end</span>
 
 #import &lt;objc/runtime.h&gt;
 
-@implementation NSObject (test)
+<span class="hljs-variable">@implementation</span> NSObject (test)
 
 - (NSString *)name {
-return objc_getAssociatedObject(self, @selector(name));
+<span class="hljs-selector-tag">return</span> <span class="hljs-selector-tag">objc_getAssociatedObject</span>(self, <span class="hljs-variable">@selector</span>(name));
 }
 
-- (void)setName:(NSString *)name
+<span class="hljs-selector-tag">-</span> (void)<span class="hljs-selector-tag">setName</span>:(NSString *)<span class="hljs-selector-tag">name</span>
 {
-objc_setAssociatedObject(self, @selector(name), name, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+<span class="hljs-selector-tag">objc_setAssociatedObject</span>(self, <span class="hljs-variable">@selector</span>(name), name, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-@end
+@<span class="hljs-selector-tag">end</span>
 </code></pre>
 <p>所以在 category 中无法添加实例变量，但是可以添加属性，但是不能添加类属性（后节分类的加载有提到）。</p>
 <h4 id="编译器对-category-的处理" tabindex="-1">编译器对 category 的处理</h4>
-<pre><code class="language-Objective-C">@interface NSObject (Category)
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-variable">@interface</span> NSObject (Category)
 
 - (void)printDescription;
 
-@end
+<span class="hljs-variable">@end</span>
 
-@implementation NSObject (Category)
+<span class="hljs-variable">@implementation</span> NSObject (Category)
 
 - (void)printDescription
 {
-NSLog(@&quot;%@&quot;,self.description);
+<span class="hljs-selector-tag">NSLog</span>(@<span class="hljs-string">&quot;%@&quot;</span>,self.description);
 }
 
-@end
+@<span class="hljs-selector-tag">end</span>
 </code></pre>
 <p>使用 clang -rewrite-objc 文件名.m 命令对上面代码转换成源码</p>
-<pre><code class="language-Objective-C">static struct /*_method_list_t*/ {
-unsigned int entsize;  // sizeof(struct _objc_method)
-unsigned int method_count;
-struct _objc_method method_list[1];
-} _OBJC_$_CATEGORY_INSTANCE_METHODS_NSObject_$_Category __attribute__ ((used, section (&quot;__DATA,__objc_const&quot;))) = {
-sizeof(_objc_method),
-1,
-{{(struct objc_selector *)&quot;printDescription&quot;, &quot;v16@0:8&quot;, (void *)_I_NSObject_Category_printDescription}}
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-built_in">static</span> struct <span class="hljs-comment">/*_method_list_t*/</span> {
+unsigned <span class="hljs-keyword">int</span> entsize;  <span class="hljs-comment">// sizeof(struct _objc_method)</span>
+unsigned <span class="hljs-keyword">int</span> method_count;
+struct _objc_method method_list[<span class="hljs-number">1</span>];
+} _OBJC_<span class="hljs-variable">$_CATEGORY_INSTANCE_METHODS_NSObject</span>_<span class="hljs-variable">$_Category</span> <span class="hljs-title function_ invoke__">__attribute__</span> ((used, <span class="hljs-title function_ invoke__">section</span> (<span class="hljs-string">&quot;__DATA,__objc_const&quot;</span>))) = {
+<span class="hljs-title function_ invoke__">sizeof</span>(_objc_method),
+<span class="hljs-number">1</span>,
+{{(struct objc_selector *)<span class="hljs-string">&quot;printDescription&quot;</span>, <span class="hljs-string">&quot;v16@0:8&quot;</span>, (<span class="hljs-keyword">void</span> *)_I_NSObject_Category_printDescription}}
 };
 
-extern &quot;C&quot; __declspec(dllimport) struct _class_t OBJC_CLASS_$_NSObject;
+extern <span class="hljs-string">&quot;C&quot;</span> <span class="hljs-title function_ invoke__">__declspec</span>(dllimport) struct _class_t OBJC_CLASS_<span class="hljs-variable">$_NSObject</span>;
 
-static struct _category_t _OBJC_$_CATEGORY_NSObject_$_Category __attribute__ ((used, section (&quot;__DATA,__objc_const&quot;))) = 
+<span class="hljs-built_in">static</span> struct _category_t _OBJC_<span class="hljs-variable">$_CATEGORY_NSObject</span>_<span class="hljs-variable">$_Category</span> <span class="hljs-title function_ invoke__">__attribute__</span> ((used, <span class="hljs-title function_ invoke__">section</span> (<span class="hljs-string">&quot;__DATA,__objc_const&quot;</span>))) = 
 {
-&quot;NSObject&quot;,
-0, // &amp;OBJC_CLASS_$_NSObject,
-(const struct _method_list_t *)&amp;_OBJC_$_CATEGORY_INSTANCE_METHODS_NSObject_$_Category,
-0,
-0,
-0,
+<span class="hljs-string">&quot;NSObject&quot;</span>,
+<span class="hljs-number">0</span>, <span class="hljs-comment">// &amp;OBJC_CLASS_$_NSObject,</span>
+(<span class="hljs-keyword">const</span> <span class="hljs-variable constant_">struct</span> _method_list_t *)&amp;_OBJC_<span class="hljs-variable">$_CATEGORY_INSTANCE_METHODS_NSObject</span>_<span class="hljs-variable">$_Category</span>,
+<span class="hljs-number">0</span>,
+<span class="hljs-number">0</span>,
+<span class="hljs-number">0</span>,
 };
-static void OBJC_CATEGORY_SETUP_$_NSObject_$_Category(void ) {
-_OBJC_$_CATEGORY_NSObject_$_Category.cls = &amp;OBJC_CLASS_$_NSObject;
+<span class="hljs-built_in">static</span> <span class="hljs-keyword">void</span> OBJC_CATEGORY_SETUP_<span class="hljs-variable">$_NSObject</span>_<span class="hljs-variable">$_Category</span>(<span class="hljs-keyword">void</span> ) {
+_OBJC_<span class="hljs-variable">$_CATEGORY_NSObject</span>_<span class="hljs-variable">$_Category</span>.cls = &amp;OBJC_CLASS_<span class="hljs-variable">$_NSObject</span>;
 }
-#pragma section(&quot;.objc_inithooks$B&quot;, long, read, write)
-__declspec(allocate(&quot;.objc_inithooks$B&quot;)) static void *OBJC_CATEGORY_SETUP[] = {
-(void *)&amp;OBJC_CATEGORY_SETUP_$_NSObject_$_Category,
+<span class="hljs-comment">#pragma section(&quot;.objc_inithooks$B&quot;, long, read, write)</span>
+<span class="hljs-title function_ invoke__">__declspec</span>(<span class="hljs-title function_ invoke__">allocate</span>(<span class="hljs-string">&quot;.objc_inithooks<span class="hljs-subst">$B</span>&quot;</span>)) <span class="hljs-built_in">static</span> <span class="hljs-keyword">void</span> *OBJC_CATEGORY_SETUP[] = {
+(<span class="hljs-keyword">void</span> *)&amp;OBJC_CATEGORY_SETUP_<span class="hljs-variable">$_NSObject</span>_<span class="hljs-variable">$_Category</span>,
 };
-static struct _category_t *L_OBJC_LABEL_CATEGORY_$ [1] __attribute__((used, section (&quot;__DATA, __objc_catlist,regular,no_dead_strip&quot;)))= {
-&amp;_OBJC_$_CATEGORY_NSObject_$_Category,
+<span class="hljs-built_in">static</span> struct _category_t *L_OBJC_LABEL_CATEGORY_$ [<span class="hljs-number">1</span>] <span class="hljs-title function_ invoke__">__attribute__</span>((used, <span class="hljs-title function_ invoke__">section</span> (<span class="hljs-string">&quot;__DATA, __objc_catlist,regular,no_dead_strip&quot;</span>)))= {
+&amp;_OBJC_<span class="hljs-variable">$_CATEGORY_NSObject</span>_<span class="hljs-variable">$_Category</span>,
 };
-static struct IMAGE_INFO { unsigned version; unsigned flag; } _OBJC_IMAGE_INFO = { 0, 2 };
+<span class="hljs-built_in">static</span> struct IMAGE_INFO { unsigned version; unsigned flag; } _OBJC_IMAGE_INFO = { <span class="hljs-number">0</span>, <span class="hljs-number">2</span> };
 
 </code></pre>
 <p>我们可以看到：</p>
@@ -201,126 +201,126 @@ static struct IMAGE_INFO { unsigned version; unsigned flag; } _OBJC_IMAGE_INFO =
 </ul>
 <h4 id="category-加载" tabindex="-1">category 加载</h4>
 <p>Objective-C 运行时入口方法：</p>
-<pre><code class="language-Objective-C">// objc4-706  objc-os.mm
-void _objc_init(void)
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-comment">// objc4-706  objc-os.mm</span>
+<span class="hljs-keyword">void</span> <span class="hljs-title function_">_objc_init</span>(<span class="hljs-params"><span class="hljs-keyword">void</span></span>)
 {
-static bool initialized = false;
-if (initialized) return;
-initialized = true;
+<span class="hljs-keyword">static</span> bool initialized = <span class="hljs-literal">false</span>;
+<span class="hljs-keyword">if</span> (initialized) <span class="hljs-keyword">return</span>;
+initialized = <span class="hljs-literal">true</span>;
 
-// fixme defer initialization until an objc-using image is found?
-environ_init();
-tls_init();
-static_init();
-lock_init();
-exception_init();
+<span class="hljs-comment">// fixme defer initialization until an objc-using image is found?</span>
+<span class="hljs-title function_">environ_init</span>();
+<span class="hljs-title function_">tls_init</span>();
+<span class="hljs-title function_">static_init</span>();
+<span class="hljs-title function_">lock_init</span>();
+<span class="hljs-title function_">exception_init</span>();
 
-_dyld_objc_notify_register(&amp;map_2_images, load_images, unmap_image);
+<span class="hljs-title function_">_dyld_objc_notify_register</span>(&amp;map_2_images, load_images, unmap_image);
 }
 
-// objc4-680  objc-os.mm
-void _objc_init(void)
+<span class="hljs-comment">// objc4-680  objc-os.mm</span>
+<span class="hljs-keyword">void</span> <span class="hljs-title function_">_objc_init</span>(<span class="hljs-params"><span class="hljs-keyword">void</span></span>)
 {
-static bool initialized = false;
-if (initialized) return;
-initialized = true;
+<span class="hljs-keyword">static</span> bool initialized = <span class="hljs-literal">false</span>;
+<span class="hljs-keyword">if</span> (initialized) <span class="hljs-keyword">return</span>;
+initialized = <span class="hljs-literal">true</span>;
 
-// fixme defer initialization until an objc-using image is found?
-environ_init();
-tls_init();
-static_init();
-lock_init();
-exception_init();
+<span class="hljs-comment">// fixme defer initialization until an objc-using image is found?</span>
+<span class="hljs-title function_">environ_init</span>();
+<span class="hljs-title function_">tls_init</span>();
+<span class="hljs-title function_">static_init</span>();
+<span class="hljs-title function_">lock_init</span>();
+<span class="hljs-title function_">exception_init</span>();
 
-// Register for unmap first, in case some +load unmaps something
-_dyld_register_func_for_remove_image(&amp;unmap_image);
-dyld_register_image_state_change_handler(dyld_image_state_bound,
-1/*batch*/, &amp;map_2_images);
-dyld_register_image_state_change_handler(dyld_image_state_dependents_initialized, 0/*not batch*/, &amp;load_images);
+<span class="hljs-comment">// Register for unmap first, in case some +load unmaps something</span>
+<span class="hljs-title function_">_dyld_register_func_for_remove_image</span>(&amp;unmap_image);
+<span class="hljs-title function_">dyld_register_image_state_change_handler</span>(dyld_image_state_bound,
+<span class="hljs-number">1</span><span class="hljs-comment">/*batch*/</span>, &amp;map_2_images);
+<span class="hljs-title function_">dyld_register_image_state_change_handler</span>(dyld_image_state_dependents_initialized, <span class="hljs-number">0</span><span class="hljs-comment">/*not batch*/</span>, &amp;load_images);
 }
 
-// objc4-437  objc-os.m
-void _objc_init(void)
+<span class="hljs-comment">// objc4-437  objc-os.m</span>
+<span class="hljs-keyword">void</span> <span class="hljs-title function_">_objc_init</span>(<span class="hljs-params"><span class="hljs-keyword">void</span></span>)
 {
-// fixme defer initialization until an objc-using image is found?
-environ_init();
-tls_init();
-lock_init();
-exception_init();
+<span class="hljs-comment">// fixme defer initialization until an objc-using image is found?</span>
+<span class="hljs-title function_">environ_init</span>();
+<span class="hljs-title function_">tls_init</span>();
+<span class="hljs-title function_">lock_init</span>();
+<span class="hljs-title function_">exception_init</span>();
 
-// Register for unmap first, in case some +load unmaps something
-_dyld_register_func_for_remove_image(&amp;unmap_image);
-dyld_register_image_state_change_handler(dyld_image_state_bound,
-1/*batch*/, &amp;map_images);
-dyld_register_image_state_change_handler(dyld_image_state_dependents_initialized, 0/*not batch*/, &amp;load_images);
+<span class="hljs-comment">// Register for unmap first, in case some +load unmaps something</span>
+<span class="hljs-title function_">_dyld_register_func_for_remove_image</span>(&amp;unmap_image);
+<span class="hljs-title function_">dyld_register_image_state_change_handler</span>(dyld_image_state_bound,
+<span class="hljs-number">1</span><span class="hljs-comment">/*batch*/</span>, &amp;map_images);
+<span class="hljs-title function_">dyld_register_image_state_change_handler</span>(dyld_image_state_dependents_initialized, <span class="hljs-number">0</span><span class="hljs-comment">/*not batch*/</span>, &amp;load_images);
 }
 </code></pre>
 <p>以上是三个版本的定义，最新版本 706 变得更简洁了。category 附加到类上面是在 map_images/map_2_images（images这里表示二进制文件(可执行文件或者动态链接库 .iso 文件)编译后的符号、代码） 的时候发生的，map_images/map_2_images 两个版本中，都在在方法里调用了 map_images_nolock 方法，在 map_images_nolock 函数中加载 images</p>
-<pre><code class="language-Objective-C">// Find all images with Objective-C metadata.
-hCount = 0;
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-comment">// Find all images with Objective-C metadata.</span>
+hCount = <span class="hljs-number">0</span>;
 i = infoCount;
-while (i--) {
-const headerType *mhdr = (headerType *)infoList[i].imageLoadAddress;
+<span class="hljs-keyword">while</span> (i--) {
+<span class="hljs-keyword">const</span> headerType *mhdr = (headerType *)infoList[i].imageLoadAddress;
 
 hi = _objc_addHeader(mhdr);
-if (!hi) {
-// no objc data in this entry
-continue;
+<span class="hljs-keyword">if</span> (!hi) {
+<span class="hljs-comment">// no objc data in this entry</span>
+<span class="hljs-keyword">continue</span>;
 }
 
 hList[hCount++] = hi;
 
 
-if (PrintImages) {
-_objc_inform(&quot;IMAGES: loading image for %s%s%s%s%s\n&quot;, 
+<span class="hljs-keyword">if</span> (PrintImages) {
+_objc_inform(<span class="hljs-string">&quot;IMAGES: loading image for %s%s%s%s%s\n&quot;</span>, 
 _nameForHeader(mhdr), 
-mhdr-&gt;filetype == MH_BUNDLE ? &quot; (bundle)&quot; : &quot;&quot;, 
-_objcHeaderIsReplacement(hi) ? &quot; (replacement)&quot; : &quot;&quot;,
-_objcHeaderOptimizedByDyld(hi)?&quot; (preoptimized)&quot; : &quot;&quot;,
+mhdr-&gt;filetype == MH_BUNDLE ? <span class="hljs-string">&quot; (bundle)&quot;</span> : <span class="hljs-string">&quot;&quot;</span>, 
+_objcHeaderIsReplacement(hi) ? <span class="hljs-string">&quot; (replacement)&quot;</span> : <span class="hljs-string">&quot;&quot;</span>,
+_objcHeaderOptimizedByDyld(hi)?<span class="hljs-string">&quot; (preoptimized)&quot;</span> : <span class="hljs-string">&quot;&quot;</span>,
 _gcForHInfo2(hi));
 }
 }
 </code></pre>
 <p>在加载完 images 后，便在方法末尾调用 _read_images函数，我们在 _read_images函数 找到处理分类的相关代码</p>
-<pre><code class="language-Objective-C">// Discover categories. 
-for (EACH_HEADER) {
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-comment">// Discover categories. </span>
+<span class="hljs-keyword">for</span> (EACH_HEADER) {
 category_t **catlist = 
 _getObjc2CategoryList(hi, &amp;count);
-for (i = 0; i &lt; count; i++) {
+<span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; count; i++) {
 category_t *cat = catlist[i];
-// Do NOT use cat-&gt;cls! It may have been remapped.
-class_t *cls = remapClass(cat-&gt;cls);
+<span class="hljs-comment">// Do NOT use cat-&gt;cls! It may have been remapped.</span>
+<span class="hljs-function"><span class="hljs-title">class_t</span> *cls = remapClass(cat-&gt;</span>cls);
 
-// Process this category. 
-// First, register the category with its target class. 
-// Then, rebuild the class's method lists (etc) if 
-// the class is realized. 
+<span class="hljs-comment">// Process this category. </span>
+<span class="hljs-comment">// First, register the category with its target class. </span>
+<span class="hljs-comment">// Then, rebuild the class&#x27;s method lists (etc) if </span>
+<span class="hljs-comment">// the class is realized. </span>
 BOOL classExists = NO;
-if (cat-&gt;instanceMethods ||  cat-&gt;protocols  
-||  cat-&gt;instanceProperties) 
+<span class="hljs-function"><span class="hljs-title">if</span> (cat-&gt;</span><span class="hljs-function"><span class="hljs-title">instanceMethods</span> ||  cat-&gt;</span>protocols  
+||  <span class="hljs-function"><span class="hljs-title">cat</span>-&gt;</span>instanceProperties) 
 {
 addUnattachedCategoryForClass(cat, cls, hi);
-if (isRealized(cls)) {
+<span class="hljs-keyword">if</span> (isRealized(cls)) {
 remethodizeClass(cls);
 classExists = YES;
 }
-if (PrintConnecting) {
-_objc_inform(&quot;CLASS: found category -%s(%s) %s&quot;, 
-getName(cls), cat-&gt;name, 
-classExists ? &quot;on existing class&quot; : &quot;&quot;);
+<span class="hljs-keyword">if</span> (PrintConnecting) {
+_objc_inform(<span class="hljs-string">&quot;CLASS: found category -%s(%s) %s&quot;</span>, 
+<span class="hljs-function"><span class="hljs-title">getName</span>(cls), cat-&gt;</span><span class="hljs-keyword">name</span>, 
+classExists ? <span class="hljs-string">&quot;on existing class&quot;</span> : <span class="hljs-string">&quot;&quot;</span>);
 }
 }
 
-if (cat-&gt;classMethods  ||  cat-&gt;protocols  
-/* ||  cat-&gt;classProperties */) 
+<span class="hljs-function"><span class="hljs-title">if</span> (cat-&gt;</span><span class="hljs-function"><span class="hljs-title">classMethods</span>  ||  cat-&gt;</span>protocols  
+<span class="hljs-comment">/* ||  cat-&gt;classProperties */</span>) 
 {
-addUnattachedCategoryForClass(cat, cls-&gt;isa, hi);
-if (isRealized(cls-&gt;isa)) {
-remethodizeClass(cls-&gt;isa);
+<span class="hljs-function"><span class="hljs-title">addUnattachedCategoryForClass</span>(cat, cls-&gt;</span>isa, hi);
+<span class="hljs-function"><span class="hljs-title">if</span> (isRealized(cls-&gt;</span>isa)) {
+<span class="hljs-function"><span class="hljs-title">remethodizeClass</span>(cls-&gt;</span>isa);
 }
-if (PrintConnecting) {
-_objc_inform(&quot;CLASS: found category +%s(%s)&quot;, 
-getName(cls), cat-&gt;name);
+<span class="hljs-keyword">if</span> (PrintConnecting) {
+_objc_inform(<span class="hljs-string">&quot;CLASS: found category +%s(%s)&quot;</span>, 
+<span class="hljs-function"><span class="hljs-title">getName</span>(cls), cat-&gt;</span><span class="hljs-keyword">name</span>);
 }
 }
 }
@@ -329,7 +329,7 @@ getName(cls), cat-&gt;name);
 </code></pre>
 <p>首先，通过 <em>getObjc2CategoryList(hi, &amp;count) 获取的 catlist 就是在编译器编译时的 L_OBJC_LABEL_CATEGORY</em>$。获取到 category_t 列表后，开始遍历 catlist，将 instanceMethods（实例方法）、protocols（协议）、instanceProperties（属性）添加到类上，将 classMethods（类方法）、protocols（协议）添加到类的元类（meta class）上。在添加到元类时，有一段注释 /* ||  cat-&gt;classProperties */ 可见并不会将 classProperties （类属性）添加到元类上，不支持在分类给类添加类属性。</p>
 <h5 id="addunattachedcategoryforclass-函数" tabindex="-1">addUnattachedCategoryForClass 函数</h5>
-<pre><code class="language-Objective-C">class_t *cls = remapClass(cat-&gt;cls);
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-function"><span class="hljs-title">class_t</span> *cls = remapClass(cat-&gt;</span>cls);
 addUnattachedCategoryForClass(cat, cls, hi);
 
 static void addUnattachedCategoryForClass(category_t *cat, class_t *cls,
@@ -337,42 +337,42 @@ header_info *catHeader)
 {
 rwlock_assert_writing(&amp;runtimeLock);
 
-BOOL catFromBundle = (catHeader-&gt;mhdr-&gt;filetype == MH_BUNDLE) ? YES: NO;
+BOOL <span class="hljs-function"><span class="hljs-title">catFromBundle</span> = (catHeader-&gt;</span><span class="hljs-function"><span class="hljs-title">mhdr</span>-&gt;</span>filetype == MH_BUNDLE) ? YES: NO;
 
-// DO NOT use cat-&gt;cls! 
-// cls may be cat-&gt;cls-&gt;isa, or cat-&gt;cls may have been remapped.
-// 获取所有未进行处理的分类
+<span class="hljs-comment">// DO NOT use cat-&gt;cls! </span>
+<span class="hljs-comment">// cls may be cat-&gt;cls-&gt;isa, or cat-&gt;cls may have been remapped.</span>
+<span class="hljs-comment">// 获取所有未进行处理的分类</span>
 NXMapTable *cats = unattachedCategories();
 category_list *list;
 
-// 根据 cls 获取该类未处理的分类
+<span class="hljs-comment">// 根据 cls 获取该类未处理的分类</span>
 list = NXMapGet(cats, cls);
-if (!list) {
-list = _calloc_internal(sizeof(*list) + sizeof(list-&gt;list[0]), 1);
-} else {
-list = _realloc_internal(list, sizeof(*list) + sizeof(list-&gt;list[0]) * (list-&gt;count + 1));
+<span class="hljs-keyword">if</span> (!list) {
+<span class="hljs-function"><span class="hljs-title">list</span> = _calloc_internal(sizeof(*list) + sizeof(list-&gt;</span>list[<span class="hljs-number">0</span>]), <span class="hljs-number">1</span>);
+} <span class="hljs-keyword">else</span> {
+<span class="hljs-function"><span class="hljs-title">list</span> = _realloc_internal(list, sizeof(*list) + sizeof(list-&gt;</span><span class="hljs-function"><span class="hljs-title">list</span>[0]) * (list-&gt;</span>count + <span class="hljs-number">1</span>));
 }
-list-&gt;list[list-&gt;count++] = (category_pair_t){cat, catFromBundle};
+<span class="hljs-function"><span class="hljs-title">list</span>-&gt;</span><span class="hljs-function"><span class="hljs-title">list</span>[list-&gt;</span>count++] = (category_pair_t){cat, catFromBundle};
 NXMapInsert(cats, cls, list);
 }
 </code></pre>
 <p>实现代码也比较简单，大致内容是：获取所有未进行处理的分类，如果当前类在 NXMapGet 中未拥有未处理的分类，那么 list 不存在，便会初始化 list。如果 list 存在，便会用 list 重新初始化并将容量加 1，然后将分类添加到 list 中，最后将分类列表插入到 NXMapTable 中。所以可见 addUnattachedCategoryForClass 函数是将类和分类做了一个关联存储。</p>
 <h5 id="remethodizeclass-函数" tabindex="-1">remethodizeClass 函数</h5>
 <p>remethodizeClass 是去处理分类方法添加的入口</p>
-<pre><code class="language-Objective-C">// 删除无关分类的代码
-static void remethodizeClass(struct class_t *cls)
+<pre class="hljs codehilite language-Objective-C"><code>// 删除无关分类的代码<span class="hljs-keyword">
+static</span> void remethodizeClass(struct class_t *cls)
 {
 category_list *cats;
-BOOL isMeta;
+BOO<span class="hljs-class">L isMeta;</span>
 
-rwlock_assert_writing(&amp;runtimeLock);
+rwlock_assert_writing(&amp;runtime<span class="hljs-class">Lock);</span>
 
 isMeta = isMetaClass(cls);
 
-// Re-methodizing: check for more categories
-if ((cats = unattachedCategoriesForClass(cls))) {
+// Re-methodizing:<span class="hljs-built_in"> check </span>for more categories<span class="hljs-built_in">
+if </span>((cats = unattachedCategoriesForClass(cls))) {
 
-BOOL vtableAffected = NO;
+BOO<span class="hljs-class">L vtableAffected = NO;</span>
 
 // Update methods, properties, protocols
 
@@ -380,44 +380,44 @@ attachCategoryMethods(cls, cats, &amp;vtableAffected);
 
 _free_internal(cats);
 
-// Update method caches and vtables
-flushCaches(cls);
-if (vtableAffected) flushVtables(cls);
+// Update method caches<span class="hljs-built_in"> and </span>vtables
+flushCaches(cls);<span class="hljs-built_in">
+if </span>(vtableAffected) flushVtables(cls);
 }
 }
 </code></pre>
 <p>首先会执行 unattachedCategoriesForClass(cls)，以下是 unattachedCategoriesForClass 函数的实现</p>
-<pre><code class="language-Objective-C">/***********************************************************************
+<pre class="hljs codehilite language-Objective-C"><code>/<span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">***
 * unattachedCategoriesForClass
 * Returns the list of unattached categories for a class, and 
 * deletes them from the list. 
 * The result must be freed by the caller. 
 * Locking: runtimeLock must be held by the caller.
-**********************************************************************/
-static category_list *unattachedCategoriesForClass(class_t *cls)
+**</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span>/
+static category<span class="hljs-emphasis">_list *unattachedCategoriesForClass(class_</span>t <span class="hljs-emphasis">*cls)
 {
 rwlock_assert_writing(&amp;runtimeLock);
 return NXMapRemove(unattachedCategories(), cls);
 }
-</code></pre>
+</span></code></pre>
 <p>根据注释和方法名，我们可以很清晰的知道 unattachedCategoriesForClass 做了什么，调用 NXMapRemove 函数，NXMapRemove 函数以 cls 为 key 从 NXMapTable 中删除类映射的分类列表并返回类的分类列表，最终 unattachedCategoriesForClass 将 NXMapRemove 函数得到分类列表返回。</p>
 <p>在执行 unattachedCategoriesForClass 函数获得分类列表后，将分类列表传入 attachCategoryMethods 函数中，attachCategoryMethods 函数的实现如下</p>
-<pre><code class="language-Objective-C">attachCategoryMethods(class_t *cls, category_list *cats, 
-BOOL *outVtablesAffected)
+<pre class="hljs codehilite language-Objective-C"><code>attachCategoryMethods(class_t *cls, category_list *cats, 
+<span class="hljs-type">BOOL</span> *outVtablesAffected)
 {
-if (!cats) return;
-if (PrintReplacedMethods) printReplacements(cls, cats);
+<span class="hljs-keyword">if</span> (!cats) <span class="hljs-keyword">return</span>;
+<span class="hljs-keyword">if</span> (PrintReplacedMethods) printReplacements(cls, cats);
 
-BOOL isMeta = isMetaClass(cls);
-method_list_t **mlists = _malloc_internal(cats-&gt;count * sizeof(*mlists));
+<span class="hljs-type">BOOL</span> isMeta = isMetaClass(cls);
+method_list_t **mlists = _malloc_internal(cats-&gt;count * <span class="hljs-keyword">sizeof</span>(*mlists));
 
-// Count backwards through cats to get newest categories first
-int mcount = 0;
-int i = cats-&gt;count;
-BOOL fromBundle = NO;
-while (i--) {
+<span class="hljs-comment">// Count backwards through cats to get newest categories first</span>
+<span class="hljs-type">int</span> mcount = <span class="hljs-number">0</span>;
+<span class="hljs-type">int</span> i = cats-&gt;count;
+<span class="hljs-type">BOOL</span> fromBundle = <span class="hljs-literal">NO</span>;
+<span class="hljs-keyword">while</span> (i--) {
 method_list_t *mlist = cat_method_list(cats-&gt;list[i].cat, isMeta);
-if (mlist) {
+<span class="hljs-keyword">if</span> (mlist) {
 mlists[mcount++] = mlist;
 fromBundle |= cats-&gt;list[i].fromBundle;
 }
@@ -430,7 +430,7 @@ _free_internal(mlists);
 }
 </code></pre>
 <p>此函数中，**mlists 是个二维数组，遍历 cats 分类列表，将分类方法数据存入 **mlists 中，并将 mlists 存储到 class_rw_t 的方法列表中。最后将 mlists 传入 attachMethodLists 函数中，该函数的实现</p>
-<pre><code class="language-Objective-C">static void 
+<pre class="hljs codehilite language-Objective-C"><code>static void 
 attachMethodLists(class_t *cls, method_list_t **lists, int count, 
 BOOL methodsFromBundle, BOOL *outVtablesAffected)
 {
@@ -439,47 +439,47 @@ rwlock_assert_writing(&amp;runtimeLock);
 BOOL vtablesAffected = NO;
 size_t listsSize = count * sizeof(*lists);
 
-// Create or extend method list array
-// Leave `count` empty slots at the start of the array to be filled below.
+<span class="hljs-comment">// Create or extend method list array</span>
+<span class="hljs-comment">// Leave `count` empty slots at the start of the array to be filled below.</span>
 
-if (!cls-&gt;data-&gt;methods) {
-// no bonus method lists yet
-cls-&gt;data-&gt;methods = _calloc_internal(1 + count, sizeof(*lists));
-} else {
-size_t oldSize = malloc_size(cls-&gt;data-&gt;methods);
-cls-&gt;data-&gt;methods = 
-_realloc_internal(cls-&gt;data-&gt;methods, oldSize + listsSize);
-memmove(cls-&gt;data-&gt;methods + count, cls-&gt;data-&gt;methods, oldSize);
+<span class="hljs-function"><span class="hljs-title">if</span> (!cls-&gt;</span><span class="hljs-function"><span class="hljs-title">data</span>-&gt;</span>methods) {
+<span class="hljs-comment">// no bonus method lists yet</span>
+<span class="hljs-function"><span class="hljs-title">cls</span>-&gt;</span><span class="hljs-function"><span class="hljs-title">data</span>-&gt;</span>methods = _calloc_internal(<span class="hljs-number">1</span> + count, sizeof(*lists));
+} <span class="hljs-keyword">else</span> {
+<span class="hljs-function"><span class="hljs-title">size_t</span> oldSize = malloc_size(cls-&gt;</span><span class="hljs-function"><span class="hljs-title">data</span>-&gt;</span>methods);
+<span class="hljs-function"><span class="hljs-title">cls</span>-&gt;</span><span class="hljs-function"><span class="hljs-title">data</span>-&gt;</span>methods = 
+_<span class="hljs-function"><span class="hljs-title">realloc_internal</span>(cls-&gt;</span><span class="hljs-function"><span class="hljs-title">data</span>-&gt;</span>methods, oldSize + listsSize);
+<span class="hljs-function"><span class="hljs-title">memmove</span>(cls-&gt;</span><span class="hljs-function"><span class="hljs-title">data</span>-&gt;</span><span class="hljs-function"><span class="hljs-title">methods</span> + count, cls-&gt;</span><span class="hljs-function"><span class="hljs-title">data</span>-&gt;</span>methods, oldSize);
 }
 
-// Add method lists to array.
-// Reallocate un-fixed method lists.
+<span class="hljs-comment">// Add method lists to array.</span>
+<span class="hljs-comment">// Reallocate un-fixed method lists.</span>
 
 int i;
-for (i = 0; i &lt; count; i++) {
+<span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; count; i++) {
 method_list_t *mlist = lists[i];
-if (!mlist) continue;
+<span class="hljs-keyword">if</span> (!mlist) continue;
 
-// Fixup selectors if necessary
-if (!isMethodListFixedUp(mlist)) {
+<span class="hljs-comment">// Fixup selectors if necessary</span>
+<span class="hljs-keyword">if</span> (!isMethodListFixedUp(mlist)) {
 mlist = _memdup_internal(mlist, method_list_size(mlist));
 fixupMethodList(mlist, methodsFromBundle);
 }
 
-// Scan for vtable updates
-if (outVtablesAffected  &amp;&amp;  !vtablesAffected) {
+<span class="hljs-comment">// Scan for vtable updates</span>
+<span class="hljs-keyword">if</span> (outVtablesAffected  &amp;&amp;  !vtablesAffected) {
 uint32_t m;
-for (m = 0; m &lt; mlist-&gt;count; m++) {
-SEL sel = method_list_nth(mlist, m)-&gt;name;
-if (vtable_containsSelector(sel)) vtablesAffected = YES;
+<span class="hljs-function"><span class="hljs-title">for</span> (m = 0; m &lt; mlist-&gt;</span>count; m++) {
+SEL <span class="hljs-function"><span class="hljs-title">sel</span> = method_list_nth(mlist, m)-&gt;</span><span class="hljs-keyword">name</span>;
+<span class="hljs-keyword">if</span> (vtable_containsSelector(sel)) vtablesAffected = YES;
 }
 }
 
-// Fill method list array
-cls-&gt;data-&gt;methods[i] = mlist;
+<span class="hljs-comment">// Fill method list array</span>
+<span class="hljs-function"><span class="hljs-title">cls</span>-&gt;</span><span class="hljs-function"><span class="hljs-title">data</span>-&gt;</span>methods[i] = mlist;
 }
 
-if (outVtablesAffected) *outVtablesAffected = vtablesAffected;
+<span class="hljs-keyword">if</span> (outVtablesAffected) *outVtablesAffected = vtablesAffected;
 }
 
 </code></pre>
@@ -488,125 +488,125 @@ if (outVtablesAffected) *outVtablesAffected = vtablesAffected;
 <p>最后的添加是将分类方法列表添加到 methods 的前面，这样的添加顺序，使得即使 category 中存在和原来类一样的方法也不会覆盖掉原来类的方法。调用方法时，会从 methods 的前面开始遍历，当找到方法后就开始调用并终止查询，所以在后面存在一样的方法便不可能会被调用。</p>
 <h3 id="category-与--load-方法" tabindex="-1">category 与 + load 方法</h3>
 <p>创建以下文件，并调用 + load 方法</p>
-<pre><code class="language-Objective-C">// Father.h
-@interface Father : NSObject
-+ (void)load;
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-comment">// Father.h</span>
+<span class="hljs-class"><span class="hljs-keyword">@interface</span> <span class="hljs-title">Father</span> : <span class="hljs-title">NSObject</span></span>
++ (<span class="hljs-type">void</span>)load;
 
-@end
-// Father.m
-@implementation Father
-+ (void)load {
-NSLog(@&quot;[Father load]&quot;);
+<span class="hljs-keyword">@end</span>
+<span class="hljs-comment">// Father.m</span>
+<span class="hljs-class"><span class="hljs-keyword">@implementation</span> <span class="hljs-title">Father</span></span>
++ (<span class="hljs-type">void</span>)load {
+<span class="hljs-built_in">NSLog</span>(<span class="hljs-string">@&quot;[Father load]&quot;</span>);
 }
 
-// Father+Category.h
-@interface Father (Category)
-+ (void)load;
+<span class="hljs-comment">// Father+Category.h</span>
+<span class="hljs-class"><span class="hljs-keyword">@interface</span> <span class="hljs-title">Father</span> (<span class="hljs-title">Category</span>)</span>
++ (<span class="hljs-type">void</span>)load;
 
-@end
-// Father+Category.m
-@implementation Father (Category)
+<span class="hljs-keyword">@end</span>
+<span class="hljs-comment">// Father+Category.m</span>
+<span class="hljs-class"><span class="hljs-keyword">@implementation</span> <span class="hljs-title">Father</span> (<span class="hljs-title">Category</span>)</span>
 
-+ (void)load {
-NSLog(@&quot;[Category load]&quot;);
++ (<span class="hljs-type">void</span>)load {
+<span class="hljs-built_in">NSLog</span>(<span class="hljs-string">@&quot;[Category load]&quot;</span>);
 }
 
-// Father+Category2.h
-@interface Father (Category2)
-+ (void)load;
+<span class="hljs-comment">// Father+Category2.h</span>
+<span class="hljs-class"><span class="hljs-keyword">@interface</span> <span class="hljs-title">Father</span> (<span class="hljs-title">Category2</span>)</span>
++ (<span class="hljs-type">void</span>)load;
 
-@end
-// Father+Category2.m
-@implementation Father (Category2)
+<span class="hljs-keyword">@end</span>
+<span class="hljs-comment">// Father+Category2.m</span>
+<span class="hljs-class"><span class="hljs-keyword">@implementation</span> <span class="hljs-title">Father</span> (<span class="hljs-title">Category2</span>)</span>
 
-+ (void)load {
-NSLog(@&quot;[Category2 load]&quot;);
++ (<span class="hljs-type">void</span>)load {
+<span class="hljs-built_in">NSLog</span>(<span class="hljs-string">@&quot;[Category2 load]&quot;</span>);
 }
 </code></pre>
 <p>以编译文件顺序为：Father、Father+Category、Father+Category2，根据上节讲述的，我们可能会觉的打印的结果如下：</p>
-<pre><code class="language-Objective-C">[Category2 load]
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-string">[Category2 load]</span>
 </code></pre>
 <p>但其实正确的结果如下：</p>
-<pre><code class="language-Objective-C">[Father load]
-[Category load]
-[Category2 load]
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-string">[Father load]</span>
+<span class="hljs-string">[Category load]</span>
+<span class="hljs-string">[Category2 load]</span>
 </code></pre>
 <h4 id="从-objc_init-中看--load-的处理" tabindex="-1">从 objc_init 中看 + load 的处理</h4>
 <p>这是为什么呢？说好的只会执行一次 load？我们来看 runtime 入口方法 _objc_init</p>
-<pre><code class="language-Objective-C">void _objc_init(void)
+<pre class="hljs codehilite language-Objective-C"><code>void <span class="hljs-built_in">_objc_init</span>(void)
 {
-// fixme defer initialization until an objc-using image is found?
-environ_init();
-tls_init();
-lock_init();
-exception_init();
+<span class="hljs-comment">// fixme defer initialization until an objc-using image is found?</span>
+<span class="hljs-built_in">environ_init</span>();
+<span class="hljs-built_in">tls_init</span>();
+<span class="hljs-built_in">lock_init</span>();
+<span class="hljs-built_in">exception_init</span>();
 
-// Register for unmap first, in case some +load unmaps something
-_dyld_register_func_for_remove_image(&amp;unmap_image);
-dyld_register_image_state_change_handler(dyld_image_state_bound,
-1/*batch*/, &amp;map_images);
-dyld_register_image_state_change_handler(dyld_image_state_dependents_initialized, 0/*not batch*/, &amp;load_images);
+<span class="hljs-comment">// Register for unmap first, in case some +load unmaps something</span>
+<span class="hljs-built_in">_dyld_register_func_for_remove_image</span>(&amp;unmap_image);
+<span class="hljs-built_in">dyld_register_image_state_change_handler</span>(dyld_image_state_bound,
+<span class="hljs-number">1</span>/*batch*/, &amp;map_images);
+<span class="hljs-built_in">dyld_register_image_state_change_handler</span>(dyld_image_state_dependents_initialized, <span class="hljs-number">0</span>/*not batch*/, &amp;load_images);
 }
 </code></pre>
 <p>在 map_images 执行完后，category 的方法也就添加到类上了，最后执行</p>
-<pre><code class="language-Objective-C">dyld_register_image_state_change_handler(dyld_image_state_dependents_initialized, 0/*not batch*/, &amp;load_images);
+<pre class="hljs codehilite language-Objective-C"><code>dyld_register_image_state_change_handler(dyld_image_state_dependents_initialized, <span class="hljs-number">0</span><span class="hljs-comment">/*not batch*/</span>, <span class="hljs-variable">&amp;load_images</span>)<span class="hljs-punctuation">;</span>
 </code></pre>
 <p>初始化 dyld 所需的依赖和注册 load_images 回调通知，当 iamge 被加载就会通知 runtime 处理，该函数的实现如下</p>
-<pre><code class="language-Objective-C">
+<pre class="hljs codehilite language-Objective-C"><code>
 /***********************************************************************
 * load_images
-* Process +load in the given images which are being mapped in by dyld.
+* Process +<span class="hljs-built_in">load</span> <span class="hljs-keyword">in</span> the given images which are being mapped <span class="hljs-keyword">in</span> by dyld.
 * Calls ABI-agnostic code after taking ABI-specific locks.
 *
-* Locking: write-locks runtimeLock and loadMethodLock
+* Locking: write-locks runtimeLock and <span class="hljs-built_in">load</span>MethodLock
 **********************************************************************/
-__private_extern__ const char *
-load_images(enum dyld_image_states state, uint32_t infoCount,
-const struct dyld_image_info infoList[])
+__private_extern__ <span class="hljs-keyword">const</span> char *
+load_images(enum dyld_image_states <span class="hljs-keyword">state</span>, uint32_t infoCount,
+<span class="hljs-keyword">const</span> struct dyld_image_info infoList[])
 {
 BOOL found;
 
-recursive_mutex_lock(&amp;loadMethodLock);
+recursive_mutex_lock(&amp;<span class="hljs-built_in">load</span>MethodLock);
 
-// Discover load methods
+// Discover <span class="hljs-built_in">load</span> methods
 rwlock_write(&amp;runtimeLock);
-found = load_images_nolock(state, infoCount, infoList);
+found = load_images_nolock(<span class="hljs-keyword">state</span>, infoCount, infoList);
 rwlock_unlock_write(&amp;runtimeLock);
 
-// Call +load methods (without runtimeLock - re-entrant)
+// C<span class="hljs-literal">all</span> +<span class="hljs-built_in">load</span> methods (without runtimeLock - re-entrant)
 if (found) {
 call_load_methods();
 }
 
-recursive_mutex_unlock(&amp;loadMethodLock);
+recursive_mutex_unlock(&amp;<span class="hljs-built_in">load</span>MethodLock);
 
 return NULL;
 }
 </code></pre>
 <p>通过 load_images_nolock 函数查询 images中是否有 + load 方法并收集 + load方法，该方法实现如下</p>
-<pre><code class="language-Objective-C">load_images_nolock(enum dyld_image_states state,uint32_t infoCount,
-const struct dyld_image_info infoList[])
+<pre class="hljs codehilite language-Objective-C"><code>load_images_nolock(<span class="hljs-keyword">enum</span> dyld_image_states state,uint32_t infoCount,
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">struct</span> dyld_image_info infoList[])
 {
-BOOL found = NO;
+<span class="hljs-type">BOOL</span> found = <span class="hljs-literal">NO</span>;
 uint32_t i;
 
 i = infoCount;
-while (i--) {
+<span class="hljs-keyword">while</span> (i--) {
 header_info *hi;
-for (hi = FirstHeader; hi != NULL; hi = hi-&gt;next) {
-const headerType *mhdr = (headerType*)infoList[i].imageLoadAddress;
-if (hi-&gt;mhdr == mhdr) {
+<span class="hljs-keyword">for</span> (hi = FirstHeader; hi != <span class="hljs-literal">NULL</span>; hi = hi-&gt;next) {
+<span class="hljs-keyword">const</span> headerType *mhdr = (headerType*)infoList[i].imageLoadAddress;
+<span class="hljs-keyword">if</span> (hi-&gt;mhdr == mhdr) {
 prepare_load_methods(hi);
-found = YES;
+found = <span class="hljs-literal">YES</span>;
 }
 }
 }
 
-return found;
+<span class="hljs-keyword">return</span> found;
 }
 </code></pre>
 <p>使用 while 循环遍历加载 iamges 中的 + load，其中处理便是 prepare_load_methods 这个函数，我们看看这个函数的实现</p>
-<pre><code class="language-Objective-C">void prepare_load_methods(header_info *hi)
+<pre class="hljs codehilite language-Objective-C"><code>void prepare_load_methods(<span class="hljs-name">header_info</span> *hi)
 {
 size_t count, i;
 
@@ -615,47 +615,47 @@ rwlock_assert_writing(&amp;runtimeLock);
 class_t **classlist = 
 _getObjc2NonlazyClassList(hi, &amp;count);
 for (i = 0; i &lt; count; i++) {
-class_t *cls = remapClass(classlist[i]);
-schedule_class_load(cls);
+class_t *cls = remapClass(<span class="hljs-name">classlist</span>[i])<span class="hljs-comment">;</span>
+schedule_class_load(<span class="hljs-name">cls</span>)<span class="hljs-comment">;</span>
 }
 
-category_t **categorylist = _getObjc2NonlazyCategoryList(hi, &amp;count);
-for (i = 0; i &lt; count; i++) {
+category_t **categorylist = _getObjc2NonlazyCategoryList(<span class="hljs-name">hi</span>, <span class="hljs-symbol">&amp;count</span>)<span class="hljs-comment">;</span>
+for (<span class="hljs-name">i</span> = <span class="hljs-number">0</span><span class="hljs-comment">; i &lt; count; i++) {</span>
 category_t *cat = categorylist[i];
 // Do NOT use cat-&gt;cls! It may have been remapped.
-class_t *cls = remapClass(cat-&gt;cls);
-realizeClass(cls);
-assert(isRealized(cls-&gt;isa));
-add_category_to_loadable_list((Category)cat);
+class_t *cls = remapClass(<span class="hljs-name">cat-&gt;cls</span>)<span class="hljs-comment">;</span>
+realizeClass(<span class="hljs-name">cls</span>)<span class="hljs-comment">;</span>
+assert(<span class="hljs-name">isRealized</span>(<span class="hljs-name">cls-&gt;isa</span>))<span class="hljs-comment">;</span>
+add_category_to_loadable_list((<span class="hljs-name">Category</span>)cat)<span class="hljs-comment">;</span>
 }
 }
 </code></pre>
 <p>我们可以看到，首先被处理的是类的 + load 方法，将类和类的 + load  通过 schedule_class_load 函数中的 add_class_to_loadable_list 函数收集在 loadable_classes 中，然后才是处理分类中的 + load 方法，将分类和分类中的 + load方法收集在 loadable_categories 中。至此，+ load 收集准备工作也就完成了。</p>
 <p>回到 load_images 函数， 如果有 + load 方法的话，那么 load_images_nolock 则会返回 YES，那么接下来便会执行 call_load_methods 函数，调用所有收集的 + load 方法，我们来看看它的实现</p>
-<pre><code class="language-Objective-C">void call_load_methods(void)
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-type">void</span> call_load_methods(<span class="hljs-type">void</span>)
 {
-static BOOL loading = NO;
-BOOL more_categories;
+<span class="hljs-keyword">static</span> <span class="hljs-type">BOOL</span> loading = <span class="hljs-literal">NO</span>;
+<span class="hljs-type">BOOL</span> more_categories;
 
 recursive_mutex_assert_locked(&amp;loadMethodLock);
 
-// Re-entrant calls do nothing; the outermost call will finish the job.
-if (loading) return;
-loading = YES;
+<span class="hljs-comment">// Re-entrant calls do nothing; the outermost call will finish the job.</span>
+<span class="hljs-keyword">if</span> (loading) <span class="hljs-keyword">return</span>;
+loading = <span class="hljs-literal">YES</span>;
 
-do {
-// 1. Repeatedly call class +loads until there aren't any more
-while (loadable_classes_used &gt; 0) {
+<span class="hljs-keyword">do</span> {
+<span class="hljs-comment">// 1. Repeatedly call class +loads until there aren&#x27;t any more</span>
+<span class="hljs-keyword">while</span> (loadable_classes_used &gt; <span class="hljs-number">0</span>) {
 call_class_loads();
 }
 
-// 2. Call category +loads ONCE
+<span class="hljs-comment">// 2. Call category +loads ONCE</span>
 more_categories = call_category_loads();
 
-// 3. Run more +loads if there are classes OR more untried categories
-} while (loadable_classes_used &gt; 0  ||  more_categories);
+<span class="hljs-comment">// 3. Run more +loads if there are classes OR more untried categories</span>
+} <span class="hljs-keyword">while</span> (loadable_classes_used &gt; <span class="hljs-number">0</span>  ||  more_categories);
 
-loading = NO;
+loading = <span class="hljs-literal">NO</span>;
 }
 </code></pre>
 <p>在 do-while 循环中我们可以看到，首先执行的是类的+ load 方法，然后是分类的 + load 方法 。</p>

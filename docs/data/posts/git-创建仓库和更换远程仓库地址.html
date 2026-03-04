@@ -1,70 +1,70 @@
 <h4 id="创建仓库" tabindex="-1">创建仓库</h4>
 <h5 id="本地初始化git仓库" tabindex="-1">本地初始化git仓库</h5>
-<pre><code>// cd 至项目目录下，初始化本地仓库
-$ git init
+<pre class="hljs codehilite"><code><span class="hljs-comment">// cd 至项目目录下，初始化本地仓库</span>
+$ git <span class="hljs-keyword">init</span>
 </code></pre>
 <!-- more -->
 <h5 id="添加远程仓库" tabindex="-1">添加远程仓库</h5>
-<pre><code>// 首先需在github、码云创建远程仓库（项目）
-// 复制远程仓库地址
-$ git remote add origin 仓库地址
+<pre class="hljs codehilite"><code><span class="hljs-comment">// 首先需在github、码云创建远程仓库（项目）</span>
+<span class="hljs-comment">// 复制远程仓库地址</span>
+$ git remote <span class="hljs-keyword">add</span> origin 仓库地址
 </code></pre>
 <h5 id="本地仓库与远程仓库关联" tabindex="-1">本地仓库与远程仓库关联</h5>
-<pre><code>$ git branch --set-upstream-to=origin/master
-$ git branch --set-upstream-to=origin/&lt;branch&gt; master
-</code></pre>
+<pre class="hljs codehilite"><code>$ git branch --<span class="hljs-attr">set-upstream-to=</span>origin/<span class="hljs-keyword">master</span>
+<span class="hljs-title">$</span> git branch --<span class="hljs-attr">set-upstream-to=</span>origin/<span class="hljs-tag">&lt;branch&gt;</span> <span class="hljs-keyword">master</span>
+<span class="hljs-title"></span></code></pre>
 <h5 id="拉取远程仓库内容到本地仓库" tabindex="-1">拉取远程仓库内容到本地仓库</h5>
-<pre><code>$ git pull
+<pre class="hljs codehilite"><code><span class="hljs-symbol">$</span> git pull
 
-// 若git pull提示：fatal: refusing to merge unrelated histories
-// 改用以下命令
-$ git pull origin master --allow-unrelated-histories
+<span class="hljs-comment">// 若git pull提示：fatal: refusing to merge unrelated histories</span>
+<span class="hljs-comment">// 改用以下命令</span>
+<span class="hljs-symbol">$</span> git pull origin master --allow-unrelated-histories
 
 </code></pre>
 <h5 id="将最新新内容推送至远程仓库" tabindex="-1">将最新新内容推送至远程仓库</h5>
-<pre><code>// 使用git status 查看是否有内容未添加至暂存区
-$ git status
+<pre class="hljs codehilite"><code><span class="hljs-comment">// 使用git status 查看是否有内容未添加至暂存区</span>
+<span class="hljs-symbol">$</span> git status
 
-// 将内容添加至暂存区
-$ git add -A  // 全部添加
+<span class="hljs-comment">// 将内容添加至暂存区</span>
+<span class="hljs-symbol">$</span> git add -A  <span class="hljs-comment">// 全部添加</span>
 
-// 将暂存区内容提交至本地仓库
-$ git commit -m &quot;本次提交内容信息&quot;
+<span class="hljs-comment">// 将暂存区内容提交至本地仓库</span>
+<span class="hljs-symbol">$</span> git commit -m <span class="hljs-string">&quot;本次提交内容信息&quot;</span>
 
-// 将本地仓库推送至远程仓库
-$ git push
+<span class="hljs-comment">// 将本地仓库推送至远程仓库</span>
+<span class="hljs-symbol">$</span> git push
 </code></pre>
 <h4 id="更换远程仓库地址" tabindex="-1">更换远程仓库地址</h4>
 <ul>
 <li>通过命令直接修改地址</li>
 </ul>
-<pre><code>// 查看仓库地址
-$ git remote -v
+<pre class="hljs codehilite"><code>// 查看仓库地址
+$ <span class="hljs-string">git</span> <span class="hljs-string">remote</span> -<span class="hljs-string">v</span>
 
 // 更换仓库地址
-$ git remote set-url origin 新仓库地址
+$ <span class="hljs-string">git</span> <span class="hljs-string">remote</span> <span class="hljs-built_in">set-url</span> <span class="hljs-string">origin</span> 新仓库地址
 </code></pre>
 <ul>
 <li>删除仓库地址然后添加新的仓库地址</li>
 </ul>
-<pre><code>// 删除仓库地址
-git remote rm origin
+<pre class="hljs codehilite"><code><span class="hljs-comment">// 删除仓库地址</span>
+<span class="hljs-symbol">git</span> remote rm origin
 
-// 添加新的仓库地址
-git remote add origin 新仓库地址
+<span class="hljs-comment">// 添加新的仓库地址</span>
+<span class="hljs-symbol">git</span> remote <span class="hljs-keyword">add</span> origin 新仓库地址
 </code></pre>
 <ul>
 <li>直接修改本地的.git/config 文件</li>
 </ul>
-<pre><code>// git 文件是隐藏文件
+<pre class="hljs codehilite"><code>// git 文件是隐藏文件
 // 显示隐藏文件
-$ defaults write com.apple.finder AppleShowAllFiles Yes &amp;&amp; killall Finder 
+<span class="hljs-variable">$ </span>defaults write com.apple.finder <span class="hljs-title class_">AppleShowAllFiles</span> <span class="hljs-title class_">Yes</span> &amp;&amp; killall <span class="hljs-title class_">Finder</span> 
 // 不显示隐藏文件
-$ defaults write com.apple.finder AppleShowAllFiles No &amp;&amp; killall Finder 
+<span class="hljs-variable">$ </span>defaults write com.apple.finder <span class="hljs-title class_">AppleShowAllFiles</span> <span class="hljs-title class_">No</span> &amp;&amp; killall <span class="hljs-title class_">Finder</span> 
 
 // .git/config 文件内容
-[remote &quot;origin&quot;]
+[remote <span class="hljs-string">&quot;origin&quot;</span>]
 url = 更换为新仓库地址
-fetch = +refs/heads/*:refs/remotes/origin/*
+fetch = +refs/heads/*<span class="hljs-symbol">:refs/remotes/origin/*</span>
 
 </code></pre>

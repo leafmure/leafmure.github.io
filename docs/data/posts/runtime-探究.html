@@ -12,79 +12,79 @@
 </blockquote>
 <h3 id="nsobject" tabindex="-1">NSObject</h3>
 <p>根据源码可以看到 NSObject 的定义</p>
-<pre><code class="language-Objective-C">typedef struct objc_class *Class;
+<pre class="hljs codehilite language-Objective-C"><code>typedef <span class="hljs-keyword">struct</span> objc_class <span class="hljs-operator">*</span>Class;
 
-@interface NSObject &lt;NSObject&gt; {
+<span class="hljs-operator">@</span><span class="hljs-keyword">interface</span> NSObject <span class="hljs-operator">&lt;</span>NSObject<span class="hljs-operator">&gt;</span> {
   Class isa  OBJC_ISA_AVAILABILITY;
 }
 
-// objc.h 中 NSObject对应的结构体
-struct objc_object {
+<span class="hljs-comment">// objc.h 中 NSObject对应的结构体</span>
+<span class="hljs-keyword">struct</span> <span class="hljs-keyword">objc_object</span> {
   Class isa  OBJC_ISA_AVAILABILITY;
 };
 
-// objc_object 结构体的实现
-struct objc_object {
-  private:
+<span class="hljs-comment">// objc_object 结构体的实现</span>
+<span class="hljs-keyword">struct</span> <span class="hljs-keyword">objc_object</span> {
+  <span class="hljs-keyword">private</span><span class="hljs-operator">:</span>
   isa_t isa;
-  ...
+  <span class="hljs-operator">...</span>
 }
 </code></pre>
 <p>在 objc_object 中 有一个指向 Class 的 isa 指针，即 objc_object 的类。</p>
 <h4 id="isa" tabindex="-1">isa</h4>
 <p>isa指针 是一个 union 联合体实例，如下：</p>
-<pre><code class="language-Objective-C">union isa_t {
+<pre class="hljs codehilite language-Objective-C"><code>union isa_t {
   isa_t() { }
-  isa_t(uintptr_t value) : bits(value) { }
+  isa_t(<span class="hljs-built_in">uint</span>ptr_t value) : bits(value) { }
 
   Class cls;
-  uintptr_t bits;
-  #if defined(ISA_BITFIELD)
+  <span class="hljs-built_in">uint</span>ptr_t bits;
+  #<span class="hljs-keyword">if</span> defined(ISA_BITFIELD)
   struct {
-    ISA_BITFIELD;  // defined in isa.h
+    ISA_BITFIELD;  <span class="hljs-comment">// defined in isa.h</span>
   };
   #endif
 };
 
-// ISA_BITFIELD 宏
+<span class="hljs-comment">// ISA_BITFIELD 宏</span>
 #   define ISA_BITFIELD                                                        \
-uintptr_t nonpointer        : 1;                                         \
-uintptr_t has_assoc         : 1;                                         \
-uintptr_t has_cxx_dtor      : 1;                                         \
-uintptr_t shiftcls          : 44; /*MACH_VM_MAX_ADDRESS 0x7fffffe00000*/ \
-uintptr_t magic             : 6;                                         \
-uintptr_t weakly_referenced : 1;                                         \
-uintptr_t deallocating      : 1;                                         \
-uintptr_t has_sidetable_rc  : 1;                                         \
-uintptr_t extra_rc          : 8
+<span class="hljs-built_in">uint</span>ptr_t nonpointer        : <span class="hljs-number">1</span>;                                         \
+<span class="hljs-built_in">uint</span>ptr_t has_assoc         : <span class="hljs-number">1</span>;                                         \
+<span class="hljs-built_in">uint</span>ptr_t has_cxx_dtor      : <span class="hljs-number">1</span>;                                         \
+<span class="hljs-built_in">uint</span>ptr_t shiftcls          : <span class="hljs-number">44</span>; <span class="hljs-comment">/*MACH_VM_MAX_ADDRESS 0x7fffffe00000*/</span> \
+<span class="hljs-built_in">uint</span>ptr_t magic             : <span class="hljs-number">6</span>;                                         \
+<span class="hljs-built_in">uint</span>ptr_t weakly_referenced : <span class="hljs-number">1</span>;                                         \
+<span class="hljs-built_in">uint</span>ptr_t deallocating      : <span class="hljs-number">1</span>;                                         \
+<span class="hljs-built_in">uint</span>ptr_t has_sidetable_rc  : <span class="hljs-number">1</span>;                                         \
+<span class="hljs-built_in">uint</span>ptr_t extra_rc          : <span class="hljs-number">8</span>
 </code></pre>
 <p>要了解 isa 的实现可看 <a href="https://github.com/draveness/analyze/blob/master/contents/objc/%E4%BB%8E%20NSObject%20%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96%E4%BA%86%E8%A7%A3%20isa.md#shiftcls">从 NSObject 的初始化了解 isa</a></p>
 <h4 id="objc_class" tabindex="-1">objc_class</h4>
 <p>Class 是一个 struct objc_class 的结构体实例，objc_class 的定义如下：</p>
-<pre><code class="language-Objective-C">struct objc_class {
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-keyword">struct</span> <span class="hljs-title class_">objc_class</span> {
   Class isa  OBJC_ISA_AVAILABILITY;
 
-  #if !__OBJC2__
+  <span class="hljs-meta">#<span class="hljs-keyword">if</span> !__OBJC2__</span>
   Class super_class                                        OBJC2_UNAVAILABLE;
-  const char *name                                         OBJC2_UNAVAILABLE;
-  long version                                             OBJC2_UNAVAILABLE;
-  long info                                                OBJC2_UNAVAILABLE;
-  long instance_size                                       OBJC2_UNAVAILABLE;
-  struct objc_ivar_list *ivars                             OBJC2_UNAVAILABLE;
-  struct objc_method_list **methodLists                    OBJC2_UNAVAILABLE;
-  struct objc_cache *cache                                 OBJC2_UNAVAILABLE;
-  struct objc_protocol_list *protocols                     OBJC2_UNAVAILABLE;
-  #endif
+  <span class="hljs-type">const</span> <span class="hljs-type">char</span> *name                                         OBJC2_UNAVAILABLE;
+  <span class="hljs-type">long</span> version                                             OBJC2_UNAVAILABLE;
+  <span class="hljs-type">long</span> info                                                OBJC2_UNAVAILABLE;
+  <span class="hljs-type">long</span> instance_size                                       OBJC2_UNAVAILABLE;
+  <span class="hljs-keyword">struct</span> <span class="hljs-title class_">objc_ivar_list</span> *ivars                             OBJC2_UNAVAILABLE;
+  <span class="hljs-keyword">struct</span> <span class="hljs-title class_">objc_method_list</span> **methodLists                    OBJC2_UNAVAILABLE;
+  <span class="hljs-keyword">struct</span> <span class="hljs-title class_">objc_cache</span> *cache                                 OBJC2_UNAVAILABLE;
+  <span class="hljs-keyword">struct</span> <span class="hljs-title class_">objc_protocol_list</span> *protocols                     OBJC2_UNAVAILABLE;
+  <span class="hljs-meta">#<span class="hljs-keyword">endif</span></span>
 
 } OBJC2_UNAVAILABLE;
-/* Use `Class` instead of `struct objc_class *` */
+<span class="hljs-comment">/* Use `Class` instead of `struct objc_class *` */</span>
 
-// objc_class 结构体实现
-struct objc_class : objc_object {
-  // Class ISA;
+<span class="hljs-comment">// objc_class 结构体实现</span>
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">objc_class</span> : objc_object {
+  <span class="hljs-comment">// Class ISA;</span>
   Class superclass;
-  cache_t cache;             // formerly cache pointer and vtable
-  class_data_bits_t bits;    // class_rw_t * plus custom rr/alloc flags
+  <span class="hljs-type">cache_t</span> cache;             <span class="hljs-comment">// formerly cache pointer and vtable</span>
+  <span class="hljs-type">class_data_bits_t</span> bits;    <span class="hljs-comment">// class_rw_t * plus custom rr/alloc flags</span>
   ...
 }
 </code></pre>
@@ -101,41 +101,41 @@ struct objc_class : objc_object {
 <p>在main方法执行之前，从 dyld到runtime这期间，类对象和元类对象被创建，具体详细可看 <a href="http://blog.sunnyxx.com/2014/08/30/objc-pre-main/">iOS 程序 main 函数之前发生了什么</a></p>
 <h4 id="method" tabindex="-1">method</h4>
 <p>method 在 Objective-C 中称为方法，在 C 语言称为函数，表示能够独立完成一个功能的一段代码，method 的源码定义如下：</p>
-<pre><code class="language-Objective-C">typedef struct objc_method *Method;
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-keyword">typedef</span> <span class="hljs-keyword">struct</span> <span class="hljs-title class_">objc_method</span> *Method;
 
-struct objc_method {
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">objc_method</span> {
   SEL method_name                                          OBJC2_UNAVAILABLE;
-  char *method_types                                       OBJC2_UNAVAILABLE;
+  <span class="hljs-type">char</span> *method_types                                       OBJC2_UNAVAILABLE;
   IMP method_imp                                           OBJC2_UNAVAILABLE;
 }
 
-// objc_method 实现
-struct method_t {
+<span class="hljs-comment">// objc_method 实现</span>
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">method_t</span> {
   SEL name;
-  const char *types;
+  <span class="hljs-type">const</span> <span class="hljs-type">char</span> *types;
   IMP imp;
 
-  struct SortBySELAddress :
-  public std::binary_function&lt;const method_t&amp;,
-  const method_t&amp;, bool&gt;
+  <span class="hljs-keyword">struct</span> <span class="hljs-title class_">SortBySELAddress</span> :
+  <span class="hljs-keyword">public</span> std::binary_function&lt;<span class="hljs-type">const</span> <span class="hljs-type">method_t</span>&amp;,
+  <span class="hljs-type">const</span> <span class="hljs-type">method_t</span>&amp;, <span class="hljs-type">bool</span>&gt;
   {
-    bool operator() (const method_t&amp; lhs,
-    const method_t&amp; rhs)
-    { return lhs.name &lt; rhs.name; }
+    <span class="hljs-function"><span class="hljs-type">bool</span> <span class="hljs-title">operator</span><span class="hljs-params">()</span> <span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">method_t</span>&amp; lhs,
+    <span class="hljs-type">const</span> <span class="hljs-type">method_t</span>&amp; rhs)</span>
+    </span>{ <span class="hljs-keyword">return</span> lhs.name &lt; rhs.name; }
   };
 };
 </code></pre>
 <p>method 是一个 objc_method 结构体实例，结构体中有：方法名、方法类型、方法实现的内存地址 三个属性。</p>
 <h5 id="sel" tabindex="-1">SEL</h5>
 <p>SEL 的源码定义：</p>
-<pre><code class="language-Objective-C">/// An opaque type that represents a method selector.
-typedef struct objc_selector *SEL;
+<pre class="hljs codehilite language-Objective-C"><code>/// An opaque type that represents a <span class="hljs-function"><span class="hljs-keyword">method</span> <span class="hljs-title">selector</span>.
+<span class="hljs-title">typedef</span> <span class="hljs-title">struct</span> <span class="hljs-title">objc_selector</span> *<span class="hljs-title">SEL</span></span>;
 </code></pre>
 <p>SEL 是 selector 在 Objective-C 中的表示类型（Swift中是Selector类）。SEL 是一个 objc_selector 结构体实例，而 objc_selector 是一个映射到方法的C字符串。selector 是一个以方法名为区分的选择器，不同类中相同名字的方法对应的方法选择器是一样的，即使方法名字相同而变量类型不同也会导致它们具有相同的方法选择器，因此这也导致 Objective-C 不支持方法重载。</p>
 <h5 id="imp" tabindex="-1">IMP</h5>
 <p>IMP 的源码定义：</p>
-<pre><code class="language-Objective-C">/// A pointer to the function of a method implementation. 
-typedef id (*IMP)(id, SEL, ...); 
+<pre class="hljs codehilite language-Objective-C"><code>/// A pointer to the function of a <span class="hljs-function"><span class="hljs-keyword">method</span> <span class="hljs-title">implementation</span>. 
+<span class="hljs-title">typedef</span> <span class="hljs-title">id</span></span> (*IMP)(id, SEL, ...); 
 </code></pre>
 <p>该指针指向方法实现的内存地址</p>
 <h5 id="types" tabindex="-1">types</h5>
@@ -143,34 +143,34 @@ typedef id (*IMP)(id, SEL, ...);
 <p>有兴趣深入了解objc的方法结构可看 <a href="https://github.com/draveness/analyze/blob/master/contents/objc/%E6%B7%B1%E5%85%A5%E8%A7%A3%E6%9E%90%20ObjC%20%E4%B8%AD%E6%96%B9%E6%B3%95%E7%9A%84%E7%BB%93%E6%9E%84.md#%E6%B7%B1%E5%85%A5%E8%A7%A3%E6%9E%90-objc-%E4%B8%AD%E6%96%B9%E6%B3%95%E7%9A%84%E7%BB%93%E6%9E%84">深入解析 ObjC 中方法的结构</a></p>
 <h4 id="objc_cache" tabindex="-1">objc_cache</h4>
 <p>objc_cache 的源码定义：</p>
-<pre><code class="language-Objective-C">struct objc_cache {
-  unsigned int mask /* total = mask + 1 */                 OBJC2_UNAVAILABLE;
-  unsigned int occupied                                    OBJC2_UNAVAILABLE;
-  Method buckets[1]                                        OBJC2_UNAVAILABLE;
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-keyword">struct</span> <span class="hljs-title class_">objc_cache</span> {
+  <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> mask <span class="hljs-comment">/* total = mask + 1 */</span>                 OBJC2_UNAVAILABLE;
+  <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> occupied                                    OBJC2_UNAVAILABLE;
+  Method buckets[<span class="hljs-number">1</span>]                                        OBJC2_UNAVAILABLE;
 };
 
-// objc_cache 实现
-#if __LP64__
-typedef uint32_t mask_t;  // x86_64 &amp; arm64 asm are less efficient with 16-bits
-#else
-typedef uint16_t mask_t;
-#endif
+<span class="hljs-comment">// objc_cache 实现</span>
+<span class="hljs-meta">#<span class="hljs-keyword">if</span> __LP64__</span>
+<span class="hljs-keyword">typedef</span> <span class="hljs-type">uint32_t</span> <span class="hljs-type">mask_t</span>;  <span class="hljs-comment">// x86_64 &amp; arm64 asm are less efficient with 16-bits</span>
+<span class="hljs-meta">#<span class="hljs-keyword">else</span></span>
+<span class="hljs-keyword">typedef</span> <span class="hljs-type">uint16_t</span> <span class="hljs-type">mask_t</span>;
+<span class="hljs-meta">#<span class="hljs-keyword">endif</span></span>
 
-typedef uintptr_t cache_key_t;
+<span class="hljs-keyword">typedef</span> <span class="hljs-type">uintptr_t</span> <span class="hljs-type">cache_key_t</span>;
 
-struct cache_t {
-  // 记录方法名对应的方法实现 IMP
-  struct bucket_t *_buckets;
-  // 分配用来缓存bucket的总数
-  mask_t _mask;
-  // 表明目前实际占用的缓存bucket的个数。
-  mask_t _occupied;
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">cache_t</span> {
+  <span class="hljs-comment">// 记录方法名对应的方法实现 IMP</span>
+  <span class="hljs-keyword">struct</span> <span class="hljs-title class_">bucket_t</span> *_buckets;
+  <span class="hljs-comment">// 分配用来缓存bucket的总数</span>
+  <span class="hljs-type">mask_t</span> _mask;
+  <span class="hljs-comment">// 表明目前实际占用的缓存bucket的个数。</span>
+  <span class="hljs-type">mask_t</span> _occupied;
 };
 
-struct bucket_t {
-  // 方法名
-  cache_key_t _key;
-  // 方法实现内存地址
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">bucket_t</span> {
+  <span class="hljs-comment">// 方法名</span>
+  <span class="hljs-type">cache_key_t</span> _key;
+  <span class="hljs-comment">// 方法实现内存地址</span>
   IMP _imp;
 };
 </code></pre>
@@ -178,7 +178,7 @@ struct bucket_t {
 <h3 id="消息传递" tabindex="-1">消息传递</h3>
 <h4 id="消息发送" tabindex="-1">消息发送</h4>
 <p>在Objective-C 中方法的调用如：[receiver message]，在编译后会转化成用于消息发送的C函数函数形式，如下：</p>
-<pre><code class="language-Objective-C">id objc_msgSend(void /* id self, SEL op, ... */ )
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-built_in">id</span> objc_msgSend(<span class="hljs-keyword">void</span> <span class="hljs-operator">/*</span> <span class="hljs-built_in">id</span> self, SEL op, <span class="hljs-operator">...</span> <span class="hljs-operator">*/</span> )
 </code></pre>
 <p>当objc_msgSend 函数调用后会做以下事情：</p>
 <ol>
@@ -187,90 +187,90 @@ struct bucket_t {
 <li>去 class 的缓存中查找该方法的实现 IMP，如果找到便将方法名和IMP缓存到 cache 中，调用该方法。如果没找到便去父类的方法列表中查找，一直找到根类 NSObject 都没找到的话就开始进入消息转发阶段。</li>
 </ol>
 <p>有的时候，我们会被表面调用者迷惑，如：</p>
-<pre><code class="language-Objective-C">@implementation Son : Father
-NSLog(@&quot;%@&quot;, NSStringFromClass([self class]));
-NSLog(@&quot;%@&quot;, NSStringFromClass([super class]));
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-variable">@implementation</span> Son : Father
+NSLog(@<span class="hljs-string">&quot;<span class="hljs-variable">%@</span>&quot;</span>, NSStringFromClass([self <span class="hljs-class"><span class="hljs-keyword">class</span>]))</span>;
+NSLog(@<span class="hljs-string">&quot;<span class="hljs-variable">%@</span>&quot;</span>, NSStringFromClass([super <span class="hljs-class"><span class="hljs-keyword">class</span>]))</span>;
 </code></pre>
 <p>看表面，我们会以为结果是：Son、Father，但正确结果是 Son、Son。self 是类的一个隐藏参数，每个方法的实现的第一个参数即为self，代表对象自身，
 而 super 并不是隐藏参数，它实际上只是一个”编译器标示符”，它负责告诉编译器，当调用方法时，以 self 去调用父类的方法。下面是 super 调用的实现</p>
-<pre><code class="language-Objective-C">void objc_msgSendSuper(void /* struct objc_super *super, SEL op, ... */ )
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-type">void</span> objc_msgSendSuper(<span class="hljs-type">void</span> <span class="hljs-comment">/* struct objc_super *super, SEL op, ... */</span> )
 
-// Specifies the superclass of an instance. 
-struct objc_super {
-  // Specifies an instance of a class.
-  __unsafe_unretained id receiver;
+<span class="hljs-comment">// Specifies the superclass of an instance. </span>
+<span class="hljs-keyword">struct</span> objc_super {
+  <span class="hljs-comment">// Specifies an instance of a class.</span>
+  __<span class="hljs-keyword">unsafe_unretained</span> <span class="hljs-type">id</span> receiver;
 
-  // Specifies the particular superclass of the instance to message. 
-  #if !defined(__cplusplus)  &amp;&amp;  !__OBJC2__
-  /* For compatibility with old objc-runtime.h header */
-  __unsafe_unretained Class class;
-  #else
-  __unsafe_unretained Class super_class;
-  #endif
-  /* super_class is the first class to search */
+  <span class="hljs-comment">// Specifies the particular superclass of the instance to message. </span>
+  <span class="hljs-meta">#<span class="hljs-keyword">if</span> !defined(__cplusplus)  &amp;&amp;  !__OBJC2__</span>
+  <span class="hljs-comment">/* For compatibility with old objc-runtime.h header */</span>
+  __<span class="hljs-keyword">unsafe_unretained</span> Class <span class="hljs-keyword">class</span>;
+  <span class="hljs-meta">#<span class="hljs-keyword">else</span></span>
+  __<span class="hljs-keyword">unsafe_unretained</span> Class super_class;
+  <span class="hljs-meta">#<span class="hljs-keyword">endif</span></span>
+  <span class="hljs-comment">/* super_class is the first class to search */</span>
 };
-#endif
+<span class="hljs-meta">#<span class="hljs-keyword">endif</span></span>
 </code></pre>
 <p>错觉在于我们以为最终是 super_class-&gt;class 方法，然而在 objc_super 结构体中 super_class 并非是消息接收者，receiver 才是接收者，根据注释我们可以知道 receiver 其实就是 self，所以最终消息发送是这样的</p>
-<pre><code class="language-Objective-C">objc_msgSend(objc_super-&gt;receiver, @selector(class))
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-selector-tag">objc_msgSend</span>(objc_super-&gt;receiver, <span class="hljs-variable">@selector</span>(class))
 </code></pre>
 <h4 id="消息转发" tabindex="-1">消息转发</h4>
 <p>在继承树上找不到方法实现，这个时候就会将消息转发给予接收者最后三次机会去处理，如果还是未处理便会执行 doesNotRecognizeSelector: 方法方法终止程序，报 unrecognized selector 错误。</p>
 <p>消息转发分为两大阶段，第一阶段先征询接收者，所属的类是否能动态添加方法以处理此未知消息。第二阶段涉及 “完整的消息转发机制”，在此阶段无法使用动态添加方法来处理未知消息。此时，runtime 会请求接收者以其他手段来处理与消息相关的方法调用。这里细分为两小步，首先，请接收者看看是否有其他对象能够处理这条消息。若有则将消息转发给该对象处理，消息转发结束。若没有“备援的接收者”，则启动完整的消息转发机制，runtime会将消息有关的全部细节都封装到 NSInvocation 中，再给接收者最后一次机会去设法解决。</p>
 <h5 id="动态方法解析" tabindex="-1">动态方法解析</h5>
 <p>在直至 NSObject 还没找到方法实现时，若未知消息是实例方法便会调用 -resolveInstanceMethod: 若未知消息是类方法便会调用 +resolveClassMethod: ，这两个方法类似，都是提供机会，动态添加一个处理该消息的方法。</p>
-<pre><code class="language-Objective-C">// 使用 runtime 需导入 runtime库，message.h 包含了 objc.h 和 runtime.h
-#import &lt;objc/message.h&gt;
+<pre class="hljs codehilite language-Objective-C"><code>// 使用 runtime 需导入 runtime库，message.h 包含了 objc.h 和 runtime.h
+<span class="hljs-comment">#import &lt;objc/message.h&gt;</span>
 
 // 被添加的方法
 void add_method(id self, SEL _cmd) {}
 
 + (BOOL)resolveInstanceMethod:(SEL)sel {
-  if (sel == @selector(method)) {
+  <span class="hljs-keyword">if</span> (sel == <span class="hljs-variable">@selector</span>(<span class="hljs-function"><span class="hljs-keyword">method</span>)) </span>{
 
-    // 添加 add_method 作为 method 的方法实现
-    class_addMethod([self class], sel, (IMP)add_method, &quot;v@:&quot;);
-    return YES;
+    // 添加 add_method 作为 <span class="hljs-function"><span class="hljs-keyword">method</span> 的方法实现
+    <span class="hljs-title">class_addMethod</span></span>([self <span class="hljs-keyword">class</span>], sel, (IMP)add_method, &quot;v@:&quot;);
+    <span class="hljs-keyword">return</span> YES;
   }
-  return [super resolveInstanceMethod:sel];
+  <span class="hljs-keyword">return</span> [super resolveInstanceMethod:sel];
 }
 </code></pre>
 <h5 id="备援接收者" tabindex="-1">备援接收者</h5>
 <p>如接收者未能动态添加方法去处理消息，那么下一步便会寻找能处理该消息的接收者。该步骤的处理方法为 -forwardingTargetForSelector: ，可以在此方法中根据方法来选用备援接收者。</p>
-<pre><code class="language-Objective-C">- (id)forwardingTargetForSelector:(SEL)selector {
-  if (selector == @selector(method)) {
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-selector-tag">-</span> (id)<span class="hljs-selector-tag">forwardingTargetForSelector</span>:(SEL)<span class="hljs-selector-tag">selector</span> {
+  <span class="hljs-selector-tag">if</span> (selector == <span class="hljs-variable">@selector</span>(method)) {
 
-    //返回备援接收者去接收这个消息
-    return [OtherObj new];
+    <span class="hljs-comment">//返回备援接收者去接收这个消息</span>
+    <span class="hljs-selector-tag">return</span> <span class="hljs-selector-attr">[OtherObj new]</span>;
   }
 
-  return [super forwardingTargetForSelector:selector];
+  <span class="hljs-selector-tag">return</span> <span class="hljs-selector-attr">[super forwardingTargetForSelector:selector]</span>;
 }
 </code></pre>
 <p>此方法处理，在外部看，消息似乎是由对象自己处理的，这一现象与继承类似，子类调用自己未实现而父类实现了的方法，因此可用来模拟 “多继承” 特性。</p>
 <h5 id="完整的消息转发" tabindex="-1">完整的消息转发</h5>
 <p>如果没有备援接收者，那么唯一能做的便是启用完整的消息转发机制。首先通过 -methodSignatureForSelector: 获取消息方法的细节(即方法参数、返回类型等)，封装成一个 NSMethodSignature(签名) 对象，如果获取消息方法失败，便返回nil，这时便会执行 doesNotRecognizeSelector: 方法终止程序，报 unrecognized selector 错误。</p>
-<pre><code class="language-Objective-C">- (NSMethodSignature *)methodSignatureForSelector:(SEL)selector {
-  if ([NSStringFromSelector(selector) isEqualToString:@&quot;method&quot;]) {
+<pre class="hljs codehilite language-Objective-C"><code>- (<span class="hljs-built_in">NSMethodSignature</span> *)methodSignatureForSelector:(SEL)selector {
+  <span class="hljs-keyword">if</span> ([<span class="hljs-built_in">NSStringFromSelector</span>(selector) isEqualToString:<span class="hljs-string">@&quot;method&quot;</span>]) {
 
-    return [NSMethodSignature signatureWithObjCTypes:&quot;v@:&quot;];
+    <span class="hljs-keyword">return</span> [<span class="hljs-built_in">NSMethodSignature</span> signatureWithObjCTypes:<span class="hljs-string">&quot;v@:&quot;</span>];
   }
 
-  return [super methodSignatureForSelector:selector];
+  <span class="hljs-keyword">return</span> [<span class="hljs-variable language_">super</span> methodSignatureForSelector:selector];
 }
 </code></pre>
 <p>-methodSignatureForSelector: 中生成NSMethodSignature(签名)对象后，便用此签名对象生成 NSInvocation 对象并通过 -forwardInvocation: 方法发给目标对象，
 在此方法中还有最后一次机会去处理未知消息。</p>
-<pre><code class="language-Objective-C">- (void)forwardInvocation:(NSInvocation *)invocation {
+<pre class="hljs codehilite language-Objective-C"><code>- (<span class="hljs-keyword">void</span>)forwardInvocation:(NSInvocation *)invocation {
 
   SEL sel = invocation.selector;
-  OtherObj *obj = [OtherObj new];
-  if([obj respondsToSelector:sel]) {
+  OtherObj *obj = [OtherObj <span class="hljs-keyword">new</span>];
+  <span class="hljs-keyword">if</span>([obj respondsToSelector:sel]) {
 
-    [invocation invokeWithTarget:obj];
-  } else {
+    [<span class="hljs-meta">invocation invokeWithTarget:obj</span>];
+  } <span class="hljs-keyword">else</span> {
 
-    [super forwardInvocation:invocation];;
+    [<span class="hljs-meta">super forwardInvocation:invocation</span>];;
   }
 }
 </code></pre>
@@ -280,62 +280,62 @@ void add_method(id self, SEL _cmd) {}
 <h4 id="实现多继承特性" tabindex="-1">实现“多继承”特性</h4>
 <p>在消息的转发的第三步的寻找备援接收者中，对象调用未实现的方法，在 forwardingTargetForSelector: 中返回备用接受者去调用该方法，在表面就像是对象自己调用的，这就像子类调用自己未实现而父类实现了的方法。</p>
 <p>即使我们利用转发消息来实现了“假”继承，但是NSObject类还是会将两者区分开。像respondsToSelector:和 isKindOfClass:这类方法只会考虑继承体系，不会考虑转发链。</p>
-<pre><code class="language-Objective-C">BOOL result1 = [objc respondsToSelector:@selector(method)];
-BOOL result2 = [otherObj respondsToSelector:@selector(method)];
+<pre class="hljs codehilite language-Objective-C"><code>BOOL result1 = [objc respondsToSelector:@<span class="hljs-keyword">selector</span>(<span class="hljs-keyword">method</span>)];
+BOOL result2 = [otherObj respondsToSelector:@<span class="hljs-keyword">selector</span>(<span class="hljs-keyword">method</span>)];
 </code></pre>
 <p>result1 为NO, result2 为 YES，因为objc中没有该方法的实现，也并不是 objc 调用的，而是备援接收者 otherObj。</p>
 <p>因此如果非要制造假象，反应出这种“假”的继承关系，那么需要重新实现 respondsToSelector:和 isKindOfClass:。</p>
-<pre><code class="language-Objective-C">- (BOOL)respondsToSelector:(SEL)selector
+<pre class="hljs codehilite language-Objective-C"><code>- (<span class="hljs-type">BOOL</span>)respondsToSelector:(SEL)selector
 {
-  if ([super respondsToSelector:selector]) {
+  <span class="hljs-keyword">if</span> ([<span class="hljs-variable language_">super</span> respondsToSelector:selector]) {
 
-    return YES;
-  } else {
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">YES</span>;
+  } <span class="hljs-keyword">else</span> {
 
-    // 在此将判断对象变成假继承来源对象
-    if ([otherObj respondsToSelector:selector]) {
+    <span class="hljs-comment">// 在此将判断对象变成假继承来源对象</span>
+    <span class="hljs-keyword">if</span> ([otherObj respondsToSelector:selector]) {
 
-      return YES;
+      <span class="hljs-keyword">return</span> <span class="hljs-literal">YES</span>;
     }
   }
-  return NO;
+  <span class="hljs-keyword">return</span> <span class="hljs-literal">NO</span>;
 }
 
 </code></pre>
 <p>除了respondsToSelector:和 isKindOfClass:之外，instancesRespondToSelector: 中也应该写一份转发算法。如果使用了协议，conformsToProtocol: 也一样需要重写。类似地，如果一个对象转发它接受的任何远程消息，它得给出一个 methodSignatureForSelector: 来返回准确的方法描述，这个方法会最终响应被转发的消息。比如一个对象能给它的替代者对象转发消息，它需要像下面这样实现 methodSignatureForSelector:</p>
-<pre><code class="language-Objective-C">- (NSMethodSignature*)methodSignatureForSelector:(SEL)selector
+<pre class="hljs codehilite language-Objective-C"><code>- (<span class="hljs-built_in">NSMethodSignature</span>*)methodSignatureForSelector:(SEL)selector
 {
-  NSMethodSignature* signature = [super methodSignatureForSelector:selector];
-  if (!signature) {
+  <span class="hljs-built_in">NSMethodSignature</span>* signature = [<span class="hljs-variable language_">super</span> methodSignatureForSelector:selector];
+  <span class="hljs-keyword">if</span> (!signature) {
 
     signature = [otherObj methodSignatureForSelector:selector];
   }
 
-  return signature;
+  <span class="hljs-keyword">return</span> signature;
 }
 </code></pre>
 <p>需要引起注意的一点，实现methodSignatureForSelector方法是一种先进的技术，只适用于没有其他解决方案的情况下。它不会作为继承的替代。如果必须使用这种技术，请确保完全理解类做的转发和转发的类的行为。请勿滥用！</p>
 <h4 id="method-swizzling-方法交换" tabindex="-1">Method Swizzling 方法交换</h4>
 <p>Method Swizzing是发生在运行时的，用于在运行时将两个Method的 IMP 和 SEL 进行交换，可以通过这一特性来实现 AOP 编程。方法交换实现如下：</p>
-<pre><code class="language-Objective-C">#import &lt;objc/runtime.h&gt;
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-comment">#import &lt;objc/runtime.h&gt;</span>
 
 + (void)load {
   static dispatch_once_t onceToken;
   dispatch_once(&amp;onceToken, ^{
-    Class class = [self class];
-    SEL originalSelector = @selector(viewWillAppear:);
-    SEL swizzledSelector = @selector(xxx_viewWillAppear:);
+    Class <span class="hljs-class"><span class="hljs-keyword">class</span> = [<span class="hljs-title">self</span> <span class="hljs-title">class</span>]</span>;
+    SEL originalSelector = <span class="hljs-variable">@selector</span>(viewWillAppear:);
+    SEL swizzledSelector = <span class="hljs-variable">@selector</span>(xxx_viewWillAppear:);
 
-    Method originalMethod = class_getInstanceMethod(class,originalSelector);
-    Method swizzledMethod = class_getInstanceMethod(class,swizzledSelector);
+    Method originalMethod = class_getInstanceMethod(<span class="hljs-class"><span class="hljs-keyword">class</span>,<span class="hljs-title">originalSelector</span>)</span>;
+    Method swizzledMethod = class_getInstanceMethod(<span class="hljs-class"><span class="hljs-keyword">class</span>,<span class="hljs-title">swizzledSelector</span>)</span>;
 
-    //judge the method named  swizzledMethod is already existed.
-    BOOL didAddMethod = class_addMethod(class, originalSelector, method_getImplementation(swizzledMethod), method_getTypeEncoding(swizzledMethod));
+    //judge the <span class="hljs-function"><span class="hljs-keyword">method</span> <span class="hljs-title">named</span>  <span class="hljs-title">swizzledMethod</span> <span class="hljs-title">is</span> <span class="hljs-title">already</span> <span class="hljs-title">existed</span>.
+    <span class="hljs-title">BOOL</span> <span class="hljs-title">didAddMethod</span> = <span class="hljs-title">class_addMethod</span></span>(<span class="hljs-keyword">class</span>, originalSelector, method_getImplementation(swizzledMethod), method_getTypeEncoding(swizzledMethod));
 
-    // if swizzledMethod is already existed.
-    if (didAddMethod) {
-      class_replaceMethod(class, swizzledSelector, method_getImplementation(originalMethod), method_getTypeEncoding(originalMethod));
-    } else {
+    // <span class="hljs-keyword">if</span> swizzledMethod is already existed.
+    <span class="hljs-keyword">if</span> (didAddMethod) {
+      class_replaceMethod(<span class="hljs-class"><span class="hljs-keyword">class</span>, <span class="hljs-title">swizzledSelector</span>, <span class="hljs-title">method_getImplementation</span>(<span class="hljs-title">originalMethod</span>), <span class="hljs-title">method_getTypeEncoding</span>(<span class="hljs-title">originalMethod</span>))</span>;
+    } <span class="hljs-keyword">else</span> {
       method_exchangeImplementations(originalMethod, swizzledMethod);
     }
   });
@@ -362,74 +362,74 @@ objc_msgSend 找不到指定的IMP，再进行 -class_resolveMethod，这里也�
 <p>KVO 是通过一种叫做is a-swizzling的技术实现的，isa指针指向维护分派表的对象的类。这个分派表实质上包含指向类实现的方法的指针以及其他数据。当一个观察者为一个对象的属性注册时，观察对象的 isa 指针被修改，指向一个中间类而不是真正的类。因此，isa指针的值不一定反映实例的实际类，不应该依赖isa指针来确定类成员。相反，应该使用类方法来确定对象实例的类。</p>
 </blockquote>
 <p>在属性值发生变化的时候，肯定会调用其 setter 方法。因此，KVO的本质就是监听对象有没有调用被监听属性对应的 setter 方法。具体方法应是需要重写 setter 方法，如何重写的？实验如下：</p>
-<pre><code class="language-Objective-C">A *a = [[A alloc]init];
-[a addObserver:self forKeyPath:@&quot;name&quot; options:NSKeyValueObservingOptionNew context:nil];
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-type">A</span> <span class="hljs-operator">*</span>a <span class="hljs-operator">=</span> [[<span class="hljs-type">A</span> alloc]<span class="hljs-keyword">init</span>];
+[a addObserver:<span class="hljs-keyword">self</span> forKeyPath:@<span class="hljs-string">&quot;name&quot;</span> options:<span class="hljs-type">NSKeyValueObservingOptionNew</span> context:<span class="hljs-literal">nil</span>];
 </code></pre>
 <p>打印观察isa指针的指向</p>
-<pre><code class="language-Objective-C">// a 注册 KVO 监听前
-NSLog(@&quot;Printing description of a-&gt;isa = %@&quot;,ClassMethodNames(object_getClass(a)));
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-comment">// a 注册 KVO 监听前</span>
+<span class="hljs-selector-tag">NSLog</span>(@<span class="hljs-string">&quot;Printing description of a-&gt;isa = %@&quot;</span>,<span class="hljs-built_in">ClassMethodNames</span>(<span class="hljs-built_in">object_getClass</span>(a)));
 
-Printing description of a-&gt;isa:
-A
+<span class="hljs-selector-tag">Printing</span> <span class="hljs-selector-tag">description</span> <span class="hljs-selector-tag">of</span> <span class="hljs-selector-tag">a</span><span class="hljs-selector-tag">-</span>&gt;<span class="hljs-selector-tag">isa</span>:
+<span class="hljs-selector-tag">A</span>
 
-// a 注册 KVO 监听后
-NSLog(@&quot;Printing description of a-&gt;isa = %@&quot;,ClassMethodNames(object_getClass(a)));
+<span class="hljs-comment">// a 注册 KVO 监听后</span>
+<span class="hljs-selector-tag">NSLog</span>(@<span class="hljs-string">&quot;Printing description of a-&gt;isa = %@&quot;</span>,<span class="hljs-built_in">ClassMethodNames</span>(<span class="hljs-built_in">object_getClass</span>(a)));
 
-Printing description of a-&gt;isa:
-NSKVONotifying_A
+<span class="hljs-selector-tag">Printing</span> <span class="hljs-selector-tag">description</span> <span class="hljs-selector-tag">of</span> <span class="hljs-selector-tag">a</span><span class="hljs-selector-tag">-</span>&gt;<span class="hljs-selector-tag">isa</span>:
+<span class="hljs-selector-tag">NSKVONotifying_A</span>
 </code></pre>
 <p>在这个过程，被观察对象的 isa 指针从指向原来的 A 类，被KVO 机制修改为指向系统新创建的子类 NSKVONotifying_A 类，来实现当前类属性值改变的监听；
 所以当我们从应用层面上看来，完全没有意识到有新的类出现，这是系统“隐瞒”了对 KVO 的底层实现过程，让我们误以为还是原来的类。但是此时如果我们创建一个新的名为“ NSKVONotifying_A ”的类，就会发现系统运行到注册 KVO 的那段代码时程序就会报 “ KVO failed to allocate class pair for name NSKVONotifying_A, automatic key-value observing will not work for this class ”，因为系统在注册监听的时候会动态创建了名为 NSKVONotifying_A 的中间类，并把 isa 指针指向这个中间类，但是由于我们创建一个NSKVONotifying_A 类，导致系统在注册监听的时候无法再创建一个NSKVONotifying_A 。</p>
 <p>在新的类中会重写对应的 setter 方法，是为了在 setter方法中增加另外两个方法的调用，回调值的更改状态。</p>
-<pre><code class="language-Objective-C">- (void)willChangeValueForKey:(NSString *)key;
-- (void)didChangeValueForKey:(NSString *)key;
+<pre class="hljs codehilite language-Objective-C"><code>- <span class="hljs-params">(void)</span>willChangeValueForKey:<span class="hljs-params">(NSString *)</span>key;
+- <span class="hljs-params">(void)</span>didChangeValueForKey:<span class="hljs-params">(NSString *)</span>key;
 //
-// 值改变回调方法，-didChangeValueForKey:(NSString *)key 中调用
-- (void)observeValueForKeyPath:(NSString *)keyPath
-ofObject:(id)object
-change:(NSDictionary *)change
-context:(void *)context;
+// 值改变回调方法，-didChangeValueForKey:<span class="hljs-params">(NSString *)</span>key 中调用
+- <span class="hljs-params">(void)</span>observeValueForKeyPath:<span class="hljs-params">(NSString *)</span>keyPath
+ofObject:<span class="hljs-params">(id)</span>object
+change:<span class="hljs-params">(NSDictionary *)</span>change
+context:<span class="hljs-params">(void *)</span>context;
 
 </code></pre>
 <p>如果访问属性用的是 KVC，那么 runtime 会在 -setValue:forKey 中调用 -will/didChangeValueForKey: 方法。</p>
 <h4 id="associated-object-关联对象" tabindex="-1">Associated Object 关联对象</h4>
 <p>有时需要在对象中存放相关信息(增加属性)时，我们会从对象所属的类中继承一个子类，然后改用该子类。除此外我们可以使用“关联对象”将对象关联其他对象，对象通过 “键” 来区分，存储对象值时，可以指明“存储策略”维护“内存管理语义”。</p>
-<pre><code class="language-Objective-C">OBJC_ASSOCIATION_ASSIGH   =&gt;  assign
-OBJC_ASSOCIATION_RETAIN_NONATOMIC  =&gt; nonatomic,retain
-OBJC_ASSOCIATION_COPY_NONATOMIC  =&gt; nonatomic,copy
-OBJC_ASSOCIATION_RETAIN  =&gt; retain
-OBJC_ASSOCIATION_COPY  =&gt; copy
+<pre class="hljs codehilite language-Objective-C"><code>OBJC_ASSOCIATION_ASSIGH   =&gt;  <span class="hljs-type">assign</span>
+<span class="hljs-variable">OBJC_ASSOCIATION_RETAIN_NONATOMIC</span>  <span class="hljs-operator">=</span>&gt; nonatomic,<span class="hljs-type">retain</span>
+<span class="hljs-variable">OBJC_ASSOCIATION_COPY_NONATOMIC</span>  <span class="hljs-operator">=</span>&gt; nonatomic,<span class="hljs-type">copy</span>
+<span class="hljs-variable">OBJC_ASSOCIATION_RETAIN</span>  <span class="hljs-operator">=</span>&gt; <span class="hljs-type">retain</span>
+<span class="hljs-variable">OBJC_ASSOCIATION_COPY</span>  <span class="hljs-operator">=</span>&gt; copy
 
-// 关联对象方法
-void objc_setAssociatedObject (id object, void*key, id value, objc_AssociationPolicy policy)
+<span class="hljs-comment">// 关联对象方法</span>
+<span class="hljs-keyword">void</span> <span class="hljs-title function_">objc_setAssociatedObject</span> <span class="hljs-params">(id object, <span class="hljs-keyword">void</span>*key, id value, objc_AssociationPolicy policy)</span>
 
-// 根据key获取关联对象值
-id objc_getAssociatedObject(id object, void*key)
+<span class="hljs-comment">// 根据key获取关联对象值</span>
+id <span class="hljs-title function_">objc_getAssociatedObject</span><span class="hljs-params">(id object, <span class="hljs-keyword">void</span>*key)</span>
 
-// 移除对象的全部关联对象
-void objc_removeAssociatedObjects(id object)
+<span class="hljs-comment">// 移除对象的全部关联对象</span>
+<span class="hljs-keyword">void</span> <span class="hljs-title function_">objc_removeAssociatedObjects</span><span class="hljs-params">(id object)</span>
 </code></pre>
 <p>这种方法可以为已有类增加属性</p>
-<pre><code class="language-Objective-C">#import &quot;objc/runtime.h&quot;
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-meta">#import <span class="hljs-string">&quot;objc/runtime.h&quot;</span></span>
 
-@interface NSObject (AssociatedObject)
-@property (nonatomic, strong) id associatedObject;
+<span class="hljs-class"><span class="hljs-keyword">@interface</span> <span class="hljs-title">NSObject</span> (<span class="hljs-title">AssociatedObject</span>)</span>
+<span class="hljs-keyword">@property</span> (<span class="hljs-keyword">nonatomic</span>, <span class="hljs-keyword">strong</span>) <span class="hljs-type">id</span> associatedObject;
 
-@end
+<span class="hljs-keyword">@end</span>
 
-@implementation NSObject (AssociatedObject)
-@dynamic associatedObject;
+<span class="hljs-class"><span class="hljs-keyword">@implementation</span> <span class="hljs-title">NSObject</span> (<span class="hljs-title">AssociatedObject</span>)</span>
+<span class="hljs-keyword">@dynamic</span> associatedObject;
 
-- (void)setAssociatedObject:(id)object {
-  objc_setAssociatedObject(self, @selector(associatedObject), object, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+- (<span class="hljs-type">void</span>)setAssociatedObject:(<span class="hljs-type">id</span>)object {
+  objc_setAssociatedObject(<span class="hljs-keyword">self</span>, <span class="hljs-keyword">@selector</span>(associatedObject), object, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (id)associatedObject {
-  return objc_getAssociatedObject(self, @selector(associatedObject));
+- (<span class="hljs-type">id</span>)associatedObject {
+  <span class="hljs-keyword">return</span> objc_getAssociatedObject(<span class="hljs-keyword">self</span>, <span class="hljs-keyword">@selector</span>(associatedObject));
 }
 </code></pre>
 <h4 id="class_addmethod-动态增加方法" tabindex="-1">class_addMethod 动态增加方法</h4>
-<pre><code class="language-Objective-C">class_addMethod(Class cls, SEL name, IMP imp, const char *types) 
+<pre class="hljs codehilite language-Objective-C"><code>class_addMethod(<span class="hljs-keyword">Class</span> cls, SEL <span class="hljs-type">name</span>, IMP imp, const <span class="hljs-type">char</span> *<span class="hljs-keyword">types</span>) 
 </code></pre>
 <ul>
 <li>cls 对象</li>
@@ -439,99 +439,99 @@ void objc_removeAssociatedObjects(id object)
 </ul>
 <h4 id="nscoding-自动归档和自动解档" tabindex="-1">NSCoding 自动归档和自动解档</h4>
 <p>当类的属性多起来时，手写对应属性的归档和解档代码就多起来了，并且都是一样的代码。可以用 runtime 去获取类的所有成员属性，遍历属性，利用 KVC 去完成归档和解档。</p>
-<pre><code class="language-Objective-C">#import &lt;objc/message.h&gt;
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-meta">#import <span class="hljs-string">&lt;objc/message.h&gt;</span></span>
 
-- (void)encodeWithCoder:(NSCoder *)aCoder {
+- (<span class="hljs-type">void</span>)encodeWithCoder:(<span class="hljs-built_in">NSCoder</span> *)aCoder {
 
-  unsigned int outCount = 0;
-  Ivar *vars = class_copyIvarList([self class], &amp;outCount);
+  <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> outCount = <span class="hljs-number">0</span>;
+  Ivar *vars = class_copyIvarList([<span class="hljs-keyword">self</span> <span class="hljs-keyword">class</span>], &amp;outCount);
 
-  for (int i = 0; i &lt; outCount; i ++) {
+  <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; outCount; i ++) {
 
     Ivar var = vars[i];
-    const char *name = ivar_getName(var);
-    NSString *key = [NSString stringWithUTF8String:name]
-    id value = [self valueForKey:key];
+    <span class="hljs-keyword">const</span> <span class="hljs-type">char</span> *name = ivar_getName(var);
+    <span class="hljs-built_in">NSString</span> *key = [<span class="hljs-built_in">NSString</span> stringWithUTF8String:name]
+    <span class="hljs-type">id</span> value = [<span class="hljs-keyword">self</span> valueForKey:key];
     [aCoder encodeObject:value forKey:key];
   }
 }
 
-- (id)initWithCoder:(NSCoder *)aDecoder {
+- (<span class="hljs-type">id</span>)initWithCoder:(<span class="hljs-built_in">NSCoder</span> *)aDecoder {
 
-  if (self = [super init]) {
+  <span class="hljs-keyword">if</span> (<span class="hljs-keyword">self</span> = [<span class="hljs-variable language_">super</span> init]) {
 
-    unsigned int outCount = 0;
-    Ivar *vars = class_copyIvarList([self class], &amp;outCount);
+    <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> outCount = <span class="hljs-number">0</span>;
+    Ivar *vars = class_copyIvarList([<span class="hljs-keyword">self</span> <span class="hljs-keyword">class</span>], &amp;outCount);
 
-    for (int i = 0; i &lt; outCount; i ++) {
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; outCount; i ++) {
 
       Ivar var = vars[i];
-      const char *name = ivar_getName(var);
-      NSString *key = [NSString stringWithUTF8String:name];
-      id value = [aDecoder decodeObjectForKey:key];
-      [self setValue:value forKey:key];
+      <span class="hljs-keyword">const</span> <span class="hljs-type">char</span> *name = ivar_getName(var);
+      <span class="hljs-built_in">NSString</span> *key = [<span class="hljs-built_in">NSString</span> stringWithUTF8String:name];
+      <span class="hljs-type">id</span> value = [aDecoder decodeObjectForKey:key];
+      [<span class="hljs-keyword">self</span> setValue:value forKey:key];
     }
   }
-  return self;
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">self</span>;
 }
 </code></pre>
 <h4 id="字典和模型互相转换" tabindex="-1">字典和模型互相转换</h4>
 <h5 id="字典转模型" tabindex="-1">字典转模型</h5>
-<pre><code class="language-Objective-C">- (void)objectWithDictionary:(NSDictionary *)dictionary {
+<pre class="hljs codehilite language-Objective-C"><code>- (<span class="hljs-type">void</span>)objectWithDictionary:(<span class="hljs-built_in">NSDictionary</span> *)dictionary {
 
-  for (NSString *key in dictionary.allKeys) {
-    // 1. 根据key 从 dictionary中获取值
-    id value = dictionary[key];
-    // 2. 根据 key 从模型中获取属性
-    objc_property_t property = class_getProperty([self class], key.UTF8String);
-    // 3. 获取属性的类型，用于处理二级嵌套，此处未处理。
-    unsigned int outCount = 0;
+  <span class="hljs-keyword">for</span> (<span class="hljs-built_in">NSString</span> *key <span class="hljs-keyword">in</span> dictionary.allKeys) {
+    <span class="hljs-comment">// 1. 根据key 从 dictionary中获取值</span>
+    <span class="hljs-type">id</span> value = dictionary[key];
+    <span class="hljs-comment">// 2. 根据 key 从模型中获取属性</span>
+    objc_property_t property = class_getProperty([<span class="hljs-keyword">self</span> <span class="hljs-keyword">class</span>], key.UTF8String);
+    <span class="hljs-comment">// 3. 获取属性的类型，用于处理二级嵌套，此处未处理。</span>
+    <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> outCount = <span class="hljs-number">0</span>;
     objc_property_attribute_t *attributeList = property_copyAttributeList(property, &amp;outCount);
-    objc_property_attribute_t attribute = attributeList[0];
-    NSString *typeString = [NSString stringWithUTF8String:attribute.value];
+    objc_property_attribute_t attribute = attributeList[<span class="hljs-number">0</span>];
+    <span class="hljs-built_in">NSString</span> *typeString = [<span class="hljs-built_in">NSString</span> stringWithUTF8String:attribute.value];
 
-    // 4. 生成 setter 方法，使用 objc_msgSend 调用生成的 setter 方法，或者用 KVC，设置属性的值
-    NSString *methodName = [NSString stringWithFormat:@&quot;set%@%@:&quot;,[key substringToIndex:1].uppercaseString,[key substringFromIndex:1]];
-    SEL setter = sel_registerName(methodName.UTF8String);
-    if ([self respondsToSelector:setter]) {
-      ((void (*) (id,SEL,id)) objc_msgSend) (self,setter,value);
+    <span class="hljs-comment">// 4. 生成 setter 方法，使用 objc_msgSend 调用生成的 setter 方法，或者用 KVC，设置属性的值</span>
+    <span class="hljs-built_in">NSString</span> *methodName = [<span class="hljs-built_in">NSString</span> stringWithFormat:<span class="hljs-string">@&quot;set%@%@:&quot;</span>,[key substringToIndex:<span class="hljs-number">1</span>].uppercaseString,[key substringFromIndex:<span class="hljs-number">1</span>]];
+    SEL <span class="hljs-keyword">setter</span> = sel_registerName(methodName.UTF8String);
+    <span class="hljs-keyword">if</span> ([<span class="hljs-keyword">self</span> respondsToSelector:<span class="hljs-keyword">setter</span>]) {
+      ((<span class="hljs-type">void</span> (*) (<span class="hljs-type">id</span>,SEL,<span class="hljs-type">id</span>)) objc_msgSend) (<span class="hljs-keyword">self</span>,<span class="hljs-keyword">setter</span>,value);
     }
     free(attributeList);
   }
 }
 </code></pre>
 <h5 id="模型转字典" tabindex="-1">模型转字典</h5>
-<pre><code class="language-Objective-C">- (NSDictionary *)keyValuesWithObject {
-  // 1. 获取属性列表
-  unsigned int outCount = 0;
-  objc_property_t *propertyList = class_copyPropertyList([self class], &amp;outCount);
-  NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-  // 2. 遍历属性列表
-  for (int i = 0; i &lt; outCount; i ++) {
+<pre class="hljs codehilite language-Objective-C"><code>- (<span class="hljs-built_in">NSDictionary</span> *)keyValuesWithObject {
+  <span class="hljs-comment">// 1. 获取属性列表</span>
+  <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> outCount = <span class="hljs-number">0</span>;
+  objc_property_t *propertyList = class_copyPropertyList([<span class="hljs-keyword">self</span> <span class="hljs-keyword">class</span>], &amp;outCount);
+  <span class="hljs-built_in">NSMutableDictionary</span> *dict = [<span class="hljs-built_in">NSMutableDictionary</span> dictionary];
+  <span class="hljs-comment">// 2. 遍历属性列表</span>
+  <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; outCount; i ++) {
 
-    // 3. 生成getter方法，并用objc_msgSend调用
+    <span class="hljs-comment">// 3. 生成getter方法，并用objc_msgSend调用</span>
     objc_property_t property = propertyList[i];
-    const char *propertyName = property_getName(property);
-    SEL getter = sel_registerName(propertyName);
+    <span class="hljs-keyword">const</span> <span class="hljs-type">char</span> *propertyName = property_getName(property);
+    SEL <span class="hljs-keyword">getter</span> = sel_registerName(propertyName);
 
-    if ([self respondsToSelector:getter]) {
-     id value = ((id (*) (id,SEL)) objc_msgSend) (self,getter);
+    <span class="hljs-keyword">if</span> ([<span class="hljs-keyword">self</span> respondsToSelector:<span class="hljs-keyword">getter</span>]) {
+     <span class="hljs-type">id</span> value = ((<span class="hljs-type">id</span> (*) (<span class="hljs-type">id</span>,SEL)) objc_msgSend) (<span class="hljs-keyword">self</span>,<span class="hljs-keyword">getter</span>);
 
-     // 4. 判断当前属性是不是Model
-     if ([value isKindOfClass:[self class]] &amp;&amp; value) {
+     <span class="hljs-comment">// 4. 判断当前属性是不是Model</span>
+     <span class="hljs-keyword">if</span> ([value isKindOfClass:[<span class="hljs-keyword">self</span> <span class="hljs-keyword">class</span>]] &amp;&amp; value) {
         value = [value keyValuesWithObject];
      }
 
-     // 5. 存入字典中，可以使用 objc_msgSend 调用生成的 getter 方法，或者用 KVC
-     if (value) {
+     <span class="hljs-comment">// 5. 存入字典中，可以使用 objc_msgSend 调用生成的 getter 方法，或者用 KVC</span>
+     <span class="hljs-keyword">if</span> (value) {
 
-        NSString *key = [NSString stringWithUTF8String:propertyName];
+        <span class="hljs-built_in">NSString</span> *key = [<span class="hljs-built_in">NSString</span> stringWithUTF8String:propertyName];
         [dict setObject:value forKey:key];
      }
    }
   }
   free(propertyList);
-  return dict;
+  <span class="hljs-keyword">return</span> dict;
 }
 </code></pre>
 <h3 id="总结" tabindex="-1">总结</h3>

@@ -70,32 +70,32 @@
 <ol>
 <li>客户端：</li>
 </ol>
-<pre><code>- 发送支持的 SSL/TLS 协议版本
-- 发送客户端生成的随机数c，后面参与“对话密钥”的生成
-- 发送支持的加密算法
-- 发送支持的压缩算法
+<pre class="hljs codehilite"><code><span class="hljs-bullet">- </span>发送支持的 SSL/TLS 协议版本
+<span class="hljs-bullet">- </span>发送客户端生成的随机数c，后面参与“对话密钥”的生成
+<span class="hljs-bullet">- </span>发送支持的加密算法
+<span class="hljs-bullet">- </span>发送支持的压缩算法
 </code></pre>
 <ol start="2">
 <li>服务端：</li>
 </ol>
-<pre><code>- 确认使用的 SSL/TLS 协议版本，如果版本不一致则关闭加密通信
-- 发送服务端生成随机数s，后面参与“对话密钥”的生成
-- 发送确认使用的加密算法
-- 发送确认压缩算法
-- 发送服务器证书
+<pre class="hljs codehilite"><code><span class="hljs-bullet">- </span>确认使用的 SSL/TLS 协议版本，如果版本不一致则关闭加密通信
+<span class="hljs-bullet">- </span>发送服务端生成随机数s，后面参与“对话密钥”的生成
+<span class="hljs-bullet">- </span>发送确认使用的加密算法
+<span class="hljs-bullet">- </span>发送确认压缩算法
+<span class="hljs-bullet">- </span>发送服务器证书
 </code></pre>
 <ol start="3">
 <li>客户端：</li>
 </ol>
-<pre><code>- 验证证书的合法性，不合法则关闭加密通信
-- 生成随机数 pre-master key，用服务器证书公钥进行加密后发送给服务端
-- 编码改变通知，确认随后的信息都将用双方商定的加密方法和密钥发送
-- 客户端握手结束通知，表示客户端的握手阶段已经结束。将前面发送的所有内容计算hash值，用来供服务器校验。
+<pre class="hljs codehilite"><code><span class="hljs-bullet">- </span>验证证书的合法性，不合法则关闭加密通信
+<span class="hljs-bullet">- </span>生成随机数 pre-master key，用服务器证书公钥进行加密后发送给服务端
+<span class="hljs-bullet">- </span>编码改变通知，确认随后的信息都将用双方商定的加密方法和密钥发送
+<span class="hljs-bullet">- </span>客户端握手结束通知，表示客户端的握手阶段已经结束。将前面发送的所有内容计算hash值，用来供服务器校验。
 </code></pre>
 <ol start="4">
 <li>服务端：</li>
 </ol>
-<pre><code>- 用私钥解密出 pre-master key，用随机数c、随机数s、pre-master key 采用商定的算法生成一个对称密钥
+<pre class="hljs codehilite"><code>- 用私钥解密出 pre-<span class="hljs-keyword">master</span> <span class="hljs-title">key</span>，用随机数c、随机数s、pre-<span class="hljs-keyword">master</span> <span class="hljs-title">key</span> 采用商定的算法生成一个对称密钥
 - 编码改变通知，确认随后的信息都将用双方商定的加密方法和密钥发送
 - 服务器握手结束通知，表示服务器的握手阶段已经结束。将前面发送的所有内容计算hash值，用来供客户端校验。
 </code></pre>

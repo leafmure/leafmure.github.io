@@ -4,27 +4,27 @@
 <h3 id="cbr" tabindex="-1">CBR</h3>
 <p>CBR代表恒定比特率（Constant Bit Rate）, 其中音频数据以恒定的比特率进行传输或存储. 在CBR编码中, 每秒传输的比特数保持不变, 这意味着无论音频内容复杂度如何, 文件大小也会保持一致. CBR 的音频每一帧的大小和时长都保持一致, 对于 CBR 的 Seek Time 实现也就比较容易.</p>
 <p>由于 CBR 音频每帧大小一致, 我们可以近似的算出时间点对应的字节位置:</p>
-<pre><code class="language-Objective-C">/// dataOffset  kAudioFileStreamProperty_DataOffset
-/// audioDataByteCount  kAudioFileStreamProperty_AudioDataByteCount
-NSTimeInterval estimatedDuration = (audioDataByteCount * 8.0) / bitRate * 1000
-NSUInteger byteSeekOffset = dataOffset + seekTime / (estimatedDuration / 1000.0) * audioDataByteCount;
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-operator">//</span><span class="hljs-symbol">/</span> dataOffset  kAudioFileStreamProperty_DataOffset
+<span class="hljs-operator">//</span><span class="hljs-symbol">/</span> audioDataByteCount  kAudioFileStreamProperty_AudioDataByteCount
+NSTimeInterval estimatedDuration <span class="hljs-operator">=</span> (audioDataByteCount <span class="hljs-operator">*</span> <span class="hljs-number">8.0</span>) <span class="hljs-symbol">/</span> bitRate <span class="hljs-operator">*</span> <span class="hljs-number">1000</span>
+NSUInteger byteSeekOffset <span class="hljs-operator">=</span> dataOffset <span class="hljs-operator">+</span> seekTime <span class="hljs-symbol">/</span> (estimatedDuration <span class="hljs-symbol">/</span> <span class="hljs-number">1000.0</span>) <span class="hljs-operator">*</span> audioDataByteCount;
 </code></pre>
 <p>通过 seekTime / packetDuration 可以获取是第几个音频帧, 然后通过 <strong>AudioFileStreamSeek</strong> 方法可以获取音频帧所在的字节位置.</p>
-<pre><code class="language-Objective-C">NSTimeInterval packetDuration = fileFormat.mFramesPerPacket / fileFormat.mSampleRate;
-SInt64 seekToPacket = floor(seekTime / packetDuration);
-UInt32 ioFlags = 0;
-SInt64 outDataByteOffset;
-OSStatus status = AudioFileStreamSeek(_audioFileStreamID, seekToPacket, &amp;outDataByteOffset, &amp;ioFlags);
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-attribute">NSTimeInterval</span> packetDuration = fileFormat.mFramesPerPacket / fileFormat.mSampleRate;
+<span class="hljs-attribute">SInt64</span> seekToPacket = floor(seekTime / packetDuration);
+<span class="hljs-attribute">UInt32</span> ioFlags = <span class="hljs-number">0</span>;
+<span class="hljs-attribute">SInt64</span> outDataByteOffset;
+<span class="hljs-attribute">OSStatus</span> status = AudioFileStreamSeek(_audioFileStreamID, seekToPacket, &amp;outDataByteOffset, &amp;ioFlags);
 </code></pre>
 <p>如果 ioFlags 包含 <strong>kAudioFileStreamSeekFlag_OffsetIsEstimated</strong>, 说明获得的字节位置是不准确的, 因此我们直接使用 <strong>byteSeekOffset</strong>, 反之, 我们可以使用 <strong>AudioFileStreamSeek</strong> 获得的 <strong>outDataByteOffset</strong>, 同时, 我们需要修正一下 SeekTime.</p>
-<pre><code class="language-Objective-C">if (status == noErr &amp;&amp; !(ioFlags &amp; kAudioFileStreamSeekFlag_OffsetIsEstimated))
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-attribute">if</span> (status == <span class="hljs-literal">no</span>Err &amp;&amp; !(ioFlags &amp; kAudioFileStreamSeekFlag_OffsetIsEstimated))
 {
-    position = outDataByteOffset + dataOffset;
-    seekTime = packetDuration * seekToPacket;
+    <span class="hljs-attribute">position</span> = outDataByteOffset + dataOffset;
+    <span class="hljs-attribute">seekTime</span> = packetDuration * seekToPacket;
 }
-else
+<span class="hljs-section">else</span>
 {
-    position = byteSeekOffset;
+    <span class="hljs-attribute">position</span> = byteSeekOffset;
 }
 </code></pre>
 <h3 id="vbr" tabindex="-1">VBR</h3>
@@ -83,125 +83,125 @@ else
 </table>
 <h4 id="解析-xing" tabindex="-1">解析 Xing</h4>
 <p>首先, 我们可以通过 <strong>kAudioFileStreamProperty_DataOffset</strong> 拿到音频文件中内容起始位置, Xing 内容会在 DataOffset 位置前第一帧中, DataOffset 后紧接着就是下一帧, 所以通过 DataOffset + 2 可以获得音频帧头标识.</p>
-<pre><code class="language-Objective-C">NSInteger packetHeadTagLength = 2;
-NSData *data = [fileData subdataWithRange:NSMakeRange(0, dataOffset + packetHeadTagLength)];
-NSData *firstData = [data subdataWithRange:NSMakeRange(0, dataOffset)]
-NSData *packetHeadTag = [data subdataWithRange:NSMakeRange(dataOffset, packetHeadTagLength)]
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-type">NSInteger</span> packetHeadTagLength = <span class="hljs-number">2</span>;
+<span class="hljs-type">NSData</span> *<span class="hljs-class"><span class="hljs-keyword">data</span> = [fileData subdataWithRange:<span class="hljs-type">NSMakeRange</span>(0, <span class="hljs-title">dataOffset</span> + <span class="hljs-title">packetHeadTagLength</span>)];</span>
+<span class="hljs-type">NSData</span> *firstData = [<span class="hljs-class"><span class="hljs-keyword">data</span> subdataWithRange:<span class="hljs-type">NSMakeRange</span>(0, <span class="hljs-title">dataOffset</span>)]</span>
+<span class="hljs-type">NSData</span> *packetHeadTag = [<span class="hljs-class"><span class="hljs-keyword">data</span> subdataWithRange:<span class="hljs-type">NSMakeRange</span>(<span class="hljs-title">dataOffset</span>, <span class="hljs-title">packetHeadTagLength</span>)]</span>
 </code></pre>
 <p>然后, 通过音频帧头标识, 从 DataOffset 位置往前匹配帧头标识, 找到第一帧完整数据.</p>
-<pre><code class="language-Objective-C">[self foundFirstPacket:firstData packetHeadTag:packetHeadTag];
+<pre class="hljs codehilite language-Objective-C"><code>[<span class="hljs-keyword">self</span> foundFirstPacket:firstData packetHeadTag:packetHeadTag];
 
-+ (NSData *)foundFirstPacket:(NSData *)data packetHeadTag:(NSData *)packetHeadTag
++ (<span class="hljs-built_in">NSData</span> *)foundFirstPacket:(<span class="hljs-built_in">NSData</span> *)data packetHeadTag:(<span class="hljs-built_in">NSData</span> *)packetHeadTag
 {
-    if (data.length &lt;= packetHeadTag.length) return nil;
+    <span class="hljs-keyword">if</span> (data.length &lt;= packetHeadTag.length) <span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span>;
     
-    NSMutableArray *matchTag = [NSMutableArray array];
+    <span class="hljs-built_in">NSMutableArray</span> *matchTag = [<span class="hljs-built_in">NSMutableArray</span> array];
     uint8_t *packetHeadTagPtr = (uint8_t *)[packetHeadTag bytes];
-    for (NSInteger position = 0; position &lt; packetHeadTag.length; position++) {
-        NSInteger v = *(packetHeadTagPtr + position);
-        [matchTag insertObject:@(v) atIndex:0];
+    <span class="hljs-keyword">for</span> (<span class="hljs-built_in">NSInteger</span> position = <span class="hljs-number">0</span>; position &lt; packetHeadTag.length; position++) {
+        <span class="hljs-built_in">NSInteger</span> v = *(packetHeadTagPtr + position);
+        [matchTag insertObject:@(v) atIndex:<span class="hljs-number">0</span>];
     }
     
-    NSData *packetData = data;
+    <span class="hljs-built_in">NSData</span> *packetData = data;
     uint8_t *ptr = (uint8_t *)[packetData bytes];
-    NSInteger matchIndex = 0;
-    NSInteger matchPostion = 0;
-    for (NSInteger position = packetData.length - 1; position &gt;= 0; position--) {
-        NSInteger v = *(ptr + position);
-        if (matchIndex &lt; matchTag.count) {
-            if (v == [matchTag[matchIndex] integerValue])
+    <span class="hljs-built_in">NSInteger</span> matchIndex = <span class="hljs-number">0</span>;
+    <span class="hljs-built_in">NSInteger</span> matchPostion = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-built_in">NSInteger</span> position = packetData.length - <span class="hljs-number">1</span>; position &gt;= <span class="hljs-number">0</span>; position--) {
+        <span class="hljs-built_in">NSInteger</span> v = *(ptr + position);
+        <span class="hljs-keyword">if</span> (matchIndex &lt; matchTag.count) {
+            <span class="hljs-keyword">if</span> (v == [matchTag[matchIndex] integerValue])
             {
-                matchIndex += 1;
-            } else {
-                matchIndex = 0;
+                matchIndex += <span class="hljs-number">1</span>;
+            } <span class="hljs-keyword">else</span> {
+                matchIndex = <span class="hljs-number">0</span>;
             }
-        } else {
+        } <span class="hljs-keyword">else</span> {
             matchPostion = position;
-            break;
+            <span class="hljs-keyword">break</span>;
         }
     }
-    if (matchPostion == 0) {
-        return nil;
-    } else {
-        return [packetData subdataWithRange:NSMakeRange(matchPostion + 1, packetData.length - matchPostion - 1)];
+    <span class="hljs-keyword">if</span> (matchPostion == <span class="hljs-number">0</span>) {
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span>;
+    } <span class="hljs-keyword">else</span> {
+        <span class="hljs-keyword">return</span> [packetData subdataWithRange:<span class="hljs-built_in">NSMakeRange</span>(matchPostion + <span class="hljs-number">1</span>, packetData.length - matchPostion - <span class="hljs-number">1</span>)];
     }
 }
 </code></pre>
 <p>找到第一帧后, 我们可以开始去寻找 Xing 信息数据.</p>
-<pre><code class="language-Objective-C">NSData *firstPacketData = [self foundFirstPacket:firstData packetHeadTag:packetHeadTag];
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-built_in">NSData</span> *firstPacketData = [<span class="hljs-keyword">self</span> foundFirstPacket:firstData packetHeadTag:packetHeadTag];
 uint8_t *ptr = (uint8_t *)[firstPacketData bytes];
-NSInteger foundPosition = 4;
-for (NSInteger position = 4; position &lt; firstPacketData.length; position++) 
+<span class="hljs-built_in">NSInteger</span> foundPosition = <span class="hljs-number">4</span>;
+<span class="hljs-keyword">for</span> (<span class="hljs-built_in">NSInteger</span> position = <span class="hljs-number">4</span>; position &lt; firstPacketData.length; position++) 
 {
-    NSInteger v = *(ptr + position);
-    if (v == 0) {
-        foundPosition += 1;
-    } else {
-        break;
+    <span class="hljs-built_in">NSInteger</span> v = *(ptr + position);
+    <span class="hljs-keyword">if</span> (v == <span class="hljs-number">0</span>) {
+        foundPosition += <span class="hljs-number">1</span>;
+    } <span class="hljs-keyword">else</span> {
+        <span class="hljs-keyword">break</span>;
     }
 }
-NSData *xingOrInfoData = [firstPacketData subdataWithRange:NSMakeRange(foundPosition, firstPacketData.length - foundPosition)];
+<span class="hljs-built_in">NSData</span> *xingOrInfoData = [firstPacketData subdataWithRange:<span class="hljs-built_in">NSMakeRange</span>(foundPosition, firstPacketData.length - foundPosition)];
 </code></pre>
 <p>找到 Xing 信息数据, 就可以开始按结构解析.</p>
-<pre><code class="language-Objective-C">NSData *tagData = [data subdataWithRange:NSMakeRange(0, 4)];
-NSString *vbrTag = [[NSString alloc] initWithData:tagData encoding:NSUTF8StringEncoding];
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-built_in">NSData</span> *tagData = [data subdataWithRange:<span class="hljs-built_in">NSMakeRange</span>(<span class="hljs-number">0</span>, <span class="hljs-number">4</span>)];
+<span class="hljs-built_in">NSString</span> *vbrTag = [[<span class="hljs-built_in">NSString</span> alloc] initWithData:tagData encoding:<span class="hljs-built_in">NSUTF8StringEncoding</span>];
 
-/// xing 解析
-if ([vbrTag.lowercaseString isEqualToString:@&quot;xing&quot;] || [vbrTag.lowercaseString isEqualToString:@&quot;info&quot;]) {
-    NSData *xingTagData = [data subdataWithRange:NSMakeRange(tagData.length, data.length - tagData.length)];
+<span class="hljs-comment">/// xing 解析</span>
+<span class="hljs-keyword">if</span> ([vbrTag.lowercaseString isEqualToString:<span class="hljs-string">@&quot;xing&quot;</span>] || [vbrTag.lowercaseString isEqualToString:<span class="hljs-string">@&quot;info&quot;</span>]) {
+    <span class="hljs-built_in">NSData</span> *xingTagData = [data subdataWithRange:<span class="hljs-built_in">NSMakeRange</span>(tagData.length, data.length - tagData.length)];
 
-    NSData *validTagData = [xingTagData subdataWithRange:NSMakeRange(0, 4)];
-    NSInteger validTag = [self intValue:validTagData];
-    BOOL hasTotalFrameCountTag = NO, hasContentLengthTag = NO, hasTocTag = NO, hasQualityTag = NO;
-    if (validTag &amp; 1) {
-        hasTotalFrameCountTag = YES;
+    <span class="hljs-built_in">NSData</span> *validTagData = [xingTagData subdataWithRange:<span class="hljs-built_in">NSMakeRange</span>(<span class="hljs-number">0</span>, <span class="hljs-number">4</span>)];
+    <span class="hljs-built_in">NSInteger</span> validTag = [<span class="hljs-keyword">self</span> intValue:validTagData];
+    <span class="hljs-type">BOOL</span> hasTotalFrameCountTag = <span class="hljs-literal">NO</span>, hasContentLengthTag = <span class="hljs-literal">NO</span>, hasTocTag = <span class="hljs-literal">NO</span>, hasQualityTag = <span class="hljs-literal">NO</span>;
+    <span class="hljs-keyword">if</span> (validTag &amp; <span class="hljs-number">1</span>) {
+        hasTotalFrameCountTag = <span class="hljs-literal">YES</span>;
     }
     
-    if (validTag &amp; 2) {
-        hasContentLengthTag = YES;
+    <span class="hljs-keyword">if</span> (validTag &amp; <span class="hljs-number">2</span>) {
+        hasContentLengthTag = <span class="hljs-literal">YES</span>;
     }
     
-    if (validTag &amp; 4) {
-        hasTocTag = YES;
+    <span class="hljs-keyword">if</span> (validTag &amp; <span class="hljs-number">4</span>) {
+        hasTocTag = <span class="hljs-literal">YES</span>;
     }
     
-    if (validTag &amp; 8) {
-        hasQualityTag = YES;
+    <span class="hljs-keyword">if</span> (validTag &amp; <span class="hljs-number">8</span>) {
+        hasQualityTag = <span class="hljs-literal">YES</span>;
     }
     
-    NSInteger readOffset = 4;
-    if (hasTotalFrameCountTag) {
-        NSInteger totalFrameCount = [self intValue:[xingTagData subdataWithRange:NSMakeRange(readOffset, 4)]];
-        NSTimeInterval estimatedDuration = (Float64)totalFrameCount * fileFormat.mFramesPerPacket / fileFormat.mSampleRate * 1000;
-        readOffset += 4;
+    <span class="hljs-built_in">NSInteger</span> readOffset = <span class="hljs-number">4</span>;
+    <span class="hljs-keyword">if</span> (hasTotalFrameCountTag) {
+        <span class="hljs-built_in">NSInteger</span> totalFrameCount = [<span class="hljs-keyword">self</span> intValue:[xingTagData subdataWithRange:<span class="hljs-built_in">NSMakeRange</span>(readOffset, <span class="hljs-number">4</span>)]];
+        <span class="hljs-built_in">NSTimeInterval</span> estimatedDuration = (Float64)totalFrameCount * fileFormat.mFramesPerPacket / fileFormat.mSampleRate * <span class="hljs-number">1000</span>;
+        readOffset += <span class="hljs-number">4</span>;
     }
     
-    if (hasContentLengthTag) {
-        NSInteger contentLength = [self intValue:[xingTagData subdataWithRange:NSMakeRange(readOffset, 4)]];
-        readOffset += 4;
+    <span class="hljs-keyword">if</span> (hasContentLengthTag) {
+        <span class="hljs-built_in">NSInteger</span> contentLength = [<span class="hljs-keyword">self</span> intValue:[xingTagData subdataWithRange:<span class="hljs-built_in">NSMakeRange</span>(readOffset, <span class="hljs-number">4</span>)]];
+        readOffset += <span class="hljs-number">4</span>;
     }
     
-    if (hasTocTag) {
-        // 获取 TOC 数据
-        NSData *tocData = [xingTagData subdataWithRange:NSMakeRange(readOffset, 100)];
-        // 解析 TOC 数据
-        NSMutableArray *tocArray = [NSMutableArray array];
-        const unsigned char *tocBytes = tocData.bytes;
-        for (NSUInteger i = 0; i &lt; tocData.length; i++) {
-            unsigned char tocValue = tocBytes[i];
-            double percentage = (double)tocValue / 256.0;
+    <span class="hljs-keyword">if</span> (hasTocTag) {
+        <span class="hljs-comment">// 获取 TOC 数据</span>
+        <span class="hljs-built_in">NSData</span> *tocData = [xingTagData subdataWithRange:<span class="hljs-built_in">NSMakeRange</span>(readOffset, <span class="hljs-number">100</span>)];
+        <span class="hljs-comment">// 解析 TOC 数据</span>
+        <span class="hljs-built_in">NSMutableArray</span> *tocArray = [<span class="hljs-built_in">NSMutableArray</span> array];
+        <span class="hljs-keyword">const</span> <span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> *tocBytes = tocData.bytes;
+        <span class="hljs-keyword">for</span> (<span class="hljs-built_in">NSUInteger</span> i = <span class="hljs-number">0</span>; i &lt; tocData.length; i++) {
+            <span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> tocValue = tocBytes[i];
+            <span class="hljs-type">double</span> percentage = (<span class="hljs-type">double</span>)tocValue / <span class="hljs-number">256.0</span>;
             [tocArray addObject:@(percentage)];
         }
     }
 }
 </code></pre>
 <p>解析完后, 我们主要获得音频总帧数 totalFrameCount 和 TOC数据表, 用于计算音频总时长和实现 SeekTime 功能.</p>
-<pre><code class="language-Objective-C">NSTimeInterval seekTime;
+<pre class="hljs codehilite language-Objective-C"><code>NSTimeInterval seekTime;
 NSTimeInterval packetDuration = fileFormat.mFramesPerPacket / fileFormat.mSampleRate;
-NSTimeInterval estimatedDuration = (Float64)totalFrameCount * packetDuration * 1000;
-float percent = (time / (estimatedDuration / 1000.0)) * 100;
-int index = (int)percent;
-position = (NSUInteger)([vbrToc[index] floatValue] * fileSize) + dataOffset;
-seekTime = index * packetDuration;
+NSTimeInterval estimatedDuration = (Float64)totalFrameCount * packetDuration * <span class="hljs-number">1000</span>;
+<span class="hljs-built_in">float</span> percent = (time / (estimatedDuration / <span class="hljs-number">1000.0</span>)) * <span class="hljs-number">100</span>;
+<span class="hljs-built_in">int</span> <span class="hljs-built_in">index</span> = (<span class="hljs-built_in">int</span>)percent;
+<span class="hljs-keyword">position</span> = (NSUInteger)([vbrToc[<span class="hljs-built_in">index</span>] floatValue] * fileSize) + dataOffset;
+seekTime = <span class="hljs-built_in">index</span> * packetDuration;
 </code></pre>
 <p>得到字节位置 position 后, 就可以进行 Seek 操作了.</p>

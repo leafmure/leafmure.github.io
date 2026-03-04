@@ -4,53 +4,53 @@
 <h3 id="二swift-的访问控制修饰符" tabindex="-1">二、Swift 的访问控制修饰符</h3>
 <h4 id="21-private" tabindex="-1">2.1  private</h4>
 <p>private 修饰的信息，仅能在当前定义的作用域访问，让我们看一下，Swift 中常使用的 “单例”实现模式：</p>
-<pre><code class="language-swift">class Single {
-   static let instance = Single()
-   private init() {} 
+<pre class="hljs codehilite language-swift"><code><span class="hljs-keyword">class</span> <span class="hljs-title class_">Single</span> {
+   <span class="hljs-keyword">static</span> <span class="hljs-keyword">let</span> instance <span class="hljs-operator">=</span> <span class="hljs-type">Single</span>()
+   <span class="hljs-keyword">private</span> <span class="hljs-keyword">init</span>() {} 
 }
-let share = Single.instance
+<span class="hljs-keyword">let</span> share <span class="hljs-operator">=</span> <span class="hljs-type">Single</span>.instance
 </code></pre>
 <p>将 init() 构造器用 private 修饰后，Single 外部无法通过构造器创建实例，只能通过静态变量 instance 获取 Single 实例</p>
 <h4 id="22-fileprivate" tabindex="-1">2.2 filePrivate</h4>
 <p>filePrivate 修饰的信息，只能在当前定义的源文件中才能访问</p>
-<pre><code class="language-swift">/// Person.swift
-fileprivate class Person {
-   var name: String?
+<pre class="hljs codehilite language-swift"><code><span class="hljs-comment">/// Person.swift</span>
+<span class="hljs-keyword">fileprivate</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Person</span> {
+   <span class="hljs-keyword">var</span> name: <span class="hljs-type">String</span>?
 }
 
-class XiaoMing: Person {
-   var father: Person
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">XiaoMing</span>: <span class="hljs-title class_ inherited__">Person</span> {
+   <span class="hljs-keyword">var</span> father: <span class="hljs-type">Person</span>
 }
 
-/// Family.swift
-不能访问 Person
+<span class="hljs-comment">/// Family.swift</span>
+不能访问 <span class="hljs-type">Person</span>
 </code></pre>
 <h4 id="23-internal" tabindex="-1">2.3  Internal</h4>
 <p>Internal 默认访问级别，允许定义模块（Target）中的任意源文件访问，但不能被该模块之外的任何源文件访问</p>
-<pre><code class="language-swift">/// TargetOne
-class Person {
-   var name: String?
+<pre class="hljs codehilite language-swift"><code><span class="hljs-comment">/// TargetOne</span>
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Person</span> {
+   <span class="hljs-keyword">var</span> name: <span class="hljs-type">String</span>?
 }
-let p = Person()
+<span class="hljs-keyword">let</span> p <span class="hljs-operator">=</span> <span class="hljs-type">Person</span>()
 
-/// TargetTwo
-import TargetOne
-let p2 = Person() -&gt; error: 'Person' initializer is inaccessible due to 'internal' protection level
+<span class="hljs-comment">/// TargetTwo</span>
+<span class="hljs-keyword">import</span> TargetOne
+<span class="hljs-keyword">let</span> p2 <span class="hljs-operator">=</span> <span class="hljs-type">Person</span>() -&gt; error: &#x27;<span class="hljs-type">Person</span>&#x27; initializer <span class="hljs-keyword">is</span> inaccessible due to &#x27;<span class="hljs-keyword">internal</span>&#x27; protection level
 </code></pre>
 <p>上述代码中，默认的访问级别为 Internal，在 TargetOne 模块内都可访问，当 TargetTwo 跨模块访问  TargetOne 内容时，即使 import TargetOne 也无法访问 Person 内容。这种情况常见于主项目 Target 和 Cocoapods 第三方框架。</p>
 <h4 id="24-public" tabindex="-1">2.4 public</h4>
 <p>public 开放式访问，使我们能够在其定义模块的任何源文件中使用代码，并且可以从另一个源文件访问源文件。但是只能在定义的模块中继承和重写，在 SDK 封装中使用比较多。</p>
-<pre><code class="language-swift">/// TargetOne
-public class Person {
-  public init() {}
+<pre class="hljs codehilite language-swift"><code><span class="hljs-comment">/// TargetOne</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Person</span> {
+  <span class="hljs-keyword">public</span> <span class="hljs-keyword">init</span>() {}
 }
-let p = Person()
+<span class="hljs-keyword">let</span> p <span class="hljs-operator">=</span> <span class="hljs-type">Person</span>()
 
-/// TargetTwo
-import TargetOne
-let p2 = Person()
+<span class="hljs-comment">/// TargetTwo</span>
+<span class="hljs-keyword">import</span> TargetOne
+<span class="hljs-keyword">let</span> p2 <span class="hljs-operator">=</span> <span class="hljs-type">Person</span>()
 
-class Student: Person { -&gt; error: Cannot inherit from non-open class 'Person' outside of its defining module
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Student</span>: <span class="hljs-title class_ inherited__">Person</span> { -&gt; error: <span class="hljs-type">Cannot</span> inherit from non<span class="hljs-operator">-</span><span class="hljs-keyword">open</span> <span class="hljs-keyword">class</span> &#x27;<span class="hljs-type">Person</span>&#x27; outside of its defining module
 }
 </code></pre>
 <p>2.3 中的 Person 类如果加上 Public 修饰，那么 TargetTwo 中只要 import TargetOne 就能访问 Person 类，但是没法继承 Person。</p>
@@ -58,12 +58,12 @@ class Student: Person { -&gt; error: Cannot inherit from non-open class 'Person'
 <p>open 是最高权限的访问级别，它和 public 的区别就在于：可以在任意地方、任意模块间继承、重写。如果将上述 2.4 的 Person 类采用 Open 修饰便不会报错。</p>
 <h4 id="26-访问控制符权限排序" tabindex="-1">2.6 访问控制符权限排序</h4>
 <p>访问控制权限从高到低的顺序：open &gt; public &gt; internal &gt; filePrivate &gt; private，变量只能接受比自己访问权限高的值，若值的访问权限比定义的变量高，编译器会报错。</p>
-<pre><code class="language-swift">fileprivate class Person {
+<pre class="hljs codehilite language-swift"><code><span class="hljs-keyword">fileprivate</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Person</span> {
 }
-let p1 = Person() -&gt; error: Constant must be declared private or fileprivate because its type 'Person' uses a fileprivate type
-/// 下面这样写便不会报错
-private let p2 = Person()
-fileprivate let p3 = Person()
+<span class="hljs-keyword">let</span> p1 <span class="hljs-operator">=</span> <span class="hljs-type">Person</span>() -&gt; error: <span class="hljs-type">Constant</span> must be declared <span class="hljs-keyword">private</span> or <span class="hljs-keyword">fileprivate</span> because its type &#x27;<span class="hljs-type">Person</span>&#x27; uses a <span class="hljs-keyword">fileprivate</span> type
+<span class="hljs-comment">/// 下面这样写便不会报错</span>
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">let</span> p2 <span class="hljs-operator">=</span> <span class="hljs-type">Person</span>()
+<span class="hljs-keyword">fileprivate</span> <span class="hljs-keyword">let</span> p3 <span class="hljs-operator">=</span> <span class="hljs-type">Person</span>()
 </code></pre>
 <h3 id="三objective-c-的访问控制修饰符" tabindex="-1">三、Objective-C 的访问控制修饰符</h3>
 <p>相对于 Swift，Objective-C 的访问控制修饰符只有：@private、@package、@protected、@public，一般都是用于修饰成员变量。方法、属性的隐藏和开放，更多是通过声明文件 .h、.m 控制。</p>

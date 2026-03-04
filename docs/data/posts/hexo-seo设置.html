@@ -11,12 +11,12 @@
 <li>在主题的_config.yml文件中，设置：baidu_site_verification: true，如果没有该字段就手动添加。</li>
 <li>在themes/next/layout/_partials/head.swig文件中添加下列代码</li>
 </ol>
-<pre><code>// 每个人的content值都不一致，请注意更换成你的content值
+<pre class="hljs codehilite"><code><span class="language-xml">// 每个人的content值都不一致，请注意更换成你的content值
 
-{% if theme.baidu_site_verification %}
-&lt;meta name=&quot;baidu-site-verification&quot; content=&quot;6K5YmdKWEx&quot; /&gt;
-{% endif %}
-</code></pre>
+</span><span class="hljs-template-tag">{% <span class="hljs-name"><span class="hljs-name">if</span></span> theme.baidu_site_verification %}</span><span class="language-xml">
+<span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;baidu-site-verification&quot;</span> <span class="hljs-attr">content</span>=<span class="hljs-string">&quot;6K5YmdKWEx&quot;</span> /&gt;</span>
+</span><span class="hljs-template-tag">{% <span class="hljs-name"><span class="hljs-name">endif</span></span> %}</span><span class="language-xml">
+</span></code></pre>
 <ol start="3">
 <li>配置好后，重新发布站点，在百度站长页面完成验证。</li>
 </ol>
@@ -32,27 +32,27 @@
 <ol>
 <li>安装百度链接提交插件</li>
 </ol>
-<pre><code>npm install hexo-baidu-url-submit --save 
+<pre class="hljs codehilite"><code>npm <span class="hljs-keyword">install </span>hexo-<span class="hljs-keyword">baidu-url-submit </span>--save 
 </code></pre>
 <ol start="2">
 <li></li>
 </ol>
-<pre><code># 百度链接自动提交
-baidu_url_submit:
-count: 6 # 提交最新的链接数量
-host: http://lianghuii.com # 在百度站长平台中注册的域名
-token:  # 请注意这是您的秘钥， 所以请不要把博客源代码发布在公众仓库里!
-path: baidu_urls.txt # 文本文档的地址， 新链接会保存在此文本文档里
+<pre class="hljs codehilite"><code><span class="hljs-comment"># 百度链接自动提交</span>
+<span class="hljs-params">baidu_url_submit:</span>
+<span class="hljs-params">count:</span> <span class="hljs-number">6</span> <span class="hljs-comment"># 提交最新的链接数量</span>
+<span class="hljs-params">host:</span> http:<span class="hljs-symbol">//lianghuii.com</span> <span class="hljs-comment"># 在百度站长平台中注册的域名</span>
+<span class="hljs-params">token:</span>  <span class="hljs-comment"># 请注意这是您的秘钥， 所以请不要把博客源代码发布在公众仓库里!</span>
+<span class="hljs-params">path:</span> baidu_urls.txt <span class="hljs-comment"># 文本文档的地址， 新链接会保存在此文本文档里</span>
 </code></pre>
 <ol start="3">
 <li>设置deploye</li>
 </ol>
-<pre><code>deploy:
-- type: git
-repo:
-github: git@github.com:Leafmure/Leafmure.github.io.git
-coding: git@git.coding.net:Leafmure/blog.git
-- type: baidu_url_submitter
+<pre class="hljs codehilite"><code><span class="hljs-params">deploy:</span>
+<span class="hljs-operator">-</span> <span class="hljs-params">type:</span> git
+<span class="hljs-params">repo:</span>
+<span class="hljs-params">github:</span> git@github.com:Leafmure<span class="hljs-symbol">/Leafmure.github.io.git</span>
+<span class="hljs-params">coding:</span> git@git.coding.net:Leafmure<span class="hljs-symbol">/blog.git</span>
+<span class="hljs-operator">-</span> <span class="hljs-params">type:</span> baidu_url_submitter
 </code></pre>
 <h4 id="自动推送" tabindex="-1">自动推送</h4>
 <blockquote>
@@ -62,24 +62,24 @@ coding: git@git.coding.net:Leafmure/blog.git
 <li>在主题配置文件将baidu_push设置为true</li>
 <li>在路径themes\next\layout_scripts\下创建baidu_push.swig 文件，文件内容如下</li>
 </ol>
-<pre><code>{% if theme.baidu_push %}
-&lt;script&gt;
-(function(){
-var bp = document.createElement('script');
-var curProtocol = window.location.protocol.split(':')[0];
-if (curProtocol === 'https') {
-bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+<pre class="hljs codehilite"><code><span class="hljs-template-tag">{% <span class="hljs-name"><span class="hljs-name">if</span></span> theme.baidu_push %}</span><span class="language-xml">
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="language-javascript">
+(<span class="hljs-keyword">function</span>(<span class="hljs-params"></span>){
+<span class="hljs-keyword">var</span> bp = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;script&#x27;</span>);
+<span class="hljs-keyword">var</span> curProtocol = <span class="hljs-variable language_">window</span>.<span class="hljs-property">location</span>.<span class="hljs-property">protocol</span>.<span class="hljs-title function_">split</span>(<span class="hljs-string">&#x27;:&#x27;</span>)[<span class="hljs-number">0</span>];
+<span class="hljs-keyword">if</span> (curProtocol === <span class="hljs-string">&#x27;https&#x27;</span>) {
+bp.<span class="hljs-property">src</span> = <span class="hljs-string">&#x27;https://zz.bdstatic.com/linksubmit/push.js&#x27;</span>;        
 }
-else {
-bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+<span class="hljs-keyword">else</span> {
+bp.<span class="hljs-property">src</span> = <span class="hljs-string">&#x27;http://push.zhanzhang.baidu.com/push.js&#x27;</span>;
 }
-var s = document.getElementsByTagName(&quot;script&quot;)[0];
-s.parentNode.insertBefore(bp, s);
+<span class="hljs-keyword">var</span> s = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">getElementsByTagName</span>(<span class="hljs-string">&quot;script&quot;</span>)[<span class="hljs-number">0</span>];
+s.<span class="hljs-property">parentNode</span>.<span class="hljs-title function_">insertBefore</span>(bp, s);
 })();
-&lt;/script&gt;
-{% endif %}
+</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+</span><span class="hljs-template-tag">{% <span class="hljs-name"><span class="hljs-name">endif</span></span> %}</span><span class="language-xml">
 
-</code></pre>
+</span></code></pre>
 <h4 id="sitemap" tabindex="-1">sitemap</h4>
 <blockquote>
 <p>您可以定期将网站链接放到Sitemap中，然后将Sitemap提交给百度。百度会周期性的抓取检查您提交的Sitemap，对其中的链接进行处理，但收录速度慢于主动推送。</p>
@@ -88,18 +88,18 @@ s.parentNode.insertBefore(bp, s);
 <ol>
 <li>安装sitemap插件</li>
 </ol>
-<pre><code>npm install hexo-generator-sitemap --save     
-npm install hexo-generator-baidu-sitemap --save
+<pre class="hljs codehilite"><code>npm <span class="hljs-keyword">install </span>hexo-generator-sitemap --save     
+npm <span class="hljs-keyword">install </span>hexo-generator-<span class="hljs-keyword">baidu-sitemap </span>--save
 </code></pre>
 <ol start="2">
 <li>修改hexo配置文件</li>
 </ol>
-<pre><code># URL
-## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://lianghuii.com
-root: /
-permalink: :title/
-permalink_defaults:
+<pre class="hljs codehilite"><code><span class="hljs-comment"># URL</span>
+<span class="hljs-comment">## If your site is put in a subdirectory, set url as &#x27;http://yoursite.com/child&#x27; and root as &#x27;/child/&#x27;</span>
+<span class="hljs-params">url:</span> http:<span class="hljs-symbol">//lianghuii.com</span>
+<span class="hljs-params">root:</span> <span class="hljs-symbol">/</span>
+<span class="hljs-params">permalink:</span> <span class="hljs-meta">:title</span><span class="hljs-symbol">/</span>
+<span class="hljs-params">permalink_defaults:</span>
 </code></pre>
 <p>执行完之后就会在网站根目录生成sitemap.xml文件和baidusitemap.xml文件,其中sitemap.xml文件是搜索引擎通用的文件，baidusitemap.xml是百度专用的sitemap文件。
 3. 将生成的sitemap文件提交到百度站长</p>
@@ -113,12 +113,12 @@ permalink_defaults:
 <h3 id="文章页面配置" tabindex="-1">文章页面配置</h3>
 <h4 id="缩短页面url路径" tabindex="-1">缩短页面url路径</h4>
 <p>hexo 中文章页面url默认为：sitename/year/mounth/day/title，由于url层级过多爬虫不容易爬到文章，所以将页面url缩简为：sitename/title，在hexo 配置文件中修改permalink 配置项。</p>
-<pre><code># URL
-## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://lianghuii.com
-root: /
-permalink: :title/
-permalink_defaults:
+<pre class="hljs codehilite"><code><span class="hljs-comment"># URL</span>
+<span class="hljs-comment">## If your site is put in a subdirectory, set url as &#x27;http://yoursite.com/child&#x27; and root as &#x27;/child/&#x27;</span>
+<span class="hljs-params">url:</span> http:<span class="hljs-symbol">//lianghuii.com</span>
+<span class="hljs-params">root:</span> <span class="hljs-symbol">/</span>
+<span class="hljs-params">permalink:</span> <span class="hljs-meta">:title</span><span class="hljs-symbol">/</span>
+<span class="hljs-params">permalink_defaults:</span>
 </code></pre>
 <h4 id="文章增加keywordsdescription等标识字段" tabindex="-1">文章增加keywords、description等标识字段</h4>
 <p>在hexo 根目录中scaffolds文件中的文章模版文件中增加。</p>

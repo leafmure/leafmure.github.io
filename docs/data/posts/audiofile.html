@@ -3,17 +3,17 @@
 <!-- more -->
 <h3 id="audiofile-初始化" tabindex="-1">AudioFile 初始化</h3>
 <h4 id="audiofileopenurl" tabindex="-1">AudioFileOpenURL</h4>
-<pre><code class="language-Objective-C">typedef CF_ENUM(SInt8, AudioFilePermissions) {
-    kAudioFileReadPermission      = 0x01,
-    kAudioFileWritePermission     = 0x02,
-    kAudioFileReadWritePermission = 0x03
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-keyword">typedef</span> <span class="hljs-built_in">CF_ENUM</span>(SInt8, AudioFilePermissions) {
+    kAudioFileReadPermission      = <span class="hljs-number">0x01</span>,
+    kAudioFileWritePermission     = <span class="hljs-number">0x02</span>,
+    kAudioFileReadWritePermission = <span class="hljs-number">0x03</span>
 };
 
-extern OSStatus 
-AudioFileOpenURL (  CFURLRef                            inFileRef,
+<span class="hljs-keyword">extern</span> OSStatus 
+AudioFileOpenURL (  <span class="hljs-built_in">CFURLRef</span>                            inFileRef,
                     AudioFilePermissions                inPermissions,
                     AudioFileTypeID                     inFileTypeHint,
-                    AudioFileID __nullable * __nonnull  outAudioFile);
+                    AudioFileID __<span class="hljs-keyword">nullable</span> * __<span class="hljs-keyword">nonnull</span>  outAudioFile);
 </code></pre>
 <ul>
 <li>inFileRef: 传入 <strong>CFURLRef</strong> url, 只支持本地文件.</li>
@@ -22,14 +22,14 @@ AudioFileOpenURL (  CFURLRef                            inFileRef,
 <li>outAudioFile: <strong>AudioFileID</strong> AudioFile 实例 ID.</li>
 </ul>
 <h4 id="audiofileopenwithcallbacks" tabindex="-1">AudioFileOpenWithCallbacks</h4>
-<pre><code class="language-Objective-C">AudioFileOpenWithCallbacks (
-                void *                              inClientData,
+<pre class="hljs codehilite language-Objective-C"><code>AudioFileOpenWithCallbacks (
+                <span class="hljs-type">void</span> *                              inClientData,
                 AudioFile_ReadProc                  inReadFunc,
-                AudioFile_WriteProc __nullable      inWriteFunc,
+                AudioFile_WriteProc __<span class="hljs-keyword">nullable</span>      inWriteFunc,
                 AudioFile_GetSizeProc               inGetSizeFunc,
-                AudioFile_SetSizeProc __nullable    inSetSizeFunc,
+                AudioFile_SetSizeProc __<span class="hljs-keyword">nullable</span>    inSetSizeFunc,
                 AudioFileTypeID                     inFileTypeHint,
-                AudioFileID __nullable * __nonnull  outAudioFile);
+                AudioFileID __<span class="hljs-keyword">nullable</span> * __<span class="hljs-keyword">nonnull</span>  outAudioFile);
 </code></pre>
 <ul>
 <li>inClientData: 上下文对象, 回调函数中传入.</li>
@@ -42,12 +42,12 @@ AudioFileOpenURL (  CFURLRef                            inFileRef,
 </ul>
 <p><strong>AudioFileOpenWithCallbacks</strong> 创建方式需要先准备好音频文件数据, 在回调函数中返回 AudioFile 所需要的数据, 否则会创建失败. 创建的所需的数据是包含音频格式信息的那部分, 即 <strong>AudioFileStream</strong> 返回 <strong>kAudioFileStreamProperty_ReadyToProducePackets</strong> 时的长度. 所以如果 AudioFile 要读取网络音频流, 需 <strong>AudioFileStream</strong> 配合使用.</p>
 <h5 id="audiofile_readproc" tabindex="-1">AudioFile_ReadProc</h5>
-<pre><code class="language-Objective-C">typedef OSStatus (*AudioFile_ReadProc)(
+<pre class="hljs codehilite language-Objective-C"><code>typedef <span class="hljs-type">OSStatus</span> (*<span class="hljs-type">AudioFile_ReadProc</span>)(
                                 void *      inClientData,
-                                SInt64      inPosition, 
-                                UInt32      requestCount,
+                                <span class="hljs-type">SInt64</span>      inPosition, 
+                                <span class="hljs-type">UInt32</span>      requestCount,
                                 void *      buffer, 
-                                UInt32 *    actualCount);
+                                <span class="hljs-type">UInt32</span> *    actualCount);
 </code></pre>
 <ul>
 <li>inClientData: 上下文对象.</li>
@@ -60,7 +60,7 @@ AudioFileOpenURL (  CFURLRef                            inFileRef,
 <p>在读取网络音频流, 缓冲数据不够给 AudioFile, 只给了一部分的情况下, AudioFile 会表现异常, 无法继续正常工作, 此时需要重新创建打开.
 <font color='red'>注意: AudioFile 不适用于网络音频流播放</font></p>
 <h5 id="audiofile_getsizeproc" tabindex="-1">AudioFile_GetSizeProc</h5>
-<pre><code class="language-Objective-C">typedef SInt64 (*AudioFile_GetSizeProc)(
+<pre class="hljs codehilite language-Objective-C"><code>typedef <span class="hljs-type">SInt64</span> (*<span class="hljs-type">AudioFile_GetSizeProc</span>)(
                                 void *      inClientData);
 </code></pre>
 <ul>
@@ -68,12 +68,12 @@ AudioFileOpenURL (  CFURLRef                            inFileRef,
 <li>返回 SInt64 值, 音频文件字节长度.</li>
 </ul>
 <h5 id="audiofile_writeproc" tabindex="-1">AudioFile_WriteProc</h5>
-<pre><code class="language-Objective-C">typedef OSStatus (*AudioFile_WriteProc)(
+<pre class="hljs codehilite language-Objective-C"><code>typedef <span class="hljs-type">OSStatus</span> (*<span class="hljs-type">AudioFile_WriteProc</span>)(
                                 void *      inClientData,
-                                SInt64      inPosition, 
-                                UInt32      requestCount, 
+                                <span class="hljs-type">SInt64</span>      inPosition, 
+                                <span class="hljs-type">UInt32</span>      requestCount, 
                                 const void *buffer, 
-                                UInt32    * actualCount);
+                                <span class="hljs-type">UInt32</span>    * actualCount);
 </code></pre>
 <ul>
 <li>inClientData: 上下文对象.</li>
@@ -83,20 +83,20 @@ AudioFileOpenURL (  CFURLRef                            inFileRef,
 <li>actualCount: 返回给 AudioFile 写入数据的真实长度, 和 buffer 的长度应一致.</li>
 </ul>
 <h5 id="audiofile_getsizeproc-1" tabindex="-1">AudioFile_GetSizeProc</h5>
-<pre><code class="language-Objective-C">typedef OSStatus (*AudioFile_SetSizeProc)(
+<pre class="hljs codehilite language-Objective-C"><code>typedef <span class="hljs-type">OSStatus</span> (*<span class="hljs-type">AudioFile_SetSizeProc</span>)(
                                 void *      inClientData,
-                                SInt64      inSize);
+                                <span class="hljs-type">SInt64</span>      inSize);
 </code></pre>
 <ul>
 <li>inClientData: 上下文对象.</li>
 <li>inSize: 写入数据字节长度</li>
 </ul>
 <h3 id="audiofile-读取音频信息" tabindex="-1">AudioFile 读取音频信息</h3>
-<pre><code class="language-Objective-C">extern OSStatus
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-keyword">extern</span> OSStatus
 AudioFileGetPropertyInfo(       AudioFileID             inAudioFile,
                                 AudioFilePropertyID     inPropertyID,
-                                UInt32 * __nullable     outDataSize,
-                                UInt32 * __nullable     isWritable);
+                                <span class="hljs-built_in">UInt32</span> * __<span class="hljs-keyword">nullable</span>     outDataSize,
+                                <span class="hljs-built_in">UInt32</span> * __<span class="hljs-keyword">nullable</span>     isWritable);
 </code></pre>
 <ul>
 <li>inAudioFile: 传入 AudioFile ID.</li>
@@ -104,203 +104,203 @@ AudioFileGetPropertyInfo(       AudioFileID             inAudioFile,
 <li>outDataSize: 获取属性值的数据大小.</li>
 <li>isWritable: 获取属性是否支持写入.</li>
 </ul>
-<pre><code class="language-Objective-C">extern OSStatus
-AudioFileGetProperty(   AudioFileID             inAudioFile,
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-function"><span class="hljs-keyword">extern</span> OSStatus
+<span class="hljs-title">AudioFileGetProperty</span><span class="hljs-params">(   AudioFileID             inAudioFile,
                         AudioFilePropertyID     inPropertyID,
                         UInt32                  *ioDataSize,
-                        void                    *outPropertyData);
+                        <span class="hljs-type">void</span>                    *outPropertyData)</span></span>;
 </code></pre>
 <ul>
 <li>inAudioFile: 传入 AudioFile ID.</li>
 <li>nPropertyID: 传入要读取的属性类型.</li>
 </ul>
 <h4 id="audiofilepropertyid" tabindex="-1">AudioFilePropertyID</h4>
-<pre><code class="language-Objective-C">CF_ENUM(AudioFilePropertyID)
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-title function_">CF_ENUM</span>(<span class="hljs-params">AudioFilePropertyID</span>)
 {
-    kAudioFilePropertyFileFormat            =   'ffmt',
-    kAudioFilePropertyDataFormat            =   'dfmt',
-    kAudioFilePropertyIsOptimized           =   'optm',
-    kAudioFilePropertyMagicCookieData       =   'mgic',
-    kAudioFilePropertyAudioDataByteCount    =   'bcnt',
-    kAudioFilePropertyAudioDataPacketCount  =   'pcnt',
-    kAudioFilePropertyMaximumPacketSize     =   'psze',
-    kAudioFilePropertyDataOffset            =   'doff',
-    kAudioFilePropertyChannelLayout         =   'cmap',
-    kAudioFilePropertyDeferSizeUpdates      =   'dszu',
-    kAudioFilePropertyDataFormatName        =   'fnme',
-    kAudioFilePropertyMarkerList            =   'mkls',
-    kAudioFilePropertyRegionList            =   'rgls',
-    kAudioFilePropertyPacketToFrame         =   'pkfr',
-    kAudioFilePropertyFrameToPacket         =   'frpk',
-    kAudioFilePropertyRestrictsRandomAccess =   'rrap',
-    kAudioFilePropertyPacketToRollDistance  =   'pkrl',
-    kAudioFilePropertyPreviousIndependentPacket = 'pind',
-    kAudioFilePropertyNextIndependentPacket =   'nind',
-    kAudioFilePropertyPacketToDependencyInfo =  'pkdp',
-    kAudioFilePropertyPacketToByte          =   'pkby',
-    kAudioFilePropertyByteToPacket          =   'bypk',
-    kAudioFilePropertyChunkIDs              =   'chid',
-    kAudioFilePropertyInfoDictionary        =   'info',
-    kAudioFilePropertyPacketTableInfo       =   'pnfo',
-    kAudioFilePropertyFormatList            =   'flst',
-    kAudioFilePropertyPacketSizeUpperBound  =   'pkub',
-    kAudioFilePropertyPacketRangeByteCountUpperBound = 'prub',
-    kAudioFilePropertyReserveDuration       =   'rsrv',
-    kAudioFilePropertyEstimatedDuration     =   'edur',
-    kAudioFilePropertyBitRate               =   'brat',
-    kAudioFilePropertyID3Tag                =   'id3t',
-    kAudioFilePropertyID3TagOffset          =   'id3o',
-    kAudioFilePropertySourceBitDepth        =   'sbtd',
-    kAudioFilePropertyAlbumArtwork          =   'aart',
-    kAudioFilePropertyAudioTrackCount       =   'atct',
-    kAudioFilePropertyUseAudioTrack         =   'uatk'
+    kAudioFilePropertyFileFormat            =   <span class="hljs-string">&#x27;ffmt&#x27;</span>,
+    kAudioFilePropertyDataFormat            =   <span class="hljs-string">&#x27;dfmt&#x27;</span>,
+    kAudioFilePropertyIsOptimized           =   <span class="hljs-string">&#x27;optm&#x27;</span>,
+    kAudioFilePropertyMagicCookieData       =   <span class="hljs-string">&#x27;mgic&#x27;</span>,
+    kAudioFilePropertyAudioDataByteCount    =   <span class="hljs-string">&#x27;bcnt&#x27;</span>,
+    kAudioFilePropertyAudioDataPacketCount  =   <span class="hljs-string">&#x27;pcnt&#x27;</span>,
+    kAudioFilePropertyMaximumPacketSize     =   <span class="hljs-string">&#x27;psze&#x27;</span>,
+    kAudioFilePropertyDataOffset            =   <span class="hljs-string">&#x27;doff&#x27;</span>,
+    kAudioFilePropertyChannelLayout         =   <span class="hljs-string">&#x27;cmap&#x27;</span>,
+    kAudioFilePropertyDeferSizeUpdates      =   <span class="hljs-string">&#x27;dszu&#x27;</span>,
+    kAudioFilePropertyDataFormatName        =   <span class="hljs-string">&#x27;fnme&#x27;</span>,
+    kAudioFilePropertyMarkerList            =   <span class="hljs-string">&#x27;mkls&#x27;</span>,
+    kAudioFilePropertyRegionList            =   <span class="hljs-string">&#x27;rgls&#x27;</span>,
+    kAudioFilePropertyPacketToFrame         =   <span class="hljs-string">&#x27;pkfr&#x27;</span>,
+    kAudioFilePropertyFrameToPacket         =   <span class="hljs-string">&#x27;frpk&#x27;</span>,
+    kAudioFilePropertyRestrictsRandomAccess =   <span class="hljs-string">&#x27;rrap&#x27;</span>,
+    kAudioFilePropertyPacketToRollDistance  =   <span class="hljs-string">&#x27;pkrl&#x27;</span>,
+    kAudioFilePropertyPreviousIndependentPacket = <span class="hljs-string">&#x27;pind&#x27;</span>,
+    kAudioFilePropertyNextIndependentPacket =   <span class="hljs-string">&#x27;nind&#x27;</span>,
+    kAudioFilePropertyPacketToDependencyInfo =  <span class="hljs-string">&#x27;pkdp&#x27;</span>,
+    kAudioFilePropertyPacketToByte          =   <span class="hljs-string">&#x27;pkby&#x27;</span>,
+    kAudioFilePropertyByteToPacket          =   <span class="hljs-string">&#x27;bypk&#x27;</span>,
+    kAudioFilePropertyChunkIDs              =   <span class="hljs-string">&#x27;chid&#x27;</span>,
+    kAudioFilePropertyInfoDictionary        =   <span class="hljs-string">&#x27;info&#x27;</span>,
+    kAudioFilePropertyPacketTableInfo       =   <span class="hljs-string">&#x27;pnfo&#x27;</span>,
+    kAudioFilePropertyFormatList            =   <span class="hljs-string">&#x27;flst&#x27;</span>,
+    kAudioFilePropertyPacketSizeUpperBound  =   <span class="hljs-string">&#x27;pkub&#x27;</span>,
+    kAudioFilePropertyPacketRangeByteCountUpperBound = <span class="hljs-string">&#x27;prub&#x27;</span>,
+    kAudioFilePropertyReserveDuration       =   <span class="hljs-string">&#x27;rsrv&#x27;</span>,
+    kAudioFilePropertyEstimatedDuration     =   <span class="hljs-string">&#x27;edur&#x27;</span>,
+    kAudioFilePropertyBitRate               =   <span class="hljs-string">&#x27;brat&#x27;</span>,
+    kAudioFilePropertyID3Tag                =   <span class="hljs-string">&#x27;id3t&#x27;</span>,
+    kAudioFilePropertyID3TagOffset          =   <span class="hljs-string">&#x27;id3o&#x27;</span>,
+    kAudioFilePropertySourceBitDepth        =   <span class="hljs-string">&#x27;sbtd&#x27;</span>,
+    kAudioFilePropertyAlbumArtwork          =   <span class="hljs-string">&#x27;aart&#x27;</span>,
+    kAudioFilePropertyAudioTrackCount       =   <span class="hljs-string">&#x27;atct&#x27;</span>,
+    kAudioFilePropertyUseAudioTrack         =   <span class="hljs-string">&#x27;uatk&#x27;</span>
 };
 </code></pre>
 <h5 id="kaudiofilepropertydataformat" tabindex="-1">kAudioFilePropertyDataFormat</h5>
 <p>基础文件格式, 这个属性用于获取音频流的数据格式. 通过查询这个属性, 你可以获得有关音频流的基本信息, 如采样率、声道数、编码格式等.</p>
-<pre><code class="language-Objective-C">UInt32 size = sizeof(AudioStreamBasicDescription);
-AudioStreamBasicDescription baseFormat;
-AudioFileGetProperty(_fileID, kAudioFilePropertyDataFormat, &amp;size, &amp;baseFormat);
+<pre class="hljs codehilite language-Objective-C"><code>UInt32 size = sizeof(<span class="hljs-name">AudioStreamBasicDescription</span>)<span class="hljs-comment">;</span>
+AudioStreamBasicDescription baseFormat<span class="hljs-comment">;</span>
+AudioFileGetProperty(<span class="hljs-name">_fileID</span>, kAudioFilePropertyDataFormat, <span class="hljs-symbol">&amp;size</span>, <span class="hljs-symbol">&amp;baseFormat</span>)<span class="hljs-comment">;</span>
 </code></pre>
 <h5 id="kaudiofilepropertyformatlist" tabindex="-1">kAudioFilePropertyFormatList</h5>
 <p>这个属性用于获取音频流支持的所有格式列表. 当一个音频流支持多种格式时, 你可以使用这个属性来获取所有支持的格式列表.</p>
-<pre><code class="language-Objective-C">UInt32 size;
+<pre class="hljs codehilite language-Objective-C"><code>UInt32 size;
 OSStatus status;
 
-status = AudioFileGetPropertyInfo(_fileID, kAudioFilePropertyFormatList, &amp;size, NULL);
-if (status != noErr)
+status = <span class="hljs-built_in">AudioFileGetPropertyInfo</span>(_fileID, kAudioFilePropertyFormatList, &amp;size, <span class="hljs-literal">NULL</span>);
+<span class="hljs-keyword">if</span> (status != noErr)
 {
-  return NO;
+  <span class="hljs-keyword">return</span> NO;
 }
 
-UInt32 numFormats = size / sizeof(AudioFormatListItem);
-AudioFormatListItem *formatList = (AudioFormatListItem *)malloc(size);
-status = AudioFileGetProperty(_fileID, kAudioFilePropertyFormatList, &amp;size, formatList);
-if (status != noErr)
+UInt32 numFormats = size / <span class="hljs-built_in">sizeof</span>(AudioFormatListItem);
+AudioFormatListItem *formatList = (AudioFormatListItem *)<span class="hljs-built_in">malloc</span>(size);
+status = <span class="hljs-built_in">AudioFileGetProperty</span>(_fileID, kAudioFilePropertyFormatList, &amp;size, formatList);
+<span class="hljs-keyword">if</span> (status != noErr)
 {
-    free(formatList);
-    return NO;
+    <span class="hljs-built_in">free</span>(formatList);
+    <span class="hljs-keyword">return</span> NO;
 }
 
-if (numFormats == 1)
+<span class="hljs-keyword">if</span> (numFormats == <span class="hljs-number">1</span>)
 {
-    fileFormat = formatList[0].mASBD;
+    fileFormat = formatList[<span class="hljs-number">0</span>].mASBD;
 }
-else
+<span class="hljs-keyword">else</span>
 {
-    status = AudioFormatGetPropertyInfo(kAudioFormatProperty_DecodeFormatIDs, 0, NULL, &amp;size);
-    if (status != noErr) {
-      free(formatList);
-      return NO;
+    status = <span class="hljs-built_in">AudioFormatGetPropertyInfo</span>(kAudioFormatProperty_DecodeFormatIDs, <span class="hljs-number">0</span>, <span class="hljs-literal">NULL</span>, &amp;size);
+    <span class="hljs-keyword">if</span> (status != noErr) {
+      <span class="hljs-built_in">free</span>(formatList);
+      <span class="hljs-keyword">return</span> NO;
     }
 
-    UInt32 numDecoders = size / sizeof(OSType);
-    OSType *decoderIDS = (OSType *)malloc(size);
+    UInt32 numDecoders = size / <span class="hljs-built_in">sizeof</span>(OSType);
+    OSType *decoderIDS = (OSType *)<span class="hljs-built_in">malloc</span>(size);
 
-    status = AudioFormatGetProperty(kAudioFormatProperty_DecodeFormatIDs, 0, NULL, &amp;size, decoderIDS);
-    if (status != noErr) {
-      free(formatList);
-      free(decoderIDS);
-      return NO;
+    status = <span class="hljs-built_in">AudioFormatGetProperty</span>(kAudioFormatProperty_DecodeFormatIDs, <span class="hljs-number">0</span>, <span class="hljs-literal">NULL</span>, &amp;size, decoderIDS);
+    <span class="hljs-keyword">if</span> (status != noErr) {
+      <span class="hljs-built_in">free</span>(formatList);
+      <span class="hljs-built_in">free</span>(decoderIDS);
+      <span class="hljs-keyword">return</span> NO;
     }
 
     UInt32 i;
-    for (i = 0; i &lt; numFormats; ++i) {
+    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; numFormats; ++i) {
       OSType decoderID = formatList[i].mASBD.mFormatID;
 
       BOOL found = NO;
-      for (UInt32 j = 0; j &lt; numDecoders; ++j) {
-        if (decoderID == decoderIDS[j]) {
+      <span class="hljs-keyword">for</span> (UInt32 j = <span class="hljs-number">0</span>; j &lt; numDecoders; ++j) {
+        <span class="hljs-keyword">if</span> (decoderID == decoderIDS[j]) {
           found = YES;
-          break;
+          <span class="hljs-keyword">break</span>;
         }
       }
 
-      if (found) {
-        break;
+      <span class="hljs-keyword">if</span> (found) {
+        <span class="hljs-keyword">break</span>;
       }
     }
 
-    free(decoderIDS);
+    <span class="hljs-built_in">free</span>(decoderIDS);
 
-    if (i &gt;= numFormats)
+    <span class="hljs-keyword">if</span> (i &gt;= numFormats)
     {
-      free(formatList);
-      return NO;
+      <span class="hljs-built_in">free</span>(formatList);
+      <span class="hljs-keyword">return</span> NO;
     }
 
     fileFormat = formatList[i].mASBD;
 }
 
-free(formatList);
+<span class="hljs-built_in">free</span>(formatList);
 </code></pre>
 <h5 id="kaudiofilepropertybitrate" tabindex="-1">kAudioFilePropertyBitRate</h5>
 <p>获取音频数据的码率, 以每秒传输的比特数（bps）为单位.</p>
-<pre><code class="language-Objective-C">UInt32 bitRate = 0;
-UInt32 size = sizeof(bitRate);
-AudioFileGetProperty(_fileID, kAudioFilePropertyBitRate, &amp;size, &amp;bitRate);
+<pre class="hljs codehilite language-Objective-C"><code>UInt32 bitRate = <span class="hljs-number">0</span><span class="hljs-comment">;</span>
+UInt32 size = sizeof(<span class="hljs-name">bitRate</span>)<span class="hljs-comment">;</span>
+AudioFileGetProperty(<span class="hljs-name">_fileID</span>, kAudioFilePropertyBitRate, <span class="hljs-symbol">&amp;size</span>, <span class="hljs-symbol">&amp;bitRate</span>)<span class="hljs-comment">;</span>
 </code></pre>
 <h5 id="kaudiofilepropertydataoffset" tabindex="-1">kAudioFilePropertyDataOffset</h5>
 <p>获取音频内容在音频流中开始的位置</p>
-<pre><code class="language-Objective-C">SInt64 dataOffset = 0;
-UInt32 size = sizeof(dataOffset);
-AudioFileGetProperty(_fileID, kAudioFilePropertyDataOffset, &amp;size, &amp;dataOffset);
+<pre class="hljs codehilite language-Objective-C"><code>SInt64 dataOffset = <span class="hljs-number">0</span><span class="hljs-comment">;</span>
+UInt32 size = sizeof(<span class="hljs-name">dataOffset</span>)<span class="hljs-comment">;</span>
+AudioFileGetProperty(<span class="hljs-name">_fileID</span>, kAudioFilePropertyDataOffset, <span class="hljs-symbol">&amp;size</span>, <span class="hljs-symbol">&amp;dataOffset</span>)<span class="hljs-comment">;</span>
 </code></pre>
 <h5 id="kaudiofilepropertyaudiodatabytecount" tabindex="-1">kAudioFilePropertyAudioDataByteCount</h5>
 <p>获取音频内容数据长度</p>
-<pre><code class="language-Objective-C">SInt64 audioDataByteCount = 0;
-UInt32 size = sizeof(audioDataByteCount);
-AudioFileGetProperty(_fileID, kAudioFilePropertyAudioDataByteCount, &amp;size, &amp;audioDataByteCount);
+<pre class="hljs codehilite language-Objective-C"><code>SInt64 audioDataByteCount = <span class="hljs-number">0</span><span class="hljs-comment">;</span>
+UInt32 size = sizeof(<span class="hljs-name">audioDataByteCount</span>)<span class="hljs-comment">;</span>
+AudioFileGetProperty(<span class="hljs-name">_fileID</span>, kAudioFilePropertyAudioDataByteCount, <span class="hljs-symbol">&amp;size</span>, <span class="hljs-symbol">&amp;audioDataByteCount</span>)<span class="hljs-comment">;</span>
 </code></pre>
 <h5 id="kaudiofilepropertyestimatedduration" tabindex="-1">kAudioFilePropertyEstimatedDuration</h5>
 <p>获取音频预估时长, 不一定准确.</p>
-<pre><code class="language-Objective-C">Float64 estimatedDuration = 0.0;
-UInt32 size = sizeof(estimatedDuration);
-AudioFileGetProperty(_fileID, kAudioFilePropertyEstimatedDuration, &amp;size, &amp;estimatedDuration);
+<pre class="hljs codehilite language-Objective-C"><code>Float64 estimatedDuration = <span class="hljs-number">0.0</span><span class="hljs-comment">;</span>
+UInt32 size = sizeof(<span class="hljs-name">estimatedDuration</span>)<span class="hljs-comment">;</span>
+AudioFileGetProperty(<span class="hljs-name">_fileID</span>, kAudioFilePropertyEstimatedDuration, <span class="hljs-symbol">&amp;size</span>, <span class="hljs-symbol">&amp;estimatedDuration</span>)<span class="hljs-comment">;</span>
 </code></pre>
 <h5 id="kaudiofilepropertymaximumpacketsize" tabindex="-1">kAudioFilePropertyMaximumPacketSize</h5>
 <p>获取音频文件的最大包大小</p>
-<pre><code class="language-Objective-C">UInt32 realityMaxPacketSize = 0.0;
-UInt32 size = sizeof(realityMaxPacketSize);
-AudioFileGetProperty(_fileID, kAudioFilePropertyMaximumPacketSize, &amp;size, &amp;realityMaxPacketSize);
+<pre class="hljs codehilite language-Objective-C"><code>UInt32 realityMaxPacketSize = <span class="hljs-number">0.0</span><span class="hljs-comment">;</span>
+UInt32 size = sizeof(<span class="hljs-name">realityMaxPacketSize</span>)<span class="hljs-comment">;</span>
+AudioFileGetProperty(<span class="hljs-name">_fileID</span>, kAudioFilePropertyMaximumPacketSize, <span class="hljs-symbol">&amp;size</span>, <span class="hljs-symbol">&amp;realityMaxPacketSize</span>)<span class="hljs-comment">;</span>
 </code></pre>
 <h5 id="kaudiofilepropertypacketsizeupperbound" tabindex="-1">kAudioFilePropertyPacketSizeUpperBound</h5>
 <p>获取音频文件的最大包大小上限</p>
-<pre><code class="language-Objective-C">UInt32 maxPacketSize = 0.0;
-UInt32 size = sizeof(maxPacketSize);
-AudioFileGetProperty(_fileID, kAudioFilePropertyPacketSizeUpperBound, &amp;size, &amp;maxPacketSize);
+<pre class="hljs codehilite language-Objective-C"><code>UInt32 maxPacketSize = <span class="hljs-number">0.0</span><span class="hljs-comment">;</span>
+UInt32 size = sizeof(<span class="hljs-name">maxPacketSize</span>)<span class="hljs-comment">;</span>
+AudioFileGetProperty(<span class="hljs-name">_fileID</span>, kAudioFilePropertyPacketSizeUpperBound, <span class="hljs-symbol">&amp;size</span>, <span class="hljs-symbol">&amp;maxPacketSize</span>)<span class="hljs-comment">;</span>
 </code></pre>
 <h5 id="kaudiofilepropertyaudiodatapacketcount" tabindex="-1">kAudioFilePropertyAudioDataPacketCount</h5>
 <p>获取音频帧(packet)总数, 此信息存在误差或不准确.</p>
-<pre><code class="language-Objective-C">SInt64 packetCount = 0.0;
-UInt32 size = sizeof(packetCount);
-AudioFileGetProperty(_fileID, kAudioFilePropertyAudioDataPacketCount, &amp;size, &amp;packetCount);
+<pre class="hljs codehilite language-Objective-C"><code>SInt64 packetCount = <span class="hljs-number">0.0</span><span class="hljs-comment">;</span>
+UInt32 size = sizeof(<span class="hljs-name">packetCount</span>)<span class="hljs-comment">;</span>
+AudioFileGetProperty(<span class="hljs-name">_fileID</span>, kAudioFilePropertyAudioDataPacketCount, <span class="hljs-symbol">&amp;size</span>, <span class="hljs-symbol">&amp;packetCount</span>)<span class="hljs-comment">;</span>
 </code></pre>
 <h5 id="kaudiofilepropertymagiccookiedata" tabindex="-1">kAudioFilePropertyMagicCookieData</h5>
 <p>Magic Cookie 一种用于描述特定音频格式或编解码器配置信息的数据块, 解码器需要该信息.</p>
-<pre><code class="language-Objective-C">UInt32 cookieSize;
-OSStatus status = AudioFileGetPropertyInfo(_fileID, kAudioFilePropertyMagicCookieData, &amp;cookieSize, NULL);
-if (status != noErr)
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-built_in">UInt32</span> cookieSize;
+OSStatus status = AudioFileGetPropertyInfo(_fileID, kAudioFilePropertyMagicCookieData, &amp;cookieSize, <span class="hljs-literal">NULL</span>);
+<span class="hljs-keyword">if</span> (status != noErr)
 {
-    return nil;
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span>;
 }
 
-void *cookieData = malloc(cookieSize);
+<span class="hljs-type">void</span> *cookieData = malloc(cookieSize);
 status = AudioFileGetProperty(_fileID, kAudioFilePropertyMagicCookieData, &amp;cookieSize, cookieData);
-if (status != noErr)
+<span class="hljs-keyword">if</span> (status != noErr)
 {
-    return nil;
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span>;
 }
 
-NSData *cookie = [NSData dataWithBytes:cookieData length:cookieSize];
+<span class="hljs-built_in">NSData</span> *cookie = [<span class="hljs-built_in">NSData</span> dataWithBytes:cookieData length:cookieSize];
 free(cookieData);
 </code></pre>
 <h3 id="读取音频数据" tabindex="-1">读取音频数据</h3>
 <h4 id="audiofilereadbytes" tabindex="-1">AudioFileReadBytes</h4>
-<pre><code class="language-Objective-C">extern OSStatus 
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-keyword">extern </span>OSStatus 
 AudioFileReadBytes (    AudioFileID     inAudioFile,
-                        Boolean         inUseCache,
-                        SInt64          inStartingByte, 
+                        <span class="hljs-keyword">Boolean </span>        inUseCache,
+                        SInt64          <span class="hljs-keyword">inStartingByte, </span>
                         UInt32          *ioNumBytes, 
                         void            *outBuffer) 
 </code></pre>
@@ -313,14 +313,14 @@ AudioFileReadBytes (    AudioFileID     inAudioFile,
 </ul>
 <p><strong>AudioFileReadBytes</strong> 仅负责读取数据, 不分离音频帧和解码.</p>
 <h4 id="audiofilereadpacketdata" tabindex="-1">AudioFileReadPacketData</h4>
-<pre><code class="language-Objective-C">extern OSStatus 
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-keyword">extern</span> OSStatus 
 AudioFileReadPacketData (   AudioFileID                     inAudioFile, 
                             Boolean                         inUseCache,
-                            UInt32 *                        ioNumBytes,
-                            AudioStreamPacketDescription * __nullable outPacketDescriptions,
+                            <span class="hljs-built_in">UInt32</span> *                        ioNumBytes,
+                            AudioStreamPacketDescription * __<span class="hljs-keyword">nullable</span> outPacketDescriptions,
                             SInt64                          inStartingPacket, 
-                            UInt32 *                        ioNumPackets,
-                            void * __nullable               outBuffer); 
+                            <span class="hljs-built_in">UInt32</span> *                        ioNumPackets,
+                            <span class="hljs-type">void</span> * __<span class="hljs-keyword">nullable</span>               outBuffer); 
 </code></pre>
 <ul>
 <li>inAudioFile: AudioFile 实例 ID.</li>
@@ -332,15 +332,15 @@ AudioFileReadPacketData (   AudioFileID                     inAudioFile,
 <li>outBuffer: 读取到的音频数据, 需要分配帧预估大小 * 帧数量内存空间, 分配的空间大小影响读取音频帧的数量.</li>
 </ul>
 <h4 id="audiofilereadpackets" tabindex="-1">AudioFileReadPackets</h4>
-<pre><code class="language-Objective-C">/// !废弃 API_DEPRECATED(&quot;no longer supported&quot;, macos(10.2, 10.10), ios(2.0, 8.0))
-extern OSStatus 
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-comment">/// !废弃 API_DEPRECATED(&quot;no longer supported&quot;, macos(10.2, 10.10), ios(2.0, 8.0))</span>
+<span class="hljs-keyword">extern</span> OSStatus 
 AudioFileReadPackets (  AudioFileID                     inAudioFile, 
                         Boolean                         inUseCache,
-                        UInt32 *                        outNumBytes,
-                        AudioStreamPacketDescription * __nullable outPacketDescriptions,
+                        <span class="hljs-built_in">UInt32</span> *                        outNumBytes,
+                        AudioStreamPacketDescription * __<span class="hljs-keyword">nullable</span> outPacketDescriptions,
                         SInt64                          inStartingPacket, 
-                        UInt32 *                        ioNumPackets,
-                        void * __nullable               outBuffer);
+                        <span class="hljs-built_in">UInt32</span> *                        ioNumPackets,
+                        <span class="hljs-type">void</span> * __<span class="hljs-keyword">nullable</span>               outBuffer);
 </code></pre>
 <ul>
 <li>inAudioFile: AudioFile 实例 ID.</li>
@@ -356,5 +356,5 @@ AudioFileReadPackets (  AudioFileID                     inAudioFile,
 <p>如果非要用于网络音频流播, 就需配合使用 <strong>AudioFileStream</strong>. <strong>AudioFileReadBytes</strong> 读取音频数据, <strong>AudioFileStream</strong> 分离音频帧. 这需要计算得到音频帧对应的字节位置, CBR 编码和 VBR 编码计算方式不同.</p>
 <h3 id="关闭audiofile" tabindex="-1">关闭AudioFile</h3>
 <p>关闭AudioFile 使用完毕后需要调用 AudioFileClose 进行关闭.</p>
-<pre><code class="language-Objective-C">extern OSStatus AudioFileClose  (AudioFileID        inAudioFile)
-</code></pre>
+<pre class="hljs codehilite language-Objective-C"><code><span class="hljs-function"><span class="hljs-keyword">extern</span> OSStatus <span class="hljs-title">AudioFileClose</span>  <span class="hljs-params">(AudioFileID        inAudioFile)</span>
+</span></code></pre>
