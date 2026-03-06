@@ -9,210 +9,240 @@
     <link>https://leafmure.github.io/post/avaudioengine音频流播放</link>
     <guid>https://leafmure.github.io/post/avaudioengine音频流播放</guid>
     <pubDate>Thu, 14 Mar 2024 20:51:30 GMT</pubDate>
-    <description><![CDATA[]]></description>
+    <summary><![CDATA[概述 Audio Engine 提供了强大、功能丰富的 API 来简化音频生成、处理和输入/输出任务。该引擎包含一组节点，这些节点连接起来形成音频信号处理链。这些节点在渲染到输出目的地之前对信号执行各种任务。Audio Engine 可以提供以下功能实现: 使用文件和缓冲区播放音]]></summary>
+    <content src="https://leafmure.github.io/post/avaudioengine音频流播放" />
   </item>
   <item>
     <title><![CDATA[AUGraph 音频流播放]]></title>
     <link>https://leafmure.github.io/post/augraph音频流播放</link>
     <guid>https://leafmure.github.io/post/augraph音频流播放</guid>
     <pubDate>Thu, 14 Mar 2024 19:41:30 GMT</pubDate>
-    <description><![CDATA[]]></description>
+    <summary><![CDATA[AUGraph 属于 Core Audio 框架, 用于描述音频单元（Audio Unit）之间的连接关系和信号流. AUGraph 抽象了音频流的处理过程, 它不直接控制 Audio Unit, 而是由基础单元节点 AUNode 管理. 一个 AUNode 对应一个 Audio]]></summary>
+    <content src="https://leafmure.github.io/post/augraph音频流播放" />
   </item>
   <item>
     <title><![CDATA[AudioConverter]]></title>
     <link>https://leafmure.github.io/post/audioconverter</link>
     <guid>https://leafmure.github.io/post/audioconverter</guid>
     <pubDate>Thu, 14 Mar 2024 18:51:30 GMT</pubDate>
-    <description><![CDATA[]]></description>
+    <summary><![CDATA[概述 AudioConverter 可以将各种线性 PCM 音频格式之间进行转换, 除此之外, 它还能将 PCM 音频格式转为压缩音频格式, 也能将压缩音频格式转为 PCM 音频格式, 达到解码的效果, 如果要实现压缩音频格式之间的转换, 则可以先转 PCM 音频格式, 再转目标]]></summary>
+    <content src="https://leafmure.github.io/post/audioconverter" />
   </item>
   <item>
     <title><![CDATA[AudioFile]]></title>
     <link>https://leafmure.github.io/post/audiofile</link>
     <guid>https://leafmure.github.io/post/audiofile</guid>
     <pubDate>Wed, 13 Mar 2024 19:40:30 GMT</pubDate>
-    <description><![CDATA[]]></description>
+    <summary><![CDATA[概述 AudioFile 归属于 AudioToolBox 框架, 可以用于读取音频信息和分离音频帧, 与 AudioFileStream 功能类似, 但功能会相对强大. 它不仅可以读取并解析音频, 还可以写入音频. 但是它在解析音频时, 需要音频文件的完整性, 适合于本地音频文]]></summary>
+    <content src="https://leafmure.github.io/post/audiofile" />
   </item>
   <item>
     <title><![CDATA[CBR、VBR音频 SeekTime]]></title>
     <link>https://leafmure.github.io/post/cbr和vbr音频seektime</link>
     <guid>https://leafmure.github.io/post/cbr和vbr音频seektime</guid>
     <pubDate>Tue, 12 Mar 2024 19:50:30 GMT</pubDate>
-    <description><![CDATA[]]></description>
+    <summary><![CDATA[音频 Seek Time 功能需要我们在音频文件中找到对应播放时间点的字节位置, 这样才能实现播放时间点的跳跃. 音频存在 CBR、VBR、CVBR 等码率编码方式, 影响每一帧的数据长度大小. 这意味着对于不同码率编码的音频, 实现 Seek Time 的方式也不一样, 这里主]]></summary>
+    <content src="https://leafmure.github.io/post/cbr和vbr音频seektime" />
   </item>
   <item>
     <title><![CDATA[AudioFileStream]]></title>
     <link>https://leafmure.github.io/post/audiofilestream</link>
     <guid>https://leafmure.github.io/post/audiofilestream</guid>
     <pubDate>Tue, 12 Mar 2024 12:42:30 GMT</pubDate>
-    <description><![CDATA[]]></description>
+    <summary><![CDATA[概述 Audio File Stream Services provides the interface for parsing streamed audio files—in which only a limited window of data is available at]]></summary>
+    <content src="https://leafmure.github.io/post/audiofilestream" />
   </item>
   <item>
     <title><![CDATA[H.264]]></title>
     <link>https://leafmure.github.io/post/h264</link>
     <guid>https://leafmure.github.io/post/h264</guid>
     <pubDate>Fri, 24 Nov 2023 18:54:47 GMT</pubDate>
-    <description><![CDATA[]]></description>
+    <summary><![CDATA[H.264 H.264码流结构分为两层: 网络提取层 (Network Abstraction Layer, NAL) 视讯编码层 (Video Coding Layer, VCL) VCL数据即被压缩编码后的视频数据序列, 需要通过封装到 NAL 单元中之后, 才可以用来传输或]]></summary>
+    <content src="https://leafmure.github.io/post/h264" />
   </item>
   <item>
     <title><![CDATA[音视频基础知识]]></title>
     <link>https://leafmure.github.io/post/音视频基础知识</link>
     <guid>https://leafmure.github.io/post/音视频基础知识</guid>
     <pubDate>Thu, 23 Nov 2023 18:54:47 GMT</pubDate>
-    <description><![CDATA[]]></description>
+    <summary><![CDATA[音视频 音视频（Audio-Visual）是指结合声音和图像的媒体形式。它可以包括电影、电视节目、音乐视频、广告等各种形式的媒体内容，通过同时传递声音和图像来提供更丰富的观感和沟通方式。音视频技术涉及录制、编辑、传输和播放等方面，包括音频编解码、视频编解码、流媒体传输、多媒体容器]]></summary>
+    <content src="https://leafmure.github.io/post/音视频基础知识" />
   </item>
   <item>
     <title><![CDATA[Mac 本地部署 Stable Diffusion]]></title>
     <link>https://leafmure.github.io/post/mac-本地部署-stable-diffusion</link>
     <guid>https://leafmure.github.io/post/mac-本地部署-stable-diffusion</guid>
     <pubDate>Tue, 14 Nov 2023 18:35:47 GMT</pubDate>
-    <description><![CDATA[]]></description>
+    <summary><![CDATA[使用的 Mac 配置 MacBook Pro (2022) 芯片: Apple M2 内存: 16GB 存储: 512GB 系统: Ventura 13.0 环境要求 Homebrew 官方安装 (需要梯子) 安装命令: /bin/zsh -c "$(curl -fsSL htt]]></summary>
+    <content src="https://leafmure.github.io/post/mac-本地部署-stable-diffusion" />
   </item>
   <item>
     <title><![CDATA[FFmpeg 安装]]></title>
     <link>https://leafmure.github.io/post/ffmpeg安装</link>
     <guid>https://leafmure.github.io/post/ffmpeg安装</guid>
     <pubDate>Tue, 19 Sep 2023 19:35:47 GMT</pubDate>
-    <description><![CDATA[]]></description>
+    <summary><![CDATA[Homebrew 方式安装 1、执行安装命令 brew install ffmpeg brew install ffmpeg --HEAD # 安装最新 2、选择第三方仓库: homebrew-ffmpeg 和 varenc-homebrew-ffmpeg brew tap ho]]></summary>
+    <content src="https://leafmure.github.io/post/ffmpeg安装" />
   </item>
   <item>
     <title><![CDATA[Mac Ruby 和 Cocoapods 安装 (适用 M 系列芯片)]]></title>
     <link>https://leafmure.github.io/post/mac-ruby-和-cocoapods-安装-适用-m-系列芯片</link>
     <guid>https://leafmure.github.io/post/mac-ruby-和-cocoapods-安装-适用-m-系列芯片</guid>
     <pubDate>Thu, 06 Jul 2023 19:35:47 GMT</pubDate>
-    <description><![CDATA[]]></description>
+    <summary><![CDATA[前言 Ruby 和 Cocoapods 是 iOSer 必接触的工具, Cocoapods 是 Ruby 程序包, 因此安装 Cocoapods 前置条件要有一个适用的 Ruby 版本, 系统有自带 Ruby, 但版本比较低且其执行目录无权限访问, 所以我们需要去下载安装一个比较]]></summary>
+    <content src="https://leafmure.github.io/post/mac-ruby-和-cocoapods-安装-适用-m-系列芯片" />
   </item>
   <item>
     <title><![CDATA[AutoreleasePool详解]]></title>
     <link>https://leafmure.github.io/post/autoreleasepool详解</link>
     <guid>https://leafmure.github.io/post/autoreleasepool详解</guid>
     <pubDate>Fri, 11 Mar 2022 16:25:19 GMT</pubDate>
-    <description><![CDATA[]]></description>
+    <summary><![CDATA[一、前言 iOS 的内存管理是通过引用计数管理的，当对象的引用计数为 0 时，说明该对象要释放回收内存了。在 iOS 5 之前，内存管理是需要开发者负责的，需要手动调用 retain、release、autorelease 去操作对象的引用计数，这种手动管理模式称为 MRC（Ma]]></summary>
+    <content src="https://leafmure.github.io/post/autoreleasepool详解" />
   </item>
   <item>
     <title><![CDATA[Swift、Objective-C 访问控制修饰符]]></title>
     <link>https://leafmure.github.io/post/swiftobjective-c-访问控制修饰符</link>
     <guid>https://leafmure.github.io/post/swiftobjective-c-访问控制修饰符</guid>
     <pubDate>Thu, 10 Mar 2022 16:17:14 GMT</pubDate>
-    <description><![CDATA[]]></description>
+    <summary><![CDATA[一、引言 Swift、Objective-C 都具有面向对象的三大特征：封装、继承和多态，访问控制修饰符应“封装”特性诞生的，“封装”需将对象的实现信息隐藏在内部，不允许外部直接访问对象内部信息，只能通过向外开放途径去访问对象。对象的那些信息需要隐藏或者开放，这可通过 “访问控制]]></summary>
+    <content src="https://leafmure.github.io/post/swiftobjective-c-访问控制修饰符" />
   </item>
   <item>
     <title><![CDATA[iOS-事件分发处理-RunLoop]]></title>
     <link>https://leafmure.github.io/post/ios-事件分发处理-runloop</link>
     <guid>https://leafmure.github.io/post/ios-事件分发处理-runloop</guid>
     <pubDate>Tue, 08 Mar 2022 17:31:02 GMT</pubDate>
-    <description><![CDATA[]]></description>
+    <summary><![CDATA[一、初识 RunLoop 1.1 线程 iOS开发是单进程，所以一般来说，一个应用程序就是一个进程，进程之间是相互独立的，每个进程都有独立的内存空间和资源。进程若需处理事件，则需要基本执行单元：线程。进程的所有事件都必须在线程中处理，因此进程在开辟时，会默认创建并开启一条线程，程]]></summary>
+    <content src="https://leafmure.github.io/post/ios-事件分发处理-runloop" />
   </item>
   <item>
     <title><![CDATA[cocoapods-私有库和公开库]]></title>
     <link>https://leafmure.github.io/post/cocoapods-私有库和公开库</link>
     <guid>https://leafmure.github.io/post/cocoapods-私有库和公开库</guid>
     <pubDate>Thu, 10 Feb 2022 17:40:13 GMT</pubDate>
-    <description><![CDATA[]]></description>
+    <summary><![CDATA[私有库：git 仓库设置为私有不对外公开 公开库：提交到 Cocoapods Specs 上，可以 pod search 到库 私有库 私有索引库 私有索引库用于保存私有库的 .podspec 文件，pod install 私有库时会去私有索引库找到对应的 .podspec 文件]]></summary>
+    <content src="https://leafmure.github.io/post/cocoapods-私有库和公开库" />
   </item>
   <item>
     <title><![CDATA[HTTP 协议]]></title>
     <link>https://leafmure.github.io/post/http协议</link>
     <guid>https://leafmure.github.io/post/http协议</guid>
     <pubDate>Thu, 10 Feb 2022 17:35:47 GMT</pubDate>
-    <description><![CDATA[]]></description>
+    <summary><![CDATA[超文本传输协议（Hyper Text Transfer Protocol，HTTP）是一个简单的请求-响应协议，它通常运行在TCP之上。它指定了客户端可能发送给服务器什么样的消息以及得到什么样的响应。请求和响应消息的头以ASCII形式给出；而消息内容则具有一个类似MIME的格式。]]></summary>
+    <content src="https://leafmure.github.io/post/http协议" />
   </item>
   <item>
     <title><![CDATA[UITableView-Invalid-update]]></title>
     <link>https://leafmure.github.io/post/uitableview-invalid-update</link>
     <guid>https://leafmure.github.io/post/uitableview-invalid-update</guid>
     <pubDate>Thu, 10 Feb 2022 17:32:11 GMT</pubDate>
-    <description><![CDATA[]]></description>
+    <summary><![CDATA[控制台错误日志： Invalid update: invalid number of rows in section 0. The number of rows contained in an existing section after the update (3) must ]]></summary>
+    <content src="https://leafmure.github.io/post/uitableview-invalid-update" />
   </item>
   <item>
     <title><![CDATA[RESTful Api架构]]></title>
     <link>https://leafmure.github.io/post/restful-api架构</link>
     <guid>https://leafmure.github.io/post/restful-api架构</guid>
     <pubDate>Thu, 10 Feb 2022 16:53:59 GMT</pubDate>
-    <description><![CDATA[]]></description>
+    <summary><![CDATA[API API 是什么？ API（Application Programming Interface，应用程序接口）是一些预先定义的接口（如函数、HTTP接口），或指软件系统不同组成部分衔接的约定。 用来提供应用程序与开发人员基于某软件或硬件得以访问的一组例程，而又无需访问源码，]]></summary>
+    <content src="https://leafmure.github.io/post/restful-api架构" />
   </item>
   <item>
     <title><![CDATA[iOS-WKWebView秒开优化方案]]></title>
     <link>https://leafmure.github.io/post/ios-wkwebview秒开优化方案</link>
     <guid>https://leafmure.github.io/post/ios-wkwebview秒开优化方案</guid>
     <pubDate>Thu, 10 Feb 2022 16:50:46 GMT</pubDate>
-    <description><![CDATA[]]></description>
+    <summary><![CDATA[简要 解决场景 后台支持使用 HTML 文本编辑器发表 HTML 格式的帖子，移动端要兼容 HTML 格式帖子展示，必然要采用 WebView 加载 HTML 格式帖子，以达到同样的呈现效果。 存在的问题 WebView 内容加载速度较原生有肉眼可见的延迟，在进入帖子详情页时，W]]></summary>
+    <content src="https://leafmure.github.io/post/ios-wkwebview秒开优化方案" />
   </item>
   <item>
     <title><![CDATA[Swift-属性包装器]]></title>
     <link>https://leafmure.github.io/post/swift-属性包装器</link>
     <guid>https://leafmure.github.io/post/swift-属性包装器</guid>
     <pubDate>Thu, 10 Feb 2022 16:48:14 GMT</pubDate>
-    <description><![CDATA[]]></description>
+    <summary><![CDATA[Property wrapper Property wrapper 类似于 java 中的注解，一种给属性附加逻辑的特性。在类、结构体、枚举声明时使用该特性，可以让其成为一个属性包装器。属性包装器可复用统一规则对属性进行包装，降低重复工作。 @propertyWrapper st]]></summary>
+    <content src="https://leafmure.github.io/post/swift-属性包装器" />
   </item>
   <item>
     <title><![CDATA[Swift-自定义运算符]]></title>
     <link>https://leafmure.github.io/post/swift-自定义运算符</link>
     <guid>https://leafmure.github.io/post/swift-自定义运算符</guid>
     <pubDate>Thu, 10 Feb 2022 16:44:17 GMT</pubDate>
-    <description><![CDATA[]]></description>
+    <summary><![CDATA[运算符定义类型 var a = 0 var b = 1 a += 1 a ^ b a-- --a 上面代码的运算是如何实现的呢？ 在 Swift 中提供三种类型运算符： prefix：前置运算符，像 --a、++a infix：中间运算符，像 a += 1、a + b postf]]></summary>
+    <content src="https://leafmure.github.io/post/swift-自定义运算符" />
   </item>
   <item>
     <title><![CDATA[单元测试-XCTest]]></title>
     <link>https://leafmure.github.io/post/单元测试-xctest</link>
     <guid>https://leafmure.github.io/post/单元测试-xctest</guid>
     <pubDate>Thu, 09 Dec 2021 15:23:38 GMT</pubDate>
-    <description><![CDATA[]]></description>
+    <summary><![CDATA[单元测试（Unit Testing）又称为模块测试，是针对程序模块软件设计来进行正确性检验的测试工作。程序单元是应用的最小可测试部件。对于面向对象编程，最小单元就是方法，包括基类、抽象类、或者派生类中的方法。 单元测试通常由软件开发人员编写，用于确保他们所写的代码符合软件需求和遵]]></summary>
+    <content src="https://leafmure.github.io/post/单元测试-xctest" />
   </item>
   <item>
     <title><![CDATA[Xcode13 Kingfisher、RealmSwift Release模式编译报错]]></title>
     <link>https://leafmure.github.io/post/xcode13-第三方库swiftui错误</link>
     <guid>https://leafmure.github.io/post/xcode13-第三方库swiftui错误</guid>
     <pubDate>Mon, 01 Nov 2021 16:38:42 GMT</pubDate>
-    <description><![CDATA[]]></description>
+    <summary><![CDATA[Xcode 13 发行说明中提到： Swift 库可能无法为使用 armv7 的 iOS 目标构建。(74120874) 解决方法：将包的平台依赖性增加到 v12 或更高版本。 依赖于 Combine 的 Swift 库可能无法为包括 armv7 和 i386 架构在内的目标构建]]></summary>
+    <content src="https://leafmure.github.io/post/xcode13-第三方库swiftui错误" />
   </item>
   <item>
     <title><![CDATA[iOS 加密算法]]></title>
     <link>https://leafmure.github.io/post/ios-加密算法</link>
     <guid>https://leafmure.github.io/post/ios-加密算法</guid>
     <pubDate>Mon, 13 Sep 2021 20:02:08 GMT</pubDate>
-    <description><![CDATA[]]></description>
+    <summary><![CDATA[数据加密的基本过程就是对原来为明文的文件或数据按某种算法进行处理，通常用于达到以下目的： 保密性：防止内容被第三方获取 数据完整性：防止数据被篡改 身份验证：确保数据是正确方发送的 摘要算法 消息摘要算法的主要特征是加密过程不需要密钥，并且经过加密的数据无法被解密，目前可以被解密]]></summary>
+    <content src="https://leafmure.github.io/post/ios-加密算法" />
   </item>
   <item>
     <title><![CDATA[Swift 指针]]></title>
     <link>https://leafmure.github.io/post/swift-指针</link>
     <guid>https://leafmure.github.io/post/swift-指针</guid>
     <pubDate>Mon, 13 Sep 2021 19:59:34 GMT</pubDate>
-    <description><![CDATA[]]></description>
+    <summary><![CDATA[在 OC 中指针的使用采用 C 语法方式，通过 *、& 操作指针，在 Swift 需要初始化相应的的指针类，其中分为两类： typed pointer 指向的内存分配了数据类型 raw pointer 指向的内存未分配数据类型 swift OC 说明 unsafePointer ]]></summary>
+    <content src="https://leafmure.github.io/post/swift-指针" />
   </item>
   <item>
     <title><![CDATA[App 启动]]></title>
     <link>https://leafmure.github.io/post/app-启动</link>
     <guid>https://leafmure.github.io/post/app-启动</guid>
     <pubDate>Mon, 13 Sep 2021 19:19:46 GMT</pubDate>
-    <description><![CDATA[]]></description>
+    <summary><![CDATA[APP 启动流程 App 启动情况有： 冷启动：系统里没有任何进程的缓存信息，如：重启手机后直接启动 App，或者杀死App 等待一段时间，缓存被清除后再启动。 热启动：系统里还存在进程的缓存信息，如：刚把App 杀死后立即启动App。 启动过程中分为两阶段：pre-main、m]]></summary>
+    <content src="https://leafmure.github.io/post/app-启动" />
   </item>
   <item>
     <title><![CDATA[iOS 内存地址、二级指针]]></title>
     <link>https://leafmure.github.io/post/ios-内存地址二级指针</link>
     <guid>https://leafmure.github.io/post/ios-内存地址二级指针</guid>
     <pubDate>Mon, 13 Sep 2021 19:16:48 GMT</pubDate>
-    <description><![CDATA[]]></description>
+    <summary><![CDATA[%p 用于输出变量内存地址 NSString *a = @"six god"; NSLog(@"%p", a); NSLog(@"%p", &a); print: 0x100004008 print: 0x16fdff418 在日志输出中，a 和 &a 的区别是： 0x10000]]></summary>
+    <content src="https://leafmure.github.io/post/ios-内存地址二级指针" />
   </item>
   <item>
     <title><![CDATA[Swift 函数调度]]></title>
     <link>https://leafmure.github.io/post/swift-函数调度</link>
     <guid>https://leafmure.github.io/post/swift-函数调度</guid>
     <pubDate>Mon, 13 Sep 2021 19:06:54 GMT</pubDate>
-    <description><![CDATA[]]></description>
+    <summary><![CDATA[在 OC 中方法的调用是要经过 runtime 消息转发机制找到方法实现，然后调用方法实现，在 Swift 中函数的调度分为两种：静态调度、动态调度。 函数调度方式 静态调度 静态调度也被称为直接调度（Direct Dispatch），函数在编译、链接完成后，函数的地址就已经确定]]></summary>
+    <content src="https://leafmure.github.io/post/swift-函数调度" />
   </item>
   <item>
     <title><![CDATA[Category 探究]]></title>
     <link>https://leafmure.github.io/post/category-探究</link>
     <guid>https://leafmure.github.io/post/category-探究</guid>
     <pubDate>Fri, 21 Dec 2018 14:37:21 GMT</pubDate>
-    <description><![CDATA[]]></description>
+    <summary><![CDATA[简介 人类在进步，社会在发展，随着时间变化我们会遇到不同的问题，由此也诞生了对应的解决方法。我们编写的类也是如此，在随着业务的发展，原定类的方法也就不足以处理新的业务，因此我们开始想方设法去扩展类以处理新业务。在 Objective-C 2.0 提供的 category 特性，此]]></summary>
+    <content src="https://leafmure.github.io/post/category-探究" />
   </item>
   <item>
     <title><![CDATA[EventKit 日历事件]]></title>
     <link>https://leafmure.github.io/post/eventkit-日历事件</link>
     <guid>https://leafmure.github.io/post/eventkit-日历事件</guid>
     <pubDate>Wed, 19 Dec 2018 13:39:24 GMT</pubDate>
-    <description><![CDATA[]]></description>
+    <summary><![CDATA[EventKit 框架 此框架可以访问手机系统日历和提醒事项APP的数据，用此框架可以添加日历事件和提醒事项。 info.plist 配置 在 info.plist 添加访问日历权限和提醒实现的key：Privacy - Calendars Usage Description、P]]></summary>
+    <content src="https://leafmure.github.io/post/eventkit-日历事件" />
   </item>
 </channel>
 </rss>

@@ -57,6 +57,36 @@
     ]
   },
   {
+    "id": "git-仓库搭建",
+    "title": "Git 仓库搭建",
+    "url": "/post/git-仓库搭建",
+    "content": "创建git新用户管理git仓库 创建git用户并配置 # adduser git // 创建git用户 # passwd git // 设置git用户的密码 # chmod -v u+w /etc/sudoers // 赋予读写权限 // 添加新用户信息至/etc/sudoers # vim /etc/sudoers // 添加新用户信息如下 // Allow root to run any commands anywhere root ALL=(ALL) ALL git ALL=(ALL) ALL 生成密钥（在电脑的shell中执行） $ ssh-keygen -t rsa // 一直回车会出现 key’s randomart image $ pbcopy < ~/.ssh/id_rsa.pub // 复制id_rsa.pub中的密钥 密钥配置（在服务器配置） # su git // 切换至git用户，如果当前是不必执行 # mkdir ~/.ssh // 创建.ssh文件 # vim ~/.ssh/authorized_keys // 将上步骤获取的密钥复制到authorized_keys文件里 # cd ～ // git用户下的根目录 // 设置权限 # chmod 600 .ssh/authorzied_keys # chmod 700 .ssh 测试是否能连接服务器 $ ",
+    "category": "Server",
+    "tags": [
+      "Git仓库搭建"
+    ],
+    "keywords": [
+      "Git 仓库搭建",
+      "Git",
+      "服务器",
+      "Server"
+    ]
+  },
+  {
+    "id": "nginx-安装",
+    "title": "Nginx 安装",
+    "url": "/post/nginx-安装",
+    "content": "Nginx (engine x) 是一个高性能的HTTP和反向代理服务，也是一个IMAP/POP3/SMTP服务。Nginx是由伊戈尔·赛索耶夫为俄罗斯访问量第二的Rambler.ru站点（俄文：Рамблер）开发的，第一个公开版本0.1.0发布于2004年10月4日。 Nginx安装 yum源中的nginx版本比较旧，包安装可以指定安装版本，安装目录地址为 /usr/local/ 包安装 安装nginx所需的依赖库（需在root身份下） pcre库 下载 pcre库 安装包 # wget ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.36.tar.gz 解压安装包 # tar -zxvf pcre-8.36.tar.gz 编译安装 # cd pcre-8.36 # ./configure # make && make install zlib库 下载 zlib库 安装包 # wget http://zlib.net/zlib-1.2.8.tar.gz 解压安装包 # tar -zxvf zlib-1.2.8.tar.gz 编译安装 # cd zlib-1.2.8 # ./configure # make && make install ssl库 下载 zlib库 安装包 # wget http://ww",
+    "category": "Server",
+    "tags": [
+      "Nginx"
+    ],
+    "keywords": [
+      "Nginx 安装",
+      "Nginx"
+    ]
+  },
+  {
     "id": "hexo-seo设置",
     "title": "Hexo SEO设置",
     "url": "/post/hexo-seo设置",
@@ -98,36 +128,6 @@
     "keywords": [
       "不蒜子统计",
       "next主题"
-    ]
-  },
-  {
-    "id": "git-仓库搭建",
-    "title": "Git 仓库搭建",
-    "url": "/post/git-仓库搭建",
-    "content": "创建git新用户管理git仓库 创建git用户并配置 # adduser git // 创建git用户 # passwd git // 设置git用户的密码 # chmod -v u+w /etc/sudoers // 赋予读写权限 // 添加新用户信息至/etc/sudoers # vim /etc/sudoers // 添加新用户信息如下 // Allow root to run any commands anywhere root ALL=(ALL) ALL git ALL=(ALL) ALL 生成密钥（在电脑的shell中执行） $ ssh-keygen -t rsa // 一直回车会出现 key’s randomart image $ pbcopy < ~/.ssh/id_rsa.pub // 复制id_rsa.pub中的密钥 密钥配置（在服务器配置） # su git // 切换至git用户，如果当前是不必执行 # mkdir ~/.ssh // 创建.ssh文件 # vim ~/.ssh/authorized_keys // 将上步骤获取的密钥复制到authorized_keys文件里 # cd ～ // git用户下的根目录 // 设置权限 # chmod 600 .ssh/authorzied_keys # chmod 700 .ssh 测试是否能连接服务器 $ ",
-    "category": "Server",
-    "tags": [
-      "Git仓库搭建"
-    ],
-    "keywords": [
-      "Git 仓库搭建",
-      "Git",
-      "服务器",
-      "Server"
-    ]
-  },
-  {
-    "id": "nginx-安装",
-    "title": "Nginx 安装",
-    "url": "/post/nginx-安装",
-    "content": "Nginx (engine x) 是一个高性能的HTTP和反向代理服务，也是一个IMAP/POP3/SMTP服务。Nginx是由伊戈尔·赛索耶夫为俄罗斯访问量第二的Rambler.ru站点（俄文：Рамблер）开发的，第一个公开版本0.1.0发布于2004年10月4日。 Nginx安装 yum源中的nginx版本比较旧，包安装可以指定安装版本，安装目录地址为 /usr/local/ 包安装 安装nginx所需的依赖库（需在root身份下） pcre库 下载 pcre库 安装包 # wget ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.36.tar.gz 解压安装包 # tar -zxvf pcre-8.36.tar.gz 编译安装 # cd pcre-8.36 # ./configure # make && make install zlib库 下载 zlib库 安装包 # wget http://zlib.net/zlib-1.2.8.tar.gz 解压安装包 # tar -zxvf zlib-1.2.8.tar.gz 编译安装 # cd zlib-1.2.8 # ./configure # make && make install ssl库 下载 zlib库 安装包 # wget http://ww",
-    "category": "Server",
-    "tags": [
-      "Nginx"
-    ],
-    "keywords": [
-      "Nginx 安装",
-      "Nginx"
     ]
   },
   {
